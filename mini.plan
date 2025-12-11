@@ -1,0 +1,20 @@
+
+make simple one page app
+
+one big html vidoplayer, what ever is nice/lib/or just self host?
+
+mini cinema app.. 
+just index.html
+
+page also has two or three other modules..
+they are visible too. 
+
+with have a list of available movies..
+and we have some mini controll over the process of getting files..
+
+in the background there is a webtorrent systsen to get files.
+
+the 'db' is from nostr ( but this is unimportant)
+we use torrent info hash ...
+
+what else?
