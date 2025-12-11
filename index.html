@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Mini Cinema</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050509;
+      --bg-alt: #101018;
+      --accent: #ff4b6e;
+      --accent-soft: rgba(255, 75, 110, 0.16);
+      --text: #f5f5f7;
+      --muted: #a0a0b5;
+      --border: #242437;
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #19192b 0, #050509 55%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 16px 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title-mark {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #fff, #ffb3c2 40%, #ff4b6e);
+      box-shadow: 0 0 0 4px rgba(255, 75, 110, 0.25);
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(240px, 1fr);
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .panel {
+      background: linear-gradient(145deg, #101018 0, #050509 70%);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      padding: 12px 12px 14px;
+      backdrop-filter: blur(16px);
+    }
+
+    .player-panel {
+      padding: 10px;
+    }
+
+    .player-shell {
+      position: relative;
+      border-radius: calc(var(--radius) - 2px);
+      overflow: hidden;
+      background: radial-gradient(circle at top, #1b1b2b, #050509);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+      aspect-ratio: 16 / 9;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: radial-gradient(circle at 30% 20%, #33334f, #050509 65%);
+    }
+
+    .player-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .player-overlay-badge {
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(255, 75, 110, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+    }
+
+    .library-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 340px;
+      overflow: auto;
+    }
+
+    .movie {
+      display: flex;
+      gap: 8px;
+      padding: 7px 8px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      transition: background 120ms ease, border-color 120ms ease,
+        transform 120ms ease;
+      text-align: left;
+      color: inherit;
+    }
+
+    .movie:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.06);
+      transform: translateY(-1px);
+    }
+
+    .movie.is-active {
+      background: linear-gradient(135deg, rgba(255, 75, 110, 0.16), transparent);
+      border-color: rgba(255, 75, 110, 0.7);
+    }
+
+    .movie-thumb {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      background: radial-gradient(circle at 30% 20%, #ffc8d5, #ff4b6e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #1b0c11;
+    }
+
+    .movie-main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .movie-title {
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .movie-meta {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .movie-tags {
+      display: inline-flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .movie-tag {
+      padding: 1px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    .badge-soft {
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .status-panel {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .status-item {
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      min-height: 54px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .status-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .status-value {
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+      margin-top: 3px;
+    }
+
+    .status-value-strong {
+      color: var(--accent);
+    }
+
+    .status-caption {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #2f6f3a;
+      box-shadow: 0 0 0 4px rgba(71, 190, 104, 0.18);
+      margin-right: 4px;
+    }
+
+    .status-caption-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-caption-right {
+      font-variant-numeric: tabular-nums;
+    }
+
+    footer {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 2px 2px;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 860px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .status-panel {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      .status-panel {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .panel {
+        padding: 10px 10px 12px;
+      }
+
+      .player-panel {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <div class="title">
+          <span class="title-mark"></span>
+          Mini Cinema
+        </div>
+        <div class="subtitle">Browser WebTorrent player · mock catalog</div>
+      </div>
+      <span class="chip">One Page Prototype</span>
+    </header>
+
+    <main class="layout">
+      <section class="panel player-panel">
+        <div class="player-shell">
+          <video id="player" controls preload="metadata"></video>
+          <div class="player-overlay">
+            <div class="player-overlay-badge" id="player-overlay-badge">
+              Select a mock title to start
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Library</div>
+          <span class="badge-soft" id="library-count">0 items</span>
+        </div>
+        <ul class="library-list" id="movie-list"></ul>
+      </aside>
+    </main>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Transfer Channel</div>
+        <span class="badge-soft" id="status-label">Idle</span>
+      </div>
+      <div class="status-panel">
+        <div class="status-item">
+          <div class="status-label">Now Playing</div>
+          <div class="status-value status-value-strong" id="status-title">
+            Nothing queued
+          </div>
+        </div>
+        <div class="status-item">
+          <div class="status-label">Progress</div>
+          <div class="status-value" id="status-progress">0%</div>
+        </div>
+        <div class="status-item">
+          <div class="status-label">Peers</div>
+          <div class="status-value" id="status-peers">0</div>
+        </div>
+        <div class="status-item">
+          <div class="status-label">Down / Up</div>
+          <div class="status-value" id="status-speed">0 kB/s · 0 kB/s</div>
+        </div>
+      </div>
+      <div class="status-caption">
+        <div class="status-caption-left">
+          <span class="dot" id="status-dot"></span>
+          WebTorrent client in browser
+        </div>
+        <div class="status-caption-right" id="status-extra">Hash-only mock data</div>
+      </div>
+    </section>
+
+    <footer>
+      <span>Replace the mock catalog with your Nostr-backed bib when ready.</span>
+      <span>Open this file directly or via any static server.</span>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+  <script>
+    const COLLECTION_INFOHASH = "c9c47e7b12586a59d83e3e519570835625d44b3e";
+    const COLLECTION_LABEL = "Werner Herzog Collection";
+    const COLLECTION_MAGNET =
+      "magnet:?xt=urn:btih:" +
+      COLLECTION_INFOHASH +
+      "&dn=" +
+      encodeURIComponent(COLLECTION_LABEL) +
+      "&tr=wss%3A%2F%2Ftracker.openwebtorrent.com" +
+      "&tr=wss%3A%2F%2Ftracker.webtorrent.dev" +
+      "&tr=wss%3A%2F%2Ftracker.btorrent.xyz" +
+      "&tr=wss%3A%2F%2Ftracker.fastcast.nz";
+    const DEFAULT_FILE_MATCH = "grizzly man";
+
+    function formatSize(bytes) {
+      if (!Number.isFinite(bytes) || bytes <= 0) return "unknown";
+      const units = ["B", "kB", "MB", "GB", "TB"];
+      let value = bytes;
+      let unitIndex = 0;
+      while (value >= 1024 && unitIndex < units.length - 1) {
+        value /= 1024;
+        unitIndex += 1;
+      }
+      return value.toFixed(value >= 100 || unitIndex === 0 ? 0 : 1) + " " + units[unitIndex];
+    }
+
+    function createMovieElement(movie) {
+      const li = document.createElement("li");
+      li.className = "movie";
+      li.dataset.id = movie.id;
+
+      const thumb = document.createElement("div");
+      thumb.className = "movie-thumb";
+      thumb.textContent = (movie.title || "?")
+        .split(" ")
+        .map((part) => part[0])
+        .join("")
+        .slice(0, 3)
+        .toUpperCase();
+
+      const main = document.createElement("div");
+      main.className = "movie-main";
+
+      const title = document.createElement("div");
+      title.className = "movie-title";
+      title.textContent = movie.title || movie.id;
+
+      const meta = document.createElement("div");
+      meta.className = "movie-meta";
+
+      const tagsContainer = document.createElement("div");
+      tagsContainer.className = "movie-tags";
+      if (Array.isArray(movie.tags)) {
+        movie.tags.forEach((tag) => {
+          const tagEl = document.createElement("span");
+          tagEl.className = "movie-tag";
+          tagEl.textContent = tag;
+          tagsContainer.appendChild(tagEl);
+        });
+      }
+
+      const size = document.createElement("div");
+      size.textContent = formatSize(movie.sizeBytes);
+
+      meta.appendChild(tagsContainer);
+      meta.appendChild(size);
+
+      main.appendChild(title);
+      main.appendChild(meta);
+
+      li.appendChild(thumb);
+      li.appendChild(main);
+
+      return li;
+    }
+
+    function setActiveMovieElement(activeId) {
+      const nodes = document.querySelectorAll(".movie");
+      nodes.forEach((node) => {
+        if (node.dataset.id === activeId) {
+          node.classList.add("is-active");
+        } else {
+          node.classList.remove("is-active");
+        }
+      });
+    }
+
+    function updateStatusIdle() {
+      document.getElementById("status-label").textContent = "Idle";
+      document.getElementById("status-title").textContent = "Nothing queued";
+      document.getElementById("status-progress").textContent = "0%";
+      document.getElementById("status-peers").textContent = "0";
+      document.getElementById("status-speed").textContent = "0 kB/s · 0 kB/s";
+      document.getElementById("status-extra").textContent = "Collection metadata not loaded";
+      const dot = document.getElementById("status-dot");
+      dot.style.background = "#2f6f3a";
+      dot.style.boxShadow = "0 0 0 4px rgba(71, 190, 104, 0.18)";
+    }
+
+    function updateStatusLoading(movie) {
+      document.getElementById("status-label").textContent = "Connecting";
+      document.getElementById("status-title").textContent = movie.title || movie.id;
+      document.getElementById("status-progress").textContent = "0%";
+      document.getElementById("status-peers").textContent = "0";
+      document.getElementById("status-speed").textContent = "0 kB/s · 0 kB/s";
+      document.getElementById("status-extra").textContent = "Requesting swarm for collection";
+      const dot = document.getElementById("status-dot");
+      dot.style.background = "#c37b2d";
+      dot.style.boxShadow = "0 0 0 4px rgba(195, 123, 45, 0.3)";
+    }
+
+    function updateStatusFromTorrent(torrent) {
+      const percent = (torrent.progress * 100) || 0;
+      const down = torrent.downloadSpeed || 0;
+      const up = torrent.uploadSpeed || 0;
+
+      document.getElementById("status-label").textContent =
+        percent >= 99.5 ? "Seed" : "Streaming";
+      document.getElementById("status-progress").textContent =
+        percent.toFixed(1).replace(/\.0$/, "") + "%";
+      document.getElementById("status-peers").textContent = String(
+        torrent.numPeers || 0
+      );
+      document.getElementById("status-speed").textContent =
+        formatSize(down) + "/s · " + formatSize(up) + "/s";
+      document.getElementById("status-extra").textContent =
+        "Swarm " + (torrent.infoHash || "").slice(0, 10) + "…";
+      const dot = document.getElementById("status-dot");
+      dot.style.background = "#47be68";
+      dot.style.boxShadow = "0 0 0 4px rgba(71, 190, 104, 0.35)";
+    }
+
+    function updateStatusError(message) {
+      document.getElementById("status-label").textContent = "Error";
+      document.getElementById("status-progress").textContent = "0%";
+      document.getElementById("status-peers").textContent = "0";
+      document.getElementById("status-speed").textContent = "0 kB/s · 0 kB/s";
+      document.getElementById("status-extra").textContent = message || "Playback failed";
+      const dot = document.getElementById("status-dot");
+      dot.style.background = "#a3283a";
+      dot.style.boxShadow = "0 0 0 4px rgba(163, 40, 58, 0.4)";
+    }
+
+    function initMiniCinema() {
+      const listEl = document.getElementById("movie-list");
+      const countEl = document.getElementById("library-count");
+      const overlayBadge = document.getElementById("player-overlay-badge");
+      const videoEl = document.getElementById("player");
+
+      let client = null;
+      let activeTorrent = null;
+      let statusInterval = null;
+
+      function ensureClient() {
+        if (!client) {
+          if (typeof WebTorrent === "undefined") {
+            updateStatusError("WebTorrent not available");
+            return null;
+          }
+          client = new WebTorrent();
+        }
+        return client;
+      }
+
+      function buildCatalogFromTorrent(torrent) {
+        const videoPattern = /\.(mp4|m4v|webm|mkv|avi|mov)$/i;
+        const files = torrent.files.filter((f) =>
+          videoPattern.test(f.name || f.path || "")
+        );
+        return files.map((file, index) => {
+          const title = (file.path || file.name || "Untitled").split("/").pop();
+          return {
+            id: "file-" + String(index + 1).toString().padStart(3, "0"),
+            title,
+            sizeBytes: file.length || 0,
+            tags: ["herzog"],
+            filePath: file.path || file.name || "",
+          };
+        });
+      }
+
+      function findDefaultIndex(catalog) {
+        const needle = DEFAULT_FILE_MATCH.toLowerCase();
+        for (let i = 0; i < catalog.length; i += 1) {
+          if ((catalog[i].title || "").toLowerCase().includes(needle)) {
+            return i;
+          }
+        }
+        return -1;
+      }
+
+      function renderCatalog(catalog, torrent) {
+        listEl.innerHTML = "";
+        countEl.textContent = catalog.length + " files";
+
+        const defaultIndex = findDefaultIndex(catalog);
+
+        catalog.forEach((movie, index) => {
+          const node = createMovieElement(movie);
+          node.addEventListener("click", () => {
+            const c = ensureClient();
+            if (!c) return;
+            const t = activeTorrent || torrent;
+            if (!t) {
+              updateStatusError("Collection not loaded yet");
+              return;
+            }
+
+            if (statusInterval) {
+              clearInterval(statusInterval);
+              statusInterval = null;
+            }
+
+            setActiveMovieElement(movie.id);
+            updateStatusLoading(movie);
+            overlayBadge.textContent = "Connecting to swarm…";
+
+            const file =
+              t.files.find(
+                (f) =>
+                  (f.path || f.name || "") === movie.filePath ||
+                  (f.path || f.name || "")
+                    .toLowerCase()
+                    .includes((movie.title || "").toLowerCase())
+              ) || t.files[0];
+
+            if (!file) {
+              updateStatusError("No playable file in collection");
+              return;
+            }
+
+            file.renderTo(videoEl, { autoplay: true }, (err) => {
+              if (err) {
+                updateStatusError("Render failed: " + err.message);
+              }
+            });
+
+            overlayBadge.textContent = "";
+
+            updateStatusFromTorrent(torrent);
+            statusInterval = setInterval(() => {
+              if (!activeTorrent) return;
+              updateStatusFromTorrent(activeTorrent);
+            }, 1000);
+
+            torrent.on("error", (err) => {
+              updateStatusError(err.message || "Torrent error");
+            });
+          });
+
+          listEl.appendChild(node);
+
+          if (index === defaultIndex) {
+            setActiveMovieElement(movie.id);
+          }
+        });
+      }
+
+      updateStatusIdle();
+      overlayBadge.textContent = "Loading Herzog collection…";
+
+      const c = ensureClient();
+      if (!c) return;
+
+      updateStatusLoading({ title: COLLECTION_LABEL, id: "collection" });
+
+      c.add(COLLECTION_MAGNET, (torrent) => {
+        activeTorrent = torrent;
+        const catalog = buildCatalogFromTorrent(torrent);
+        if (!catalog.length) {
+          document.getElementById("status-extra").textContent =
+            "No playable video files in collection";
+          overlayBadge.textContent = "Nothing playable found in torrent";
+          return;
+        }
+        renderCatalog(catalog, torrent);
+        document.getElementById("status-extra").textContent =
+          "Herzog collection loaded (" + catalog.length + " files)";
+        overlayBadge.textContent = "Select a title to start";
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initMiniCinema);
+    } else {
+      initMiniCinema();
+    }
+  </script>
+</body>
+</html>
