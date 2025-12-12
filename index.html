@@ -542,6 +542,9 @@
         <ul class="client-presets" id="client-presets"></ul>
       </div>
       <div class="client-row">
+        <span class="client-note" id="nostr-status">
+          Nostr presets: idle
+        </span>
         <span class="client-note" id="metadata-scan-status">
           Metadata scan: idle
         </span>
@@ -721,6 +724,7 @@
       const loadButton = document.getElementById("client-load");
 
       const presetsEl = document.getElementById("client-presets");
+      const nostrStatusEl = document.getElementById("nostr-status");
       const scanStatusEl = document.getElementById("metadata-scan-status");
 
       let client = null;
@@ -779,6 +783,12 @@
       function setScanStatus(text) {
         if (scanStatusEl) {
           scanStatusEl.textContent = text;
+        }
+      }
+
+      function setNostrStatus(text) {
+        if (nostrStatusEl) {
+          nostrStatusEl.textContent = text;
         }
       }
 
@@ -1069,7 +1079,7 @@
 
         function loadFromNostr() {
           if (!NOSTR_RELAY || typeof WebSocket === "undefined") {
-            setScanStatus("Nostr presets: disabled");
+            setNostrStatus("Nostr presets: disabled");
             return Promise.resolve(false);
           }
 
@@ -1079,11 +1089,12 @@
             try {
               ws = new WebSocket(NOSTR_RELAY);
             } catch (e) {
+              setNostrStatus("Nostr presets: error opening WebSocket");
               resolve(false);
               return;
             }
 
-            setScanStatus("Nostr presets: connecting to relay");
+            setNostrStatus("Nostr presets: connecting to relay");
 
             const done = (ok) => {
               if (resolved) return;
@@ -1134,7 +1145,7 @@
                     addPreset(hash, item.title || hash);
                   });
                   clearTimeout(timer);
-                  setScanStatus("Nostr presets: loaded from relay");
+                  setNostrStatus("Nostr presets: loaded from relay");
                   done(true);
                 } catch (e) {
                   // ignore malformed content
@@ -1142,10 +1153,10 @@
               } else if (msg[0] === "EOSE") {
                 clearTimeout(timer);
                 if (presetsEl.children.length > 0) {
-                  setScanStatus("Nostr presets: loaded from relay");
+                  setNostrStatus("Nostr presets: loaded from relay");
                   done(true);
                 } else {
-                  setScanStatus("Nostr presets: no presets on relay");
+                  setNostrStatus("Nostr presets: no presets on relay");
                   done(false);
                 }
               }
@@ -1153,7 +1164,7 @@
 
             ws.onerror = () => {
               clearTimeout(timer);
-               setScanStatus("Nostr presets: error talking to relay");
+              setNostrStatus("Nostr presets: error talking to relay");
               done(false);
             };
           });
@@ -1164,6 +1175,7 @@
 
       updateStatusIdle();
       overlayBadge.textContent = "Select a film or enter an infohash…";
+      setNostrStatus("Nostr presets: idle");
       loadFilmLibrary();
 
       if (magnetInput) {
