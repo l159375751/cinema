@@ -25,3 +25,23 @@ on our own seeder:
 - webtor-io already exposes HTTP/streaming interfaces on top of torrents
 - it could simplify seeding, metadata fetching, and peer discovery
 - we’d still keep Nostr + infohash bag as the catalog layer
+
+BIG FAT NOTE – VIDEO / PLAYER LAYER
+
+Also consider replacing the hand-rolled `<video>` UI with DPlayer:
+- https://github.com/DIYgod/DPlayer
+- clean, modern HTML5 player with playlist + danmaku support
+- can be wired to accept a MediaSource / streaming URL produced by our torrent
+  layer (webtorrent/webtor/etc.) instead of direct file URLs
+- keeps playback concerns separate from WHDA + Nostr + torrent plumbing
+
+BIG FAT NOTE – BLAZE / REFERENCE APP
+
+Blaze (https://github.com/blenderskool/blaze) is a good reference for how a
+multi-torrent WebTorrent app can look in production, but it solves a slightly
+different problem:
+- Blaze is focused on ad-hoc file sharing "rooms" between peers
+- cinema/WHDA is a curated, long-lived archive keyed by infohash/Nostr WHDA
+- we should treat Blaze as inspiration and code reference, not embed it
+- in particular, Blaze's WebTorrent wiring and multi-torrent handling patterns
+  could be useful when designing our dedicated seeder node or richer client
