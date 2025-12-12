@@ -1072,6 +1072,7 @@
 
         function loadFromNostr() {
           if (!NOSTR_RELAY || typeof WebSocket === "undefined") {
+            setScanStatus("Nostr presets: disabled");
             return Promise.resolve(false);
           }
 
@@ -1084,6 +1085,8 @@
               resolve(false);
               return;
             }
+
+            setScanStatus("Nostr presets: connecting to relay");
 
             const done = (ok) => {
               if (resolved) return;
@@ -1134,18 +1137,26 @@
                     addPreset(hash, item.title || hash);
                   });
                   clearTimeout(timer);
+                  setScanStatus("Nostr presets: loaded from relay");
                   done(true);
                 } catch (e) {
                   // ignore malformed content
                 }
               } else if (msg[0] === "EOSE") {
                 clearTimeout(timer);
-                done(presetsEl.children.length > 0);
+                if (presetsEl.children.length > 0) {
+                  setScanStatus("Nostr presets: loaded from relay");
+                  done(true);
+                } else {
+                  setScanStatus("Nostr presets: no presets on relay");
+                  done(false);
+                }
               }
             };
 
             ws.onerror = () => {
               clearTimeout(timer);
+               setScanStatus("Nostr presets: error talking to relay");
               done(false);
             };
           });
