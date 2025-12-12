@@ -324,6 +324,35 @@
       word-break: break-all;
     }
 
+    .player-meta {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .player-meta-line {
+      display: flex;
+      gap: 4px;
+      align-items: baseline;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-meta-label {
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .player-meta-value {
+      flex: 1;
+      min-width: 0;
+      color: var(--text);
+    }
+
     .client-row {
       margin-top: 4px;
       display: flex;
@@ -485,6 +514,16 @@
             <div class="player-overlay-badge" id="player-overlay-badge">
               Select a mock title to start
             </div>
+          </div>
+        </div>
+        <div class="player-meta">
+          <div class="player-meta-line">
+            <span class="player-meta-label">Title:</span>
+            <span class="player-meta-value" id="player-meta-title">No film selected</span>
+          </div>
+          <div class="player-meta-line">
+            <span class="player-meta-label">Media:</span>
+            <span class="player-meta-value" id="player-meta-file">No media file loaded</span>
           </div>
         </div>
       </section>
@@ -867,6 +906,17 @@
         if (!metadataLogEl) return;
         const value = (metadataLogEl.textContent || "").trim();
         metadataLogEl.textContent = value ? value + " · " + line : line;
+      }
+
+      function setPlayerMeta(title, fileName) {
+        const titleEl = document.getElementById("player-meta-title");
+        const fileEl = document.getElementById("player-meta-file");
+        if (titleEl) {
+          titleEl.textContent = title || "No film selected";
+        }
+        if (fileEl) {
+          fileEl.textContent = fileName || "No media file loaded";
+        }
       }
 
       function setActiveInfohash(hash) {
@@ -1340,6 +1390,9 @@
             return;
           }
 
+          const fileName = (file.path || file.name || "").split("/").pop();
+          setPlayerMeta(label, fileName);
+
           file.renderTo(videoEl, { autoplay: true }, (err) => {
             if (err) {
               updateStatusError("Render failed: " + err.message);
@@ -1787,6 +1840,7 @@
       updateStatusIdle();
       overlayBadge.textContent = "Select a film…";
       setNostrStatus("Nostr presets: idle");
+      setPlayerMeta(null, null);
       localNostrSk = ensureLocalNostrKey();
       refreshLocalNostrKeyLabel();
       loadFilmLibraryFromWhda();
