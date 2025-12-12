@@ -1373,6 +1373,7 @@
 
         const label = title || cleanHash;
         setActiveInfohash(cleanHash);
+        setPlayerMeta(label, "Resolving media…");
         updateStatusLoading({ title: label, id: cleanHash });
         overlayBadge.textContent = "Connecting to swarm…";
 
@@ -1395,6 +1396,7 @@
           if (!file) {
             updateStatusError("No playable video file in torrent");
             overlayBadge.textContent = "Nothing playable found in torrent";
+            setPlayerMeta(label, "No media file loaded (no playable file)");
             return;
           }
 
