@@ -613,11 +613,11 @@
         </span>
       </div>
       <div class="client-actions">
-        <button class="client-button" id="nostr-whda-reload">Reload from relay</button>
-        <button class="client-button" id="nostr-whda-apply">Apply draft locally</button>
-        <button class="client-button" id="nostr-whda-sync">Sync WHDA to relay (POC)</button>
         <button class="client-button" id="nostr-whda-example">Generate example WHDA</button>
-        <span class="client-note">Draft is local-only; sync is unsigned POC (relays may reject).</span>
+        <button class="client-button" id="nostr-whda-apply">Apply draft locally</button>
+        <button class="client-button" id="nostr-whda-reload">Reload from relay</button>
+        <button class="client-button" id="nostr-whda-sync">Sync WHDA to relay</button>
+        <span class="client-note">Draft is local-only; sync uses local key/nostr-tools when available (relays may still reject).</span>
       </div>
       <div class="client-row">
         <div class="client-label">EVENT frame (last WHDA EVENT sent to relay)</div>
@@ -1443,6 +1443,7 @@
         }
 
         const items = [];
+        const seen = new Set();
 
         const done = () => {
           if (resolved) return;
@@ -1521,7 +1522,6 @@
                 : Array.isArray(payload)
                 ? payload
                 : [];
-              const seen = new Set();
               rawItems.forEach((item) => {
                 if (!item || typeof item.infohash !== "string") return;
                 const hash = item.infohash.trim();
