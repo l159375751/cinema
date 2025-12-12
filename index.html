@@ -1742,7 +1742,14 @@
       function loadPresets() {
         if (!presetsEl) return;
 
+        const seenPresets = new Set();
+
         function addPreset(hash, label) {
+          const key =
+            (hash || "").toLowerCase() + "|" + String(label || "").trim();
+          if (seenPresets.has(key)) return;
+          seenPresets.add(key);
+
           const li = document.createElement("li");
           const button = document.createElement("button");
           button.type = "button";
