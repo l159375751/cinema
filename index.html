@@ -564,6 +564,11 @@
         </div>
         <pre class="nostr-block" id="nostr-whda" contenteditable="true">// Loading WHDA draft…</pre>
       </div>
+      <div class="client-row">
+        <span class="client-note" id="nostr-key-label">
+          Local Nostr key: not generated
+        </span>
+      </div>
       <div class="client-actions">
         <button class="client-button" id="nostr-whda-reload">Reload from relay</button>
         <button class="client-button" id="nostr-whda-apply">Apply draft locally</button>
@@ -749,11 +754,13 @@
       const nostrWhdaEl = document.getElementById("nostr-whda");
       const nostrWhdaReloadButton = document.getElementById("nostr-whda-reload");
       const nostrWhdaApplyButton = document.getElementById("nostr-whda-apply");
+      const nostrKeyLabelEl = document.getElementById("nostr-key-label");
 
       let client = null;
       let activeTorrent = null;
       let statusInterval = null;
       let filmBag = [];
+      let localNostrSk = null;
 
       function ensureClient() {
         if (!client) {
@@ -800,6 +807,55 @@
         if (!metadataLogEl) return;
         const value = (metadataLogEl.textContent || "").trim();
         metadataLogEl.textContent = value ? value + " · " + line : line;
+      }
+
+      function ensureLocalNostrKey() {
+        try {
+          if (!("localStorage" in window)) return null;
+        } catch (e) {
+          return null;
+        }
+
+        let existing = null;
+        try {
+          existing = window.localStorage.getItem("cinema_nostr_sk");
+        } catch (e) {
+          existing = null;
+        }
+
+        if (existing && /^[0-9a-fA-F]{64}$/.test(existing)) {
+          return existing.toLowerCase();
+        }
+
+        if (
+          !("crypto" in window && window.crypto && window.crypto.getRandomValues)
+        ) {
+          return null;
+        }
+
+        try {
+          const bytes = new Uint8Array(32);
+          window.crypto.getRandomValues(bytes);
+          const hex = Array.from(bytes)
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join("");
+          window.localStorage.setItem("cinema_nostr_sk", hex);
+          return hex;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function refreshLocalNostrKeyLabel() {
+        if (!nostrKeyLabelEl) return;
+        if (!localNostrSk) {
+          nostrKeyLabelEl.textContent =
+            "Local Nostr key: not available (no localStorage/crypto)";
+          return;
+        }
+        const short = localNostrSk.slice(0, 8) + "…" + localNostrSk.slice(-4);
+        nostrKeyLabelEl.textContent =
+          "Local Nostr key (POC secret, hex): " + short;
       }
 
       function refreshNostrDraftFromFilmBag() {
@@ -1366,6 +1422,8 @@
       updateStatusIdle();
       overlayBadge.textContent = "Select a film…";
       setNostrStatus("Nostr presets: idle");
+      localNostrSk = ensureLocalNostrKey();
+      refreshLocalNostrKeyLabel();
       loadFilmLibraryFromWhda();
 
       loadPresets();
