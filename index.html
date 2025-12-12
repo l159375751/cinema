@@ -541,6 +541,11 @@
         <div class="client-label">Presets from Herzog archive</div>
         <ul class="client-presets" id="client-presets"></ul>
       </div>
+      <div class="client-row">
+        <span class="client-note" id="metadata-scan-status">
+          Metadata scan: idle
+        </span>
+      </div>
     </section>
 
     <section class="panel">
@@ -719,6 +724,7 @@
       const loadButton = document.getElementById("client-load");
 
       const presetsEl = document.getElementById("client-presets");
+      const scanStatusEl = document.getElementById("metadata-scan-status");
 
       let client = null;
       let activeTorrent = null;
@@ -771,6 +777,12 @@
             filePath: file.path || file.name || "",
           };
         });
+      }
+
+      function setScanStatus(text) {
+        if (scanStatusEl) {
+          scanStatusEl.textContent = text;
+        }
       }
 
       function loadFilmFromHash(infohash, title, movieId) {
@@ -892,10 +904,72 @@
               });
               listEl.appendChild(node);
             });
+
+            startMetadataScanFromHashes(items);
           })
           .catch(() => {
             // leave library empty if hashes.txt not available
           });
+      }
+
+      function startMetadataScanFromHashes(items) {
+        if (!Array.isArray(items) || !items.length) {
+          setScanStatus("Metadata scan: no items");
+          return;
+        }
+
+        const c = ensureClient();
+        if (!c) {
+          setScanStatus("Metadata scan: WebTorrent unavailable");
+          return;
+        }
+
+        let index = 0;
+        const total = items.length;
+
+        function next() {
+          if (index >= total) {
+            setScanStatus("Metadata scan: complete (" + total + " films)");
+            return;
+          }
+
+          const item = items[index];
+          const hash = (item && item.hash) || "";
+          const label = (item && item.title) || hash;
+
+          if (!/^[0-9a-fA-F]{40}$/.test(hash)) {
+            index += 1;
+            next();
+            return;
+          }
+
+          setScanStatus(
+            "Metadata scan: " + String(index + 1) + " / " + String(total)
+          );
+
+          const magnet =
+            "magnet:?xt=urn:btih:" +
+            hash +
+            "&dn=" +
+            encodeURIComponent(label) +
+            MAGNET_TRACKERS;
+
+          c.add(magnet, (torrent) => {
+            // We only care about metadata; try to destroy quickly after it is ready.
+            try {
+              torrent.destroy();
+            } catch (e) {
+              // ignore
+            }
+            index += 1;
+            next();
+          }).on("error", () => {
+            index += 1;
+            next();
+          });
+        }
+
+        next();
       }
 
       function findDefaultIndex(catalog) {
@@ -1082,6 +1156,7 @@
 
       updateStatusIdle();
       overlayBadge.textContent = "Select a film or enter an infohash…";
+      loadFilmLibrary();
 
       if (magnetInput) {
         magnetInput.value = COLLECTION_MAGNET;
