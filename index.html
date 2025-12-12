@@ -751,10 +751,10 @@
       dot.style.boxShadow = "none";
     }
 
-    function updateStatusFromTorrent(torrent) {
-      const percent = (torrent.progress * 100) || 0;
-      const down = torrent.downloadSpeed || 0;
-      const up = torrent.uploadSpeed || 0;
+      function updateStatusFromTorrent(torrent) {
+        const percent = (torrent.progress * 100) || 0;
+        const down = torrent.downloadSpeed || 0;
+        const up = torrent.uploadSpeed || 0;
 
       document.getElementById("status-label").textContent =
         percent >= 99.5 ? "Seed" : "Streaming";
@@ -770,6 +770,15 @@
       const dot = document.getElementById("status-dot");
       dot.style.background = "#5a8f63";
       dot.style.boxShadow = "none";
+      const key = (torrent.infoHash || "").toLowerCase();
+      whdaStatus[key] = {
+        label: document.getElementById("status-title").textContent || key,
+        peers: torrent.numPeers || 0,
+        progress: percent,
+        down,
+        up,
+      };
+      refreshWhdaInfohashes();
     }
 
     function updateStatusError(message) {
@@ -798,9 +807,7 @@
       const nostrWhdaReloadButton = document.getElementById("nostr-whda-reload");
       const nostrWhdaApplyButton = document.getElementById("nostr-whda-apply");
       const nostrWhdaSyncButton = document.getElementById("nostr-whda-sync");
-      const nostrWhdaExampleButton = document.getElementById(
-        "nostr-whda-example"
-      );
+      const nostrWhdaExampleButton = document.getElementById("nostr-whda-example");
       const nostrEventFrameEl = document.getElementById("nostr-event-frame");
       const nostrKeyLabelEl = document.getElementById("nostr-key-label");
 
@@ -809,6 +816,7 @@
       let statusInterval = null;
       let filmBag = [];
       let localNostrSk = null;
+      let whdaStatus = {};
 
       function ensureClient() {
         if (!client) {
@@ -921,12 +929,29 @@
           return;
         }
         const lines = filmBag.map((item, index) => {
-          const hash = item.hash || "";
+          const hash = (item.hash || "").trim();
           const title = item.title || hash;
+          const key = hash.toLowerCase();
+          const status = whdaStatus[key] || {};
+          const peers = status.peers != null ? status.peers : 0;
+          const progress =
+            status.progress != null
+              ? status.progress.toFixed(1).replace(/\.0$/, "") + "%"
+              : "0%";
+          const down = formatSize(status.down || 0);
+          const up = formatSize(status.up || 0);
           return (
             String(index + 1).padStart(2, "0") +
             ". " +
             hash +
+            "  peers=" +
+            String(peers) +
+            "  prog=" +
+            progress +
+            "  down=" +
+            down +
+            "  up=" +
+            up +
             "  " +
             title
           );
@@ -990,6 +1015,7 @@
           countEl.textContent = items.length + " films";
 
           filmBag = items;
+          whdaStatus = {};
           refreshNostrDraftFromFilmBag();
 
           items.forEach((item, index) => {
@@ -1510,6 +1536,16 @@
             const files = Array.isArray(torrent.files) ? torrent.files : [];
             const names = files.map((f) => f.path || f.name || "Unnamed");
             appendMetadataLog(label + " (" + hash.slice(0, 7) + "…) → " + names.length + " file(s)");
+            const key = (torrent.infoHash || "").toLowerCase();
+            const percent = (torrent.progress * 100) || 0;
+            whdaStatus[key] = {
+              label,
+              peers: torrent.numPeers || 0,
+              progress: percent,
+              down: torrent.downloadSpeed || 0,
+              up: torrent.uploadSpeed || 0,
+            };
+            refreshWhdaInfohashes();
             setScanStatus(
               "Metadata scan: " +
                 String(index + 1) +
