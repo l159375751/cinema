@@ -49,3 +49,11 @@ different problem:
 - we should treat Blaze as inspiration and code reference, not embed it
 - in particular, Blaze's WebTorrent wiring and multi-torrent handling patterns
   could be useful when designing our dedicated seeder node or richer client
+
+BIG FAT NOTE – FUTURE DOC SOURCES
+
+If we ever need to expand the Herzog/related documentary catalog, this YouTube
+playlist is a perfect candidate to base future WHDA entries on:
+- https://www.youtube.com/watch?v=nV_awXI9XJY&list=PLav47HAVZMjnTFVZL-aImCQIC0uLZtNCz
+We would still treat it as a reference source for metadata and hashes, not as
+an embedded player.
