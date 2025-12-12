@@ -573,6 +573,7 @@
         <button class="client-button" id="nostr-whda-reload">Reload from relay</button>
         <button class="client-button" id="nostr-whda-apply">Apply draft locally</button>
         <button class="client-button" id="nostr-whda-sync">Sync WHDA to relay (POC)</button>
+        <button class="client-button" id="nostr-whda-example">Generate example WHDA</button>
         <span class="client-note">Draft is local-only; sync is unsigned POC (relays may reject).</span>
       </div>
       <div class="client-row">
@@ -607,6 +608,36 @@
     const NOSTR_PRESETS_KIND = 30317;
     const NOSTR_PRESETS_D = "herzog-docs-presets";
     const NOSTR_WHDA_D = "WHDA";
+    const EXAMPLE_WHDA_ITEMS = [
+      {
+        hash: "c9c47e7b12586a59d83e3e519570835625d44b3e",
+        title: "Herzog Collection",
+      },
+      {
+        hash: "A50DFEB595BA55726EEC43C691221188D2BE8471",
+        title: "Lessons of Darkness (1992)",
+      },
+      {
+        hash: "C5B2CB165B7CBBDE3A36262FA50FF818BE18207B",
+        title: "Grizzly Man (2005)",
+      },
+      {
+        hash: "7D8F3DA61332336454C4F4849FF5BA063DE0E191",
+        title: "Cave of Forgotten Dreams (2010)",
+      },
+      {
+        hash: "91C7CF39E3E25CBD77ABE92EF2C4A8029F1D123A",
+        title: "Little Dieter Needs to Fly (1997)",
+      },
+      {
+        hash: "2504A0C0D722CDA65ADEDB17DB4D61F366982A23",
+        title: "The Great Ecstasy of Woodcarver Steiner (1974)",
+      },
+      {
+        hash: "DA288753694BE9483F2B24E8D99DA6C77FCBC9A9",
+        title: "The Wild Blue Yonder (2005)",
+      },
+    ];
     const MAGNET_TRACKERS =
       "&tr=wss%3A%2F%2Ftracker.0x6d.net";
     const COLLECTION_MAGNET =
@@ -760,6 +791,9 @@
       const nostrWhdaReloadButton = document.getElementById("nostr-whda-reload");
       const nostrWhdaApplyButton = document.getElementById("nostr-whda-apply");
       const nostrWhdaSyncButton = document.getElementById("nostr-whda-sync");
+      const nostrWhdaExampleButton = document.getElementById(
+        "nostr-whda-example"
+      );
       const nostrEventFrameEl = document.getElementById("nostr-event-frame");
       const nostrKeyLabelEl = document.getElementById("nostr-key-label");
 
@@ -1575,6 +1609,25 @@
       if (nostrWhdaSyncButton) {
         nostrWhdaSyncButton.addEventListener("click", () => {
           syncWhdaToRelay();
+        });
+      }
+
+      if (nostrWhdaExampleButton) {
+        nostrWhdaExampleButton.addEventListener("click", () => {
+          if (!nostrWhdaEl) return;
+          const content = {
+            items: EXAMPLE_WHDA_ITEMS.map((item) => ({
+              infohash: item.hash,
+              title: item.title,
+            })),
+          };
+          try {
+            nostrWhdaEl.textContent = JSON.stringify(content, null, 2);
+          } catch (e) {
+            nostrWhdaEl.textContent = "// Failed to generate example WHDA";
+            return;
+          }
+          applyWhdaDraftLocally();
         });
       }
     }
