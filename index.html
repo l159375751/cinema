@@ -853,9 +853,8 @@
             "Local Nostr key: not available (no localStorage/crypto)";
           return;
         }
-        const short = localNostrSk.slice(0, 8) + "…" + localNostrSk.slice(-4);
         nostrKeyLabelEl.textContent =
-          "Local Nostr key (POC secret, hex): " + short;
+          "Local Nostr key (POC secret, hex): " + localNostrSk;
       }
 
       function refreshNostrDraftFromFilmBag() {
