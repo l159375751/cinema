@@ -1458,6 +1458,16 @@
             return;
           }
 
+          const existing = c.get(hash);
+          if (existing) {
+            appendMetadataLog(
+              label + " (" + hash.slice(0, 7) + "…) → already active, skipped"
+            );
+            index += 1;
+            next();
+            return;
+          }
+
           setScanStatus(
             "Metadata scan: " + String(index + 1) + " / " + String(total)
           );
