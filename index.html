@@ -860,6 +860,7 @@
       let filmBag = [];
       let localNostrSk = null;
       let whdaStatus = {};
+      let mediaResolveTimeout = null;
 
       function ensureClient() {
         if (!client) {
@@ -1377,6 +1378,24 @@
         updateStatusLoading({ title: label, id: cleanHash });
         overlayBadge.textContent = "Connecting to swarm…";
 
+        if (mediaResolveTimeout) {
+          clearTimeout(mediaResolveTimeout);
+          mediaResolveTimeout = null;
+        }
+        mediaResolveTimeout = setTimeout(() => {
+          const titleEl = document.getElementById("player-meta-title");
+          if (
+            titleEl &&
+            titleEl.textContent &&
+            titleEl.textContent === label
+          ) {
+            setPlayerMeta(
+              label,
+              "No peers yet (no metadata from trackers)"
+            );
+          }
+        }, 12000);
+
         const magnet =
           "magnet:?xt=urn:btih:" +
           cleanHash +
@@ -1385,6 +1404,10 @@
           MAGNET_TRACKERS;
 
         c.add(magnet, (torrent) => {
+          if (mediaResolveTimeout) {
+            clearTimeout(mediaResolveTimeout);
+            mediaResolveTimeout = null;
+          }
           activeTorrent = torrent;
 
           const videoPattern = /\.(mp4|m4v|webm|mkv|avi|mov)$/i;
@@ -1419,6 +1442,9 @@
 
           torrent.on("error", (err) => {
             updateStatusError(err.message || "Torrent error");
+            setPlayerMeta(label, "Error: " + (err && err.message
+              ? err.message
+              : "torrent error"));
           });
         });
       }
