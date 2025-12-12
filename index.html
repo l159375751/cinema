@@ -564,6 +564,9 @@
   <script>
     const COLLECTION_INFOHASH = "c9c47e7b12586a59d83e3e519570835625d44b3e";
     const COLLECTION_LABEL = "Werner Herzog Collection";
+    const NOSTR_RELAY = ""; // fill with e.g. wss://nostr.example.com
+    const NOSTR_PRESETS_KIND = 30100;
+    const NOSTR_PRESETS_D = "herzog-docs-presets";
     const MAGNET_TRACKERS =
       "&tr=wss%3A%2F%2Ftracker.openwebtorrent.com" +
       "&tr=wss%3A%2F%2Ftracker.webtorrent.dev" +
@@ -849,40 +852,132 @@
       function loadPresets() {
         if (!presetsEl) return;
 
-        fetch("hashes.txt")
-          .then((response) => (response.ok ? response.text() : ""))
-          .then((text) => {
-            if (!text) return;
-
-            const lines = text.split("\n");
-            lines.forEach((line) => {
-              const trimmed = line.trim();
-              if (!trimmed) return;
-              const parts = trimmed.split(/\s+/, 2);
-              if (!parts[0] || parts[0].length !== 40) return;
-              const hash = parts[0];
-              const label = parts[1] || hash;
-
-              const li = document.createElement("li");
-              const button = document.createElement("button");
-              button.type = "button";
-              button.className = "client-preset";
-              button.textContent = label;
-              button.addEventListener("click", () => {
-                if (magnetInput) {
-                  magnetInput.value = hash;
-                }
-                if (loadButton) {
-                  loadButton.click();
-                }
-              });
-              li.appendChild(button);
-              presetsEl.appendChild(li);
-            });
-          })
-          .catch(() => {
-            // ignore preset load errors for POC0
+        function addPreset(hash, label) {
+          const li = document.createElement("li");
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "client-preset";
+          button.textContent = label || hash;
+          button.addEventListener("click", () => {
+            if (magnetInput) {
+              magnetInput.value = hash;
+            }
+            if (loadButton) {
+              loadButton.click();
+            }
           });
+          li.appendChild(button);
+          presetsEl.appendChild(li);
+        }
+
+        function loadFromHashesTxt() {
+          fetch("hashes.txt")
+            .then((response) => (response.ok ? response.text() : ""))
+            .then((text) => {
+              if (!text) return;
+
+              const lines = text.split("\n");
+              lines.forEach((line) => {
+                const trimmed = line.trim();
+                if (!trimmed) return;
+                const parts = trimmed.split(/\s+/, 2);
+                if (!parts[0] || parts[0].length !== 40) return;
+                const hash = parts[0];
+                const label = parts[1] || hash;
+                addPreset(hash, label);
+              });
+            })
+            .catch(() => {
+              // ignore preset load errors for POC0
+            });
+        }
+
+        function loadFromNostr() {
+          if (!NOSTR_RELAY || typeof WebSocket === "undefined") {
+            return Promise.resolve(false);
+          }
+
+          return new Promise((resolve) => {
+            let resolved = false;
+            let ws;
+            try {
+              ws = new WebSocket(NOSTR_RELAY);
+            } catch (e) {
+              resolve(false);
+              return;
+            }
+
+            const done = (ok) => {
+              if (resolved) return;
+              resolved = true;
+              try {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                  ws.close();
+                }
+              } catch (e) {
+                // ignore
+              }
+              resolve(ok);
+            };
+
+            const timer = setTimeout(() => done(false), 3500);
+
+            ws.onopen = () => {
+              const filter = {
+                kinds: [NOSTR_PRESETS_KIND],
+                "#d": [NOSTR_PRESETS_D],
+              };
+              ws.send(JSON.stringify(["REQ", "cinema-presets", filter]));
+            };
+
+            ws.onmessage = (event) => {
+              let msg;
+              try {
+                msg = JSON.parse(event.data);
+              } catch (e) {
+                return;
+              }
+
+              if (!Array.isArray(msg) || msg.length < 2) return;
+              if (msg[0] === "EVENT") {
+                const eventObj = msg[2];
+                if (!eventObj || typeof eventObj.content !== "string") return;
+                try {
+                  const payload = JSON.parse(eventObj.content);
+                  const items = Array.isArray(payload.items)
+                    ? payload.items
+                    : Array.isArray(payload)
+                    ? payload
+                    : [];
+                  items.forEach((item) => {
+                    if (!item || typeof item.infohash !== "string") return;
+                    const hash = item.infohash.trim();
+                    if (!/^[0-9a-fA-F]{40}$/.test(hash)) return;
+                    addPreset(hash, item.title || hash);
+                  });
+                  clearTimeout(timer);
+                  done(true);
+                } catch (e) {
+                  // ignore malformed content
+                }
+              } else if (msg[0] === "EOSE") {
+                clearTimeout(timer);
+                done(presetsEl.children.length > 0);
+              }
+            };
+
+            ws.onerror = () => {
+              clearTimeout(timer);
+              done(false);
+            };
+          });
+        }
+
+        loadFromNostr().then((ok) => {
+          if (!ok) {
+            loadFromHashesTxt();
+          }
+        });
       }
 
       updateStatusIdle();
