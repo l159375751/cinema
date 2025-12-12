@@ -1050,10 +1050,14 @@
             ? payload
             : [];
           const items = [];
+          const seen = new Set();
           rawItems.forEach((item) => {
             if (!item || typeof item.infohash !== "string") return;
             const hash = item.infohash.trim();
             if (!/^[0-9a-fA-F]{40}$/.test(hash)) return;
+            const key = hash.toLowerCase();
+            if (seen.has(key)) return;
+            seen.add(key);
             const title = item.title || hash;
             items.push({ hash, title });
           });
@@ -1109,10 +1113,14 @@
                 : Array.isArray(payload)
                 ? payload
                 : [];
+              const seen = new Set();
               rawItems.forEach((item) => {
                 if (!item || typeof item.infohash !== "string") return;
                 const hash = item.infohash.trim();
                 if (!/^[0-9a-fA-F]{40}$/.test(hash)) return;
+                const key = hash.toLowerCase();
+                if (seen.has(key)) return;
+                seen.add(key);
                 const title = item.title || hash;
                 items.push({ hash, title });
               });
@@ -1513,10 +1521,14 @@
                 : Array.isArray(payload)
                 ? payload
                 : [];
+              const seen = new Set();
               rawItems.forEach((item) => {
                 if (!item || typeof item.infohash !== "string") return;
                 const hash = item.infohash.trim();
                 if (!/^[0-9a-fA-F]{40}$/.test(hash)) return;
+                const key = hash.toLowerCase();
+                if (seen.has(key)) return;
+                seen.add(key);
                 const title = item.title || hash;
                 items.push({ hash, title });
               });
