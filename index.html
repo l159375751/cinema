@@ -562,7 +562,12 @@
         <div class="client-label">
           Example content payload for kind 30317 / d=WHDA
         </div>
-        <pre class="nostr-block" id="nostr-whda">// Loading WHDA draft…</pre>
+        <pre class="nostr-block" id="nostr-whda" contenteditable="true">// Loading WHDA draft…</pre>
+      </div>
+      <div class="client-actions">
+        <button class="client-button" id="nostr-whda-reload">Reload from relay</button>
+        <button class="client-button" id="nostr-whda-apply">Apply draft locally</button>
+        <span class="client-note">Draft is local-only; posting to Nostr will need a key.</span>
       </div>
     </section>
 
@@ -742,6 +747,8 @@
       const scanStatusEl = document.getElementById("metadata-scan-status");
       const metadataLogEl = document.getElementById("metadata-log");
       const nostrWhdaEl = document.getElementById("nostr-whda");
+      const nostrWhdaReloadButton = document.getElementById("nostr-whda-reload");
+      const nostrWhdaApplyButton = document.getElementById("nostr-whda-apply");
 
       let client = null;
       let activeTorrent = null;
@@ -811,6 +818,68 @@
           nostrWhdaEl.textContent = JSON.stringify(content, null, 2);
         } catch (e) {
           nostrWhdaEl.textContent = "// Failed to render WHDA draft";
+        }
+      }
+
+      function applyWhdaDraftLocally() {
+        if (!nostrWhdaEl) return;
+        let raw = nostrWhdaEl.textContent || "";
+        raw = raw.trim();
+        if (!raw || raw.startsWith("//")) {
+          setScanStatus("Metadata scan: WHDA draft is empty");
+          return;
+        }
+        try {
+          const payload = JSON.parse(raw);
+          const rawItems = Array.isArray(payload.items)
+            ? payload.items
+            : Array.isArray(payload)
+            ? payload
+            : [];
+          const items = [];
+          rawItems.forEach((item) => {
+            if (!item || typeof item.infohash !== "string") return;
+            const hash = item.infohash.trim();
+            if (!/^[0-9a-fA-F]{40}$/.test(hash)) return;
+            const title = item.title || hash;
+            items.push({ hash, title });
+          });
+
+          if (!items.length) {
+            setScanStatus("Metadata scan: no valid items in WHDA draft");
+            filmBag = [];
+            refreshNostrDraftFromFilmBag();
+            return;
+          }
+
+          listEl.innerHTML = "";
+          countEl.textContent = items.length + " films";
+
+          filmBag = items;
+          refreshNostrDraftFromFilmBag();
+
+          items.forEach((item, index) => {
+            const movie = {
+              id:
+                "film-" +
+                String(index + 1)
+                  .toString()
+                  .padStart(2, "0"),
+              title: item.title,
+              sizeBytes: 0,
+              tags: ["herzog"],
+            };
+            const node = createMovieElement(movie);
+            node.addEventListener("click", () => {
+              loadFilmFromHash(item.hash, item.title, movie.id);
+            });
+            listEl.appendChild(node);
+          });
+
+          startMetadataScanFromHashes(items);
+          setScanStatus("Metadata scan: WHDA draft applied locally");
+        } catch (e) {
+          setScanStatus("Metadata scan: error parsing WHDA draft");
         }
       }
 
@@ -1300,6 +1369,18 @@
       loadFilmLibraryFromWhda();
 
       loadPresets();
+
+      if (nostrWhdaReloadButton) {
+        nostrWhdaReloadButton.addEventListener("click", () => {
+          loadFilmLibraryFromWhda();
+        });
+      }
+
+      if (nostrWhdaApplyButton) {
+        nostrWhdaApplyButton.addEventListener("click", () => {
+          applyWhdaDraftLocally();
+        });
+      }
     }
 
     if (document.readyState === "loading") {
