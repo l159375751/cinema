@@ -1,20 +1,17 @@
 
-make simple one page app
+POC0 – mini cinema
 
-one big html vidoplayer, what ever is nice/lib/or just self host?
+[x] simple one page app
+[x] one big html video player
+[x] mini cinema app, just index.html
+[x] two or three other visible modules
+[x] list of available movies from torrent
+[x] some mini control over getting files
+[x] webtorrent system in the background
+[x] use torrent infohash as collection anchor
 
-mini cinema app.. 
-just index.html
+POC1 – future
 
-page also has two or three other modules..
-they are visible too. 
-
-with have a list of available movies..
-and we have some mini controll over the process of getting files..
-
-in the background there is a webtorrent systsen to get files.
-
-the 'db' is from nostr ( but this is unimportant)
-we use torrent info hash ...
-
-what else?
+[ ] nostr-backed bib / “db”
+[ ] richer Herzog catalog metadata
+[ ] better state logging / diagnostics
