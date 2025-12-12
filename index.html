@@ -577,7 +577,7 @@
         <span class="client-note">Draft is local-only; sync is unsigned POC (relays may reject).</span>
       </div>
       <div class="client-row">
-        <div class="client-label">EVENT frame (copy to your Nostr tool)</div>
+        <div class="client-label">EVENT frame (last WHDA EVENT sent to relay)</div>
         <pre class="nostr-block" id="nostr-event-frame">// EVENT frame will appear here when you sync.</pre>
       </div>
     </section>
@@ -1011,7 +1011,7 @@
         return items;
       }
 
-      function buildWhdaEvent() {
+      function buildWhdaEventBase() {
         const items = buildWhdaItemsFromDraftOrFilmBag();
         if (!items.length) return null;
 
@@ -1024,7 +1024,6 @@
 
         const now = Math.floor(Date.now() / 1000);
         const event = {
-          id: "0".repeat(64),
           pubkey: localNostrSk || "0".repeat(64),
           created_at: now,
           kind: NOSTR_PRESETS_KIND,
@@ -1035,7 +1034,6 @@
             ["client", "cinema-poc0.2"],
           ],
           content: JSON.stringify(content),
-          sig: "0".repeat(64),
         };
 
         return event;
@@ -1057,9 +1055,8 @@
       }
 
       function syncWhdaToRelay() {
-        const event = buildWhdaEvent();
-        refreshNostrEventFrame(event);
-        if (!event) {
+        const baseEvent = buildWhdaEventBase();
+        if (!baseEvent) {
           setNostrStatus("Nostr presets: no WHDA items to sync");
           return;
         }
@@ -1069,40 +1066,107 @@
           return;
         }
 
-        let ws;
-        try {
-          ws = new WebSocket(NOSTR_RELAY);
-        } catch (e) {
-          setNostrStatus("Nostr presets: error opening WebSocket for sync");
-          return;
-        }
+        const hasNostrSigner =
+          typeof window !== "undefined" &&
+          window.nostr &&
+          typeof window.nostr.signEvent === "function";
 
-        setNostrStatus("Nostr presets: syncing WHDA to relay (unsigned POC)");
+        const sendEvent = (eventToSend, label) => {
+          refreshNostrEventFrame(eventToSend);
 
-        ws.onopen = () => {
+          let ws;
           try {
-            const frame = ["EVENT", event];
-            ws.send(JSON.stringify(frame));
-            setNostrStatus("Nostr presets: WHDA EVENT sent (relay may reject)");
+            ws = new WebSocket(NOSTR_RELAY);
           } catch (e) {
-            setNostrStatus("Nostr presets: error sending WHDA EVENT");
-          } finally {
+            setNostrStatus("Nostr presets: error opening WebSocket for sync");
+            return;
+          }
+
+          setNostrStatus(label);
+
+          ws.onopen = () => {
+            try {
+              const frame = ["EVENT", eventToSend];
+              ws.send(JSON.stringify(frame));
+              setNostrStatus(
+                "Nostr presets: WHDA EVENT sent (" +
+                  (hasNostrSigner ? "signed" : "unsigned POC") +
+                  ", relay may reject)"
+              );
+            } catch (e) {
+              setNostrStatus("Nostr presets: error sending WHDA EVENT");
+            } finally {
+              try {
+                ws.close();
+              } catch (e) {
+                // ignore
+              }
+            }
+          };
+
+          ws.onerror = () => {
+            setNostrStatus("Nostr presets: error during WHDA sync");
             try {
               ws.close();
             } catch (e) {
               // ignore
             }
-          }
+          };
         };
 
-        ws.onerror = () => {
-          setNostrStatus("Nostr presets: error during WHDA sync");
+        if (hasNostrSigner) {
+          setNostrStatus("Nostr presets: signing WHDA via NIP-07");
           try {
-            ws.close();
+            window.nostr
+              .signEvent(baseEvent)
+              .then((signed) => {
+                sendEvent(signed, "Nostr presets: syncing signed WHDA to relay");
+              })
+              .catch(() => {
+                setNostrStatus(
+                  "Nostr presets: NIP-07 signing failed, sending unsigned POC"
+                );
+                const unsignedEvent = Object.assign(
+                  {
+                    id: "0".repeat(64),
+                    sig: "0".repeat(64),
+                  },
+                  baseEvent
+                );
+                sendEvent(
+                  unsignedEvent,
+                  "Nostr presets: syncing unsigned WHDA to relay (POC)"
+                );
+              });
           } catch (e) {
-            // ignore
+            setNostrStatus(
+              "Nostr presets: NIP-07 exception, sending unsigned POC"
+            );
+            const unsignedEvent = Object.assign(
+              {
+                id: "0".repeat(64),
+                sig: "0".repeat(64),
+              },
+              baseEvent
+            );
+            sendEvent(
+              unsignedEvent,
+              "Nostr presets: syncing unsigned WHDA to relay (POC)"
+            );
           }
-        };
+        } else {
+          const unsignedEvent = Object.assign(
+            {
+              id: "0".repeat(64),
+              sig: "0".repeat(64),
+            },
+            baseEvent
+          );
+          sendEvent(
+            unsignedEvent,
+            "Nostr presets: syncing unsigned WHDA to relay (POC)"
+          );
+        }
       }
 
       function loadFilmFromHash(infohash, title, movieId) {
