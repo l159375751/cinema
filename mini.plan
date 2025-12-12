@@ -34,6 +34,10 @@ Also consider replacing the hand-rolled `<video>` UI with DPlayer:
 - can be wired to accept a MediaSource / streaming URL produced by our torrent
   layer (webtorrent/webtor/etc.) instead of direct file URLs
 - keeps playback concerns separate from WHDA + Nostr + torrent plumbing
+- could also pair with hlsjs-p2p-engine to get HLS + P2P:
+  - https://github.com/cdnbye/hlsjs-p2p-engine
+  - idea: torrent layer (or webtor) → HLS stream → hls.js + cdnbye for P2P +
+    DPlayer as the front-end player
 
 BIG FAT NOTE – BLAZE / REFERENCE APP
 
