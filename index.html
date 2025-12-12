@@ -405,6 +405,21 @@
       color: var(--accent);
     }
 
+    .nostr-block {
+      margin-top: 4px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #090a10;
+      color: var(--muted);
+      font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      max-height: 140px;
+      overflow: auto;
+      white-space: pre;
+    }
+
     footer {
       margin-top: 4px;
       font-size: 11px;
@@ -552,6 +567,18 @@
       <div class="client-row">
         <div class="client-label">Metadata log</div>
         <div class="client-note" id="metadata-log"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Nostr WHDA draft</div>
+      </div>
+      <div class="client-row">
+        <div class="client-label">
+          Example content payload for kind 30317 / d=WHDA
+        </div>
+        <pre class="nostr-block" id="nostr-whda">// Loading WHDA draft…</pre>
       </div>
     </section>
 
@@ -731,10 +758,12 @@
       const nostrStatusEl = document.getElementById("nostr-status");
       const scanStatusEl = document.getElementById("metadata-scan-status");
       const metadataLogEl = document.getElementById("metadata-log");
+      const nostrWhdaEl = document.getElementById("nostr-whda");
 
       let client = null;
       let activeTorrent = null;
       let statusInterval = null;
+      let filmBag = [];
 
       function ensureClient() {
         if (!client) {
@@ -801,6 +830,25 @@
         if (!metadataLogEl) return;
         const value = (metadataLogEl.textContent || "").trim();
         metadataLogEl.textContent = value ? value + " · " + line : line;
+      }
+
+      function refreshNostrDraftFromFilmBag() {
+        if (!nostrWhdaEl) return;
+        if (!Array.isArray(filmBag) || !filmBag.length) {
+          nostrWhdaEl.textContent = "// WHDA draft is empty – no films loaded yet";
+          return;
+        }
+        const content = {
+          items: filmBag.map((item) => ({
+            infohash: item.hash,
+            title: item.title,
+          })),
+        };
+        try {
+          nostrWhdaEl.textContent = JSON.stringify(content, null, 2);
+        } catch (e) {
+          nostrWhdaEl.textContent = "// Failed to render WHDA draft";
+        }
       }
 
       function loadFilmFromHash(infohash, title, movieId) {
@@ -900,10 +948,17 @@
               items.push({ hash, title });
             });
 
-            if (!items.length) return;
+            if (!items.length) {
+              filmBag = [];
+              refreshNostrDraftFromFilmBag();
+              return;
+            }
 
             listEl.innerHTML = "";
             countEl.textContent = items.length + " films";
+
+            filmBag = items;
+            refreshNostrDraftFromFilmBag();
 
             items.forEach((item, index) => {
               const movie = {
