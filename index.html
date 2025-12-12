@@ -533,6 +533,10 @@
       <div class="infohash" id="active-infohash">
         Infohash: —
       </div>
+      <div class="client-row">
+        <div class="client-label">WHDA bag (all infohashes)</div>
+        <pre class="nostr-block" id="whda-infohashes">// WHDA bag not loaded yet.</pre>
+      </div>
       <div class="client-row" style="margin-top: 10px;">
         <div class="client-label">Client controls</div>
       </div>
@@ -789,6 +793,7 @@
       const nostrStatusEl = document.getElementById("nostr-status");
       const scanStatusEl = document.getElementById("metadata-scan-status");
       const metadataLogEl = document.getElementById("metadata-log");
+      const whdaInfohashesEl = document.getElementById("whda-infohashes");
       const nostrWhdaEl = document.getElementById("nostr-whda");
       const nostrWhdaReloadButton = document.getElementById("nostr-whda-reload");
       const nostrWhdaApplyButton = document.getElementById("nostr-whda-apply");
@@ -909,10 +914,31 @@
           "Local Nostr key (POC secret, hex): " + localNostrSk;
       }
 
+      function refreshWhdaInfohashes() {
+        if (!whdaInfohashesEl) return;
+        if (!Array.isArray(filmBag) || !filmBag.length) {
+          whdaInfohashesEl.textContent = "// WHDA bag empty.";
+          return;
+        }
+        const lines = filmBag.map((item, index) => {
+          const hash = item.hash || "";
+          const title = item.title || hash;
+          return (
+            String(index + 1).padStart(2, "0") +
+            ". " +
+            hash +
+            "  " +
+            title
+          );
+        });
+        whdaInfohashesEl.textContent = lines.join("\n");
+      }
+
       function refreshNostrDraftFromFilmBag() {
         if (!nostrWhdaEl) return;
         if (!Array.isArray(filmBag) || !filmBag.length) {
           nostrWhdaEl.textContent = "// WHDA draft is empty – no films loaded yet";
+          refreshWhdaInfohashes();
           return;
         }
         const content = {
@@ -926,6 +952,7 @@
         } catch (e) {
           nostrWhdaEl.textContent = "// Failed to render WHDA draft";
         }
+        refreshWhdaInfohashes();
       }
 
       function applyWhdaDraftLocally() {
