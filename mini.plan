@@ -49,3 +49,13 @@ different problem:
 - we should treat Blaze as inspiration and code reference, not embed it
 - in particular, Blaze's WebTorrent wiring and multi-torrent handling patterns
   could be useful when designing our dedicated seeder node or richer client
+
+BIG FAT NOTE – BLAZOR / SPAWNDEV WEBTORRENTS
+
+SpawnDev.BlazorJS.WebTorrents demo:
+- https://lostbeard.github.io/SpawnDev.BlazorJS.WebTorrents/
+- shows a clean WebTorrent UI built in Blazor with JS interop
+- could be an interesting direction for a "seeder / admin" UI or alternate
+  client that reads the same WHDA bag but lives outside this one-page app
+- also a good reference for how to expose WebTorrent client state in a typed,
+  component-based UI
