@@ -541,8 +541,8 @@
       document.getElementById("status-speed").textContent = "0 kB/s · 0 kB/s";
       document.getElementById("status-extra").textContent = "Collection metadata not loaded";
       const dot = document.getElementById("status-dot");
-      dot.style.background = "#2f6f3a";
-      dot.style.boxShadow = "0 0 0 4px rgba(71, 190, 104, 0.18)";
+      dot.style.background = "#5a8f63";
+      dot.style.boxShadow = "none";
     }
 
     function updateStatusLoading(movie) {
@@ -553,8 +553,8 @@
       document.getElementById("status-speed").textContent = "0 kB/s · 0 kB/s";
       document.getElementById("status-extra").textContent = "Requesting swarm for collection";
       const dot = document.getElementById("status-dot");
-      dot.style.background = "#c37b2d";
-      dot.style.boxShadow = "0 0 0 4px rgba(195, 123, 45, 0.3)";
+      dot.style.background = "#c29a4a";
+      dot.style.boxShadow = "none";
     }
 
     function updateStatusFromTorrent(torrent) {
@@ -574,8 +574,8 @@
       document.getElementById("status-extra").textContent =
         "Swarm " + (torrent.infoHash || "").slice(0, 10) + "…";
       const dot = document.getElementById("status-dot");
-      dot.style.background = "#47be68";
-      dot.style.boxShadow = "0 0 0 4px rgba(71, 190, 104, 0.35)";
+      dot.style.background = "#5a8f63";
+      dot.style.boxShadow = "none";
     }
 
     function updateStatusError(message) {
@@ -585,8 +585,8 @@
       document.getElementById("status-speed").textContent = "0 kB/s · 0 kB/s";
       document.getElementById("status-extra").textContent = message || "Playback failed";
       const dot = document.getElementById("status-dot");
-      dot.style.background = "#a3283a";
-      dot.style.boxShadow = "0 0 0 4px rgba(163, 40, 58, 0.4)";
+      dot.style.background = "#b45b6a";
+      dot.style.boxShadow = "none";
     }
 
     function initMiniCinema() {
@@ -602,7 +602,8 @@
       function ensureClient() {
         if (!client) {
           if (typeof WebTorrent === "undefined") {
-            updateStatusError("WebTorrent not available");
+            overlayBadge.textContent = "WebTorrent not available in this browser";
+            updateStatusError("WebTorrent not available in this browser");
             return null;
           }
           client = new WebTorrent();
@@ -736,4 +737,3 @@
   </script>
 </body>
 </html>
->>>>>>> refs/remotes/origin/main
