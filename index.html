@@ -962,7 +962,23 @@
             MAGNET_TRACKERS;
 
           c.add(magnet, (torrent) => {
-            // We only care about metadata; try to destroy quickly after it is ready.
+            const files = Array.isArray(torrent.files) ? torrent.files : [];
+            const names = files.map((f) => f.path || f.name || "Unnamed");
+            setScanStatus(
+              "Metadata scan: " +
+                String(index + 1) +
+                " / " +
+                String(total) +
+                " (files: " +
+                String(names.length) +
+                ")"
+            );
+            try {
+              // eslint-disable-next-line no-console
+              console.log("[WHDA] metadata for", label, names);
+            } catch (e) {
+              // ignore console issues
+            }
             try {
               torrent.destroy();
             } catch (e) {
@@ -970,7 +986,20 @@
             }
             index += 1;
             next();
-          }).on("error", () => {
+          }).on("error", (err) => {
+            setScanStatus(
+              "Metadata scan: " +
+                String(index + 1) +
+                " / " +
+                String(total) +
+                " (error)"
+            );
+            try {
+              // eslint-disable-next-line no-console
+              console.warn("[WHDA] metadata error for", label, err);
+            } catch (e) {
+              // ignore console issues
+            }
             index += 1;
             next();
           });
