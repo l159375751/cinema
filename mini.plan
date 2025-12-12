@@ -15,3 +15,13 @@ POC1 – future
 [ ] nostr-backed bib / “db”
 [ ] richer Herzog catalog metadata
 [ ] better state logging / diagnostics
+
+BIG FAT NOTE – TORRENT ENGINE OPTION
+
+Before going too deep into custom WebTorrent plumbing, consider whether to
+leverage https://github.com/webtor-io/ as the underlying torrent infrastructure
+for WHDA / cinema instead of rolling and maintaining everything in-browser and
+on our own seeder:
+- webtor-io already exposes HTTP/streaming interfaces on top of torrents
+- it could simplify seeding, metadata fetching, and peer discovery
+- we’d still keep Nostr + infohash bag as the catalog layer
