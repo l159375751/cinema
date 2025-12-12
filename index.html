@@ -380,6 +380,30 @@
       color: var(--muted);
     }
 
+    .client-presets {
+      margin: 6px 0 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .client-preset {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .client-preset:hover {
+      border-color: rgba(224, 198, 128, 0.6);
+      color: var(--accent);
+    }
+
     footer {
       margin-top: 4px;
       font-size: 11px;
@@ -511,6 +535,10 @@
       <div class="client-actions">
         <button class="client-button" id="client-load">Load torrent</button>
         <span class="client-note">Uses a browser WebTorrent client; knowledge of the hash is optional.</span>
+      </div>
+      <div class="client-row">
+        <div class="client-label">Presets from Herzog archive</div>
+        <ul class="client-presets" id="client-presets"></ul>
       </div>
     </section>
 
@@ -686,6 +714,8 @@
       const magnetInput = document.getElementById("magnet-input");
       const loadButton = document.getElementById("client-load");
 
+      const presetsEl = document.getElementById("client-presets");
+
       let client = null;
       let activeTorrent = null;
       let statusInterval = null;
@@ -816,6 +846,45 @@
         });
       }
 
+      function loadPresets() {
+        if (!presetsEl) return;
+
+        fetch("hashes.txt")
+          .then((response) => (response.ok ? response.text() : ""))
+          .then((text) => {
+            if (!text) return;
+
+            const lines = text.split("\n");
+            lines.forEach((line) => {
+              const trimmed = line.trim();
+              if (!trimmed) return;
+              const parts = trimmed.split(/\s+/, 2);
+              if (!parts[0] || parts[0].length !== 40) return;
+              const hash = parts[0];
+              const label = parts[1] || hash;
+
+              const li = document.createElement("li");
+              const button = document.createElement("button");
+              button.type = "button";
+              button.className = "client-preset";
+              button.textContent = label;
+              button.addEventListener("click", () => {
+                if (magnetInput) {
+                  magnetInput.value = hash;
+                }
+                if (loadButton) {
+                  loadButton.click();
+                }
+              });
+              li.appendChild(button);
+              presetsEl.appendChild(li);
+            });
+          })
+          .catch(() => {
+            // ignore preset load errors for POC0
+          });
+      }
+
       updateStatusIdle();
       overlayBadge.textContent = "Loading Herzog collection…";
 
@@ -899,6 +968,8 @@
           });
         });
       }
+
+      loadPresets();
     }
 
     if (document.readyState === "loading") {
