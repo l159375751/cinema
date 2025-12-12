@@ -9,12 +9,16 @@ infohash. It:
 - exposes the collection infohash and a simple WebTorrent client panel
 - is styled to stay minimal, calm, and readable
 
+### see:
+* https://l159375751.github.io/cinema/
+* https://c.0x6d.net/
 
-use/or:
+
+### technical:
+
+tbd... 
+later, consider useing:
 https://github.com/Novage/p2p-media-loader
 
-
-
-
-also later consider using:
+also even later consider using:
 https://github.com/Novage/wt-tracker
