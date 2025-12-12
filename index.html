@@ -549,6 +549,10 @@
           Metadata scan: idle
         </span>
       </div>
+      <div class="client-row">
+        <div class="client-label">Metadata log</div>
+        <div class="client-note" id="metadata-log"></div>
+      </div>
     </section>
 
     <section class="panel">
@@ -726,6 +730,7 @@
       const presetsEl = document.getElementById("client-presets");
       const nostrStatusEl = document.getElementById("nostr-status");
       const scanStatusEl = document.getElementById("metadata-scan-status");
+      const metadataLogEl = document.getElementById("metadata-log");
 
       let client = null;
       let activeTorrent = null;
@@ -790,6 +795,12 @@
         if (nostrStatusEl) {
           nostrStatusEl.textContent = text;
         }
+      }
+
+      function appendMetadataLog(line) {
+        if (!metadataLogEl) return;
+        const value = (metadataLogEl.textContent || "").trim();
+        metadataLogEl.textContent = value ? value + " · " + line : line;
       }
 
       function loadFilmFromHash(infohash, title, movieId) {
@@ -964,6 +975,7 @@
           c.add(magnet, (torrent) => {
             const files = Array.isArray(torrent.files) ? torrent.files : [];
             const names = files.map((f) => f.path || f.name || "Unnamed");
+            appendMetadataLog(label + " (" + hash.slice(0, 7) + "…) → " + names.length + " file(s)");
             setScanStatus(
               "Metadata scan: " +
                 String(index + 1) +
@@ -1000,6 +1012,7 @@
             } catch (e) {
               // ignore console issues
             }
+            appendMetadataLog(label + " (" + hash.slice(0, 7) + "…) → error");
             index += 1;
             next();
           });
