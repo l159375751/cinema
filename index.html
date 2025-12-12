@@ -601,6 +601,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+  <script src="https://unpkg.com/nostr-tools@1.19.0/lib/nostr.bundle.js"></script>
   <script>
     const COLLECTION_INFOHASH = "c9c47e7b12586a59d83e3e519570835625d44b3e";
     const COLLECTION_LABEL = "Werner Herzog Collection";
@@ -1024,8 +1025,22 @@
         };
 
         const now = Math.floor(Date.now() / 1000);
+
+        let pubkey = localNostrSk || "0".repeat(64);
+        try {
+          if (
+            window.NostrTools &&
+            typeof window.NostrTools.getPublicKey === "function" &&
+            localNostrSk
+          ) {
+            pubkey = window.NostrTools.getPublicKey(localNostrSk);
+          }
+        } catch (e) {
+          // fall back to placeholder pubkey
+        }
+
         const event = {
-          pubkey: localNostrSk || "0".repeat(64),
+          pubkey,
           created_at: now,
           kind: NOSTR_PRESETS_KIND,
           tags: [
@@ -1071,6 +1086,12 @@
           typeof window !== "undefined" &&
           window.nostr &&
           typeof window.nostr.signEvent === "function";
+        const hasNostrTools =
+          typeof window !== "undefined" &&
+          window.NostrTools &&
+          typeof window.NostrTools.getEventHash === "function" &&
+          typeof window.NostrTools.signEvent === "function" &&
+          !!localNostrSk;
 
         const sendEvent = (eventToSend, label) => {
           refreshNostrEventFrame(eventToSend);
@@ -1115,7 +1136,33 @@
           };
         };
 
-        if (hasNostrSigner) {
+        if (hasNostrTools) {
+          setNostrStatus("Nostr presets: signing WHDA via nostr-tools");
+          try {
+            const id = window.NostrTools.getEventHash(baseEvent);
+            const sig = window.NostrTools.signEvent(baseEvent, localNostrSk);
+            const signedEvent = Object.assign({}, baseEvent, { id, sig });
+            sendEvent(
+              signedEvent,
+              "Nostr presets: syncing signed WHDA to relay (nostr-tools)"
+            );
+          } catch (e) {
+            setNostrStatus(
+              "Nostr presets: nostr-tools signing failed, sending unsigned POC"
+            );
+            const unsignedEvent = Object.assign(
+              {
+                id: "0".repeat(64),
+                sig: "0".repeat(64),
+              },
+              baseEvent
+            );
+            sendEvent(
+              unsignedEvent,
+              "Nostr presets: syncing unsigned WHDA to relay (POC)"
+            );
+          }
+        } else if (hasNostrSigner) {
           setNostrStatus("Nostr presets: signing WHDA via NIP-07");
           try {
             window.nostr
