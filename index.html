@@ -323,6 +323,63 @@
       word-break: break-all;
     }
 
+    .client-row {
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .client-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .client-input {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #090a10;
+      color: var(--text);
+      font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+    }
+
+    .client-input::placeholder {
+      color: rgba(163, 163, 181, 0.7);
+    }
+
+    .client-actions {
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .client-button {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(224, 198, 128, 0.4);
+      background: transparent;
+      color: var(--accent);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .client-button:hover {
+      border-color: rgba(224, 198, 128, 0.7);
+      background: rgba(224, 198, 128, 0.08);
+    }
+
+    .client-note {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
     footer {
       margin-top: 4px;
       font-size: 11px;
@@ -438,6 +495,25 @@
       </div>
     </section>
 
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">WebTorrent Client</div>
+      </div>
+      <div class="client-row">
+        <label class="client-label" for="magnet-input">Magnet URL or infohash</label>
+        <input
+          class="client-input"
+          id="magnet-input"
+          type="text"
+          placeholder="Leave empty for Herzog collection"
+        >
+      </div>
+      <div class="client-actions">
+        <button class="client-button" id="client-load">Load torrent</button>
+        <span class="client-note">Uses a browser WebTorrent client; knowledge of the hash is optional.</span>
+      </div>
+    </section>
+
     <footer>
       <span>Replace the mock catalog with your Nostr-backed bib when ready.</span>
       <span>Open this file directly or via any static server.</span>
@@ -449,15 +525,17 @@
   <script>
     const COLLECTION_INFOHASH = "c9c47e7b12586a59d83e3e519570835625d44b3e";
     const COLLECTION_LABEL = "Werner Herzog Collection";
+    const MAGNET_TRACKERS =
+      "&tr=wss%3A%2F%2Ftracker.openwebtorrent.com" +
+      "&tr=wss%3A%2F%2Ftracker.webtorrent.dev" +
+      "&tr=wss%3A%2F%2Ftracker.btorrent.xyz" +
+      "&tr=wss%3A%2F%2Ftracker.fastcast.nz";
     const COLLECTION_MAGNET =
       "magnet:?xt=urn:btih:" +
       COLLECTION_INFOHASH +
       "&dn=" +
       encodeURIComponent(COLLECTION_LABEL) +
-      "&tr=wss%3A%2F%2Ftracker.openwebtorrent.com" +
-      "&tr=wss%3A%2F%2Ftracker.webtorrent.dev" +
-      "&tr=wss%3A%2F%2Ftracker.btorrent.xyz" +
-      "&tr=wss%3A%2F%2Ftracker.fastcast.nz";
+      MAGNET_TRACKERS;
     const DEFAULT_FILE_MATCH = "grizzly man";
 
     function formatSize(bytes) {
@@ -594,6 +672,8 @@
       const countEl = document.getElementById("library-count");
       const overlayBadge = document.getElementById("player-overlay-badge");
       const videoEl = document.getElementById("player");
+      const magnetInput = document.getElementById("magnet-input");
+      const loadButton = document.getElementById("client-load");
 
       let client = null;
       let activeTorrent = null;
@@ -609,6 +689,26 @@
           client = new WebTorrent();
         }
         return client;
+      }
+
+      function normalizeMagnet(raw) {
+        const value = (raw || "").trim();
+        if (!value) {
+          return COLLECTION_MAGNET;
+        }
+        if (value.startsWith("magnet:")) {
+          return value;
+        }
+        if (/^[0-9a-fA-F]{40}$/.test(value)) {
+          return (
+            "magnet:?xt=urn:btih:" +
+            value +
+            "&dn=" +
+            encodeURIComponent("Custom torrent") +
+            MAGNET_TRACKERS
+          );
+        }
+        return null;
       }
 
       function buildCatalogFromTorrent(torrent) {
@@ -727,6 +827,59 @@
           "Herzog collection loaded (" + catalog.length + " files)";
         overlayBadge.textContent = "Select a title to start";
       });
+
+      if (magnetInput) {
+        magnetInput.value = COLLECTION_MAGNET;
+      }
+
+      if (loadButton) {
+        loadButton.addEventListener("click", () => {
+          const c2 = ensureClient();
+          if (!c2) return;
+
+          const magnet = normalizeMagnet(magnetInput ? magnetInput.value : "");
+          if (!magnet) {
+            updateStatusError("Enter a magnet URL or 40-character infohash");
+            return;
+          }
+
+          if (activeTorrent) {
+            try {
+              activeTorrent.destroy();
+            } catch (e) {
+              // ignore
+            }
+            activeTorrent = null;
+          }
+
+          if (statusInterval) {
+            clearInterval(statusInterval);
+            statusInterval = null;
+          }
+
+          setActiveMovieElement(null);
+          listEl.innerHTML = "";
+          countEl.textContent = "0 files";
+
+          overlayBadge.textContent = "Loading selected collection…";
+          updateStatusLoading({ title: "Custom collection", id: "custom" });
+
+          c2.add(magnet, (torrent) => {
+            activeTorrent = torrent;
+            const catalog = buildCatalogFromTorrent(torrent);
+            if (!catalog.length) {
+              document.getElementById("status-extra").textContent =
+                "No playable video files in collection";
+              overlayBadge.textContent = "Nothing playable found in torrent";
+              return;
+            }
+            renderCatalog(catalog, torrent);
+            document.getElementById("status-extra").textContent =
+              "Collection loaded (" + catalog.length + " files)";
+            overlayBadge.textContent = "Select a title to start";
+          });
+        });
+      }
     }
 
     if (document.readyState === "loading") {
