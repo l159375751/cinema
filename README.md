@@ -19,6 +19,4 @@ infohash. It:
 tbd... 
 later, consider useing:
 https://github.com/Novage/p2p-media-loader
-
-also even later consider using:
-https://github.com/Novage/wt-tracker
+and/or https://github.com/Novage/wt-tracker
