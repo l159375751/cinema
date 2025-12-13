@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Mini Cinema · Torrent Debug</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="cinema:mode" content="debug">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050608;
+      --bg-alt: #111219;
+      --accent: #e0c680;
+      --accent-soft: rgba(224, 198, 128, 0.14);
+      --text: #f3f3f5;
+      --muted: #a3a3b5;
+      --border: #252637;
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 16px 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title-mark {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: #e2e2ea;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .panel {
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 12px 12px 14px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .badge-soft {
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(260px, 1fr);
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .field-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      word-break: break-all;
+    }
+
+    .input {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #090a10;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .input::placeholder {
+      color: rgba(163, 163, 181, 0.7);
+    }
+
+    .client-button {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(224, 198, 128, 0.4);
+      background: transparent;
+      color: var(--accent);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .client-button:hover {
+      border-color: rgba(224, 198, 128, 0.7);
+      background: rgba(224, 198, 128, 0.08);
+    }
+
+    .client-button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .controls-row {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .status-item {
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      min-height: 54px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .status-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .status-value {
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+      margin-top: 3px;
+    }
+
+    .status-value-strong {
+      color: var(--accent);
+    }
+
+    .file-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .file-row {
+      display: flex;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: rgba(0, 0, 0, 0.35);
+      align-items: center;
+    }
+
+    .file-main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .file-name {
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .nostr-block {
+      margin-top: 4px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #090a10;
+      color: var(--muted);
+      font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      max-height: 180px;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+
+    footer {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 2px 2px;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 780px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <div class="title">
+          <span class="title-mark"></span>
+          Torrent Debug
+        </div>
+        <div class="subtitle">
+          Single-infohash WebTorrent debug for “Charge – Blender Open Movie”.
+        </div>
+      </div>
+      <span class="badge-soft">POC0 · debug</span>
+    </header>
+
+    <main class="layout">
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Torrent</div>
+        </div>
+        <div>
+          <div class="field-label">Title / label</div>
+          <input
+            class="input"
+            id="title-input"
+            type="text"
+            value="Charge – Blender Open Movie"
+          >
+        </div>
+        <div style="margin-top: 6px;">
+          <div class="field-label">Infohash or magnet URI</div>
+          <input
+            class="input mono"
+            id="input-target"
+            type="text"
+            placeholder="Paste infohash or magnet; default is Charge demo."
+          >
+        </div>
+        <div style="margin-top: 6px;">
+          <div class="field-label">Trackers (one per line, optional)</div>
+          <textarea
+            class="input mono"
+            id="input-trackers"
+            rows="2"
+            placeholder="Default: WebTorrent WebRTC trackers. Leave blank for defaults."
+          ></textarea>
+        </div>
+        <div style="margin-top: 6px;">
+          <div class="field-label">Resolved infohash</div>
+          <div class="mono" id="infohash"></div>
+        </div>
+        <div style="margin-top: 6px;">
+          <div class="field-label">Resolved magnet URI</div>
+          <div class="mono" id="magnet"></div>
+        </div>
+        <div class="controls-row">
+          <button class="client-button" id="start-debug">Start debug</button>
+          <button class="client-button" id="stop-debug">Stop / reset</button>
+          <span style="font-size: 11px; color: var(--muted);">
+            Uses in-browser WebTorrent and public WebRTC trackers.
+          </span>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Swarm status</div>
+          <span class="badge-soft" id="status-label">Idle</span>
+        </div>
+        <div class="status-grid">
+          <div class="status-item">
+            <div class="status-label">Progress</div>
+            <div class="status-value status-value-strong" id="status-progress">0%</div>
+          </div>
+          <div class="status-item">
+            <div class="status-label">Peers</div>
+            <div class="status-value" id="status-peers">0</div>
+          </div>
+          <div class="status-item">
+            <div class="status-label">Down / Up</div>
+            <div class="status-value" id="status-speed">0 kB/s · 0 kB/s</div>
+          </div>
+          <div class="status-item">
+            <div class="status-label">Name</div>
+            <div class="status-value" id="status-name">–</div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Files in swarm</div>
+        <span class="badge-soft" id="file-count">0 files</span>
+      </div>
+      <div>
+        <video
+          id="preview-video"
+          controls
+          preload="metadata"
+          style="width: 100%; border-radius: 6px; background: #050608;"
+        ></video>
+        <div
+          style="margin-top: 4px; font-size: 11px; color: var(--muted);"
+          id="preview-label"
+        >
+          Select “Play in preview” on a video file to stream directly from the swarm.
+        </div>
+      </div>
+      <ul class="file-list" id="file-list"></ul>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Debug log</div>
+      </div>
+      <pre class="nostr-block" id="debug-log">// Debug log will appear here once you start.</pre>
+    </section>
+
+    <footer>
+      <span>Open <code>index.html</code> for the full mini cinema UI.</span>
+      <span>This page focuses on swarm + file-level debugging for a single infohash.</span>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+  <script>
+    const DEBUG_INFOHASH = "460b0b5d942af2de6e3d69333c782f391fcc1ee0";
+    const DEBUG_TITLE = "Charge \u2013 Blender Open Movie";
+    const DEFAULT_TRACKERS = [
+      "wss://tracker.openwebtorrent.com",
+      "wss://tracker.webtorrent.dev",
+    ];
+
+    function buildTrackersQuery(trackers) {
+      if (!Array.isArray(trackers) || !trackers.length) return "";
+      return trackers
+        .map((tracker) => tracker && tracker.trim())
+        .filter(Boolean)
+        .map((tracker) => "&tr=" + encodeURIComponent(tracker))
+        .join("");
+    }
+
+    const DEFAULT_TRACKERS_QUERY = buildTrackersQuery(DEFAULT_TRACKERS);
+    const DEBUG_MAGNET =
+      "magnet:?xt=urn:btih:" +
+      DEBUG_INFOHASH +
+      "&dn=" +
+      encodeURIComponent(DEBUG_TITLE) +
+      DEFAULT_TRACKERS_QUERY;
+
+    function formatSize(bytes) {
+      if (!Number.isFinite(bytes) || bytes <= 0) return "unknown";
+      const units = ["B", "kB", "MB", "GB", "TB"];
+      let value = bytes;
+      let unitIndex = 0;
+      while (value >= 1024 && unitIndex < units.length - 1) {
+        value /= 1024;
+        unitIndex += 1;
+      }
+      return (
+        value.toFixed(value >= 100 || unitIndex === 0 ? 0 : 1) +
+        " " +
+        units[unitIndex]
+      );
+    }
+
+    function initTorrentDebug() {
+      const infohashEl = document.getElementById("infohash");
+      const magnetEl = document.getElementById("magnet");
+      const titleInput = document.getElementById("title-input");
+      const targetInput = document.getElementById("input-target");
+      const trackersInput = document.getElementById("input-trackers");
+      const statusLabelEl = document.getElementById("status-label");
+      const progressEl = document.getElementById("status-progress");
+      const peersEl = document.getElementById("status-peers");
+      const speedEl = document.getElementById("status-speed");
+      const nameEl = document.getElementById("status-name");
+      const fileListEl = document.getElementById("file-list");
+      const fileCountEl = document.getElementById("file-count");
+      const logEl = document.getElementById("debug-log");
+      const startButton = document.getElementById("start-debug");
+      const stopButton = document.getElementById("stop-debug");
+      const previewVideo = document.getElementById("preview-video");
+      const previewLabel = document.getElementById("preview-label");
+
+      let client = null;
+      let activeTorrent = null;
+      let statusInterval = null;
+      let currentLabel = DEBUG_TITLE;
+
+      function log(line) {
+        if (!logEl) return;
+        const existing = (logEl.textContent || "").replace(/^\/\/.*\n?/, "");
+        const time = new Date().toISOString().split("T")[1].replace("Z", "");
+        const next = "[" + time + "] " + line;
+        logEl.textContent = existing ? existing + "\n" + next : next;
+      }
+
+      function resetStatus() {
+        statusLabelEl.textContent = "Idle";
+        progressEl.textContent = "0%";
+        peersEl.textContent = "0";
+        speedEl.textContent = "0 kB/s · 0 kB/s";
+        nameEl.textContent = "\u2013";
+        fileListEl.innerHTML = "";
+        fileCountEl.textContent = "0 files";
+        if (previewVideo) {
+          try {
+            previewVideo.removeAttribute("src");
+            previewVideo.load();
+          } catch (e) {
+            // ignore
+          }
+        }
+        if (previewLabel) {
+          previewLabel.textContent =
+            "Select \u201cPlay in preview\u201d on a video file to stream directly from the swarm.";
+        }
+      }
+
+      function ensureClient() {
+        if (client) return client;
+        if (typeof WebTorrent === "undefined") {
+          statusLabelEl.textContent = "No WebTorrent";
+          log("WebTorrent is not available in this browser.");
+          return null;
+        }
+        client = new WebTorrent();
+        log("Created WebTorrent client.");
+        return client;
+      }
+
+      function updateStatusFromTorrent(torrent) {
+        const percent = (torrent.progress || 0) * 100;
+        const down = torrent.downloadSpeed || 0;
+        const up = torrent.uploadSpeed || 0;
+        progressEl.textContent = percent.toFixed(1).replace(/\.0$/, "") + "%";
+        peersEl.textContent = String(torrent.numPeers || 0);
+        speedEl.textContent =
+          formatSize(down) + "/s · " + formatSize(up) + "/s";
+        statusLabelEl.textContent =
+          percent >= 99.5 ? "Done / seeding" : "Downloading";
+        nameEl.textContent = torrent.name || currentLabel;
+      }
+
+      function renderFiles(torrent) {
+        const files = Array.isArray(torrent.files) ? torrent.files : [];
+        fileListEl.innerHTML = "";
+        fileCountEl.textContent =
+          files.length + (files.length === 1 ? " file" : " files");
+
+        if (!files.length) {
+          const li = document.createElement("li");
+          li.className = "file-row";
+          const main = document.createElement("div");
+          main.className = "file-main";
+          const name = document.createElement("div");
+          name.className = "file-name";
+          name.textContent = "No files discovered yet.";
+          const meta = document.createElement("div");
+          meta.className = "file-meta";
+          meta.textContent = "Wait for metadata to arrive from swarm.";
+          main.appendChild(name);
+          main.appendChild(meta);
+          li.appendChild(main);
+          fileListEl.appendChild(li);
+          return;
+        }
+
+        files.forEach((file) => {
+          const li = document.createElement("li");
+          li.className = "file-row";
+
+          const main = document.createElement("div");
+          main.className = "file-main";
+
+          const name = document.createElement("div");
+          name.className = "file-name";
+          name.textContent = file.path || file.name || "Unnamed file";
+
+          const meta = document.createElement("div");
+          meta.className = "file-meta";
+          meta.textContent = formatSize(file.length || 0);
+
+          main.appendChild(name);
+          main.appendChild(meta);
+          const actions = document.createElement("div");
+          actions.className = "file-actions";
+
+          const isVideo = /\.(mp4|m4v|webm|mkv|avi|mov)$/i.test(
+            (file.path || file.name || "").toLowerCase()
+          );
+
+          if (isVideo && previewVideo) {
+            const playButton = document.createElement("button");
+            playButton.className = "client-button";
+            playButton.textContent = "Play in preview";
+            playButton.addEventListener("click", () => {
+              playButton.disabled = true;
+              playButton.textContent = "Loading\u2026";
+              try {
+                file.renderTo(previewVideo, { autoplay: true }, (err) => {
+                  if (err) {
+                    log(
+                      "Preview error: " +
+                        (err && err.message ? err.message : String(err))
+                    );
+                  }
+                  playButton.disabled = false;
+                  playButton.textContent = "Play in preview";
+                });
+                if (previewLabel) {
+                  previewLabel.textContent =
+                    "Preview: " +
+                    (file.name || file.path || "video");
+                }
+              } catch (e) {
+                log(
+                  "Preview error: " +
+                    (e && e.message ? e.message : String(e))
+                );
+                playButton.disabled = false;
+                playButton.textContent = "Play in preview";
+              }
+            });
+            actions.appendChild(playButton);
+          }
+
+          const button = document.createElement("button");
+          button.className = "client-button";
+          button.textContent = "Download";
+          button.addEventListener("click", () => {
+            button.disabled = true;
+            button.textContent = "Preparing\u2026";
+            try {
+              file.getBlobURL((err, url) => {
+                if (err) {
+                  log("Error generating blob URL: " + (err.message || String(err)));
+                  button.disabled = false;
+                  button.textContent = "Download";
+                  return;
+                }
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = file.name || "download";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                button.disabled = false;
+                button.textContent = "Download";
+                log("Download triggered for " + (file.name || "file") + ".");
+              });
+            } catch (e) {
+              log("Download error: " + (e && e.message ? e.message : String(e)));
+              button.disabled = false;
+              button.textContent = "Download";
+            }
+          });
+
+          li.appendChild(main);
+          actions.appendChild(button);
+          li.appendChild(actions);
+          fileListEl.appendChild(li);
+        });
+      }
+
+      function attachTorrent(torrent) {
+        activeTorrent = torrent;
+        statusLabelEl.textContent = "Connecting";
+        nameEl.textContent = torrent.name || currentLabel;
+        log(
+          "Torrent metadata received. Infohash: " +
+            (torrent.infoHash || "").toLowerCase()
+        );
+
+        renderFiles(torrent);
+        updateStatusFromTorrent(torrent);
+
+        if (statusInterval) {
+          clearInterval(statusInterval);
+        }
+        statusInterval = setInterval(() => {
+          if (!activeTorrent) return;
+          updateStatusFromTorrent(activeTorrent);
+        }, 1000);
+
+        torrent.on("download", () => {
+          updateStatusFromTorrent(torrent);
+        });
+
+        torrent.on("wire", (wire) => {
+          const addr = wire && (wire.remoteAddress || wire.peerAddress);
+          log("Peer connected: " + (addr || "unknown address"));
+        });
+
+        torrent.on("done", () => {
+          updateStatusFromTorrent(torrent);
+          log("Torrent download complete.");
+        });
+
+        torrent.on("error", (err) => {
+          statusLabelEl.textContent = "Error";
+          log("Torrent error: " + (err && err.message ? err.message : String(err)));
+        });
+      }
+
+      function startDebug() {
+        if (activeTorrent) {
+          log("Torrent already active; reset first if needed.");
+          return;
+        }
+        const c = ensureClient();
+        if (!c) return;
+
+        resetStatus();
+        statusLabelEl.textContent = "Connecting";
+        const rawTarget =
+          (targetInput && targetInput.value && targetInput.value.trim()) || "";
+        const label =
+          (titleInput && titleInput.value && titleInput.value.trim()) ||
+          DEBUG_TITLE;
+        currentLabel = label;
+
+        const trackerLines = trackersInput
+          ? trackersInput.value.split(/\r?\n/)
+          : [];
+        const trackers = trackerLines
+          .map((line) => line.trim())
+          .filter(Boolean);
+
+        let magnet = "";
+        let infohash = "";
+
+        if (rawTarget && rawTarget.toLowerCase().startsWith("magnet:")) {
+          magnet = rawTarget;
+
+          const match = magnet.match(/xt=urn:btih:([^&]+)/i);
+          if (match && match[1]) {
+            infohash = match[1];
+            infohashEl.textContent = infohash;
+          } else {
+            infohashEl.textContent = "\u2013";
+          }
+
+          if (trackers.length) {
+            magnet = magnet.replace(/&tr=[^&]*/gi, "");
+            magnet += buildTrackersQuery(trackers);
+          }
+        } else {
+          const candidate = rawTarget || DEBUG_INFOHASH;
+          const cleanHash = candidate.replace(/\s+/g, "");
+          if (!/^[0-9a-fA-F]{40}$/.test(cleanHash)) {
+            statusLabelEl.textContent = "Error";
+            log("Invalid infohash or magnet URI: " + candidate);
+            return;
+          }
+          infohash = cleanHash.toLowerCase();
+          const trackersQuery = trackers.length
+            ? buildTrackersQuery(trackers)
+            : DEFAULT_TRACKERS_QUERY;
+          magnet =
+            "magnet:?xt=urn:btih:" +
+            infohash +
+            "&dn=" +
+            encodeURIComponent(label) +
+            trackersQuery;
+          infohashEl.textContent = infohash;
+        }
+
+        magnetEl.textContent = magnet;
+        log("Adding magnet to WebTorrent client.");
+
+        try {
+          c.add(magnet, (torrent) => {
+            attachTorrent(torrent);
+          });
+        } catch (e) {
+          statusLabelEl.textContent = "Error";
+          log(
+            "Error adding magnet: " +
+              (e && e.message ? e.message : String(e))
+          );
+        }
+      }
+
+      function stopDebug() {
+        if (statusInterval) {
+          clearInterval(statusInterval);
+          statusInterval = null;
+        }
+
+        if (activeTorrent) {
+          try {
+            log("Destroying active torrent.");
+            activeTorrent.destroy();
+          } catch (e) {
+            // ignore
+          }
+        }
+        activeTorrent = null;
+
+        if (client) {
+          try {
+            log("Destroying WebTorrent client.");
+            client.destroy();
+          } catch (e) {
+            // ignore
+          }
+        }
+        client = null;
+
+        resetStatus();
+      }
+
+      startButton.addEventListener("click", startDebug);
+      stopButton.addEventListener("click", stopDebug);
+
+      infohashEl.textContent = DEBUG_INFOHASH;
+      magnetEl.textContent = DEBUG_MAGNET;
+      if (titleInput && !titleInput.value) {
+        titleInput.value = DEBUG_TITLE;
+      }
+      if (targetInput && !targetInput.value) {
+        targetInput.value = DEBUG_INFOHASH;
+      }
+      resetStatus();
+      log("Ready. Click \"Start debug\" to connect to the swarm.");
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initTorrentDebug);
+    } else {
+      initTorrentDebug();
+    }
+  </script>
+</body>
+</html>
