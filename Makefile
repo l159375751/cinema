@@ -10,7 +10,7 @@ push:
 	git push $(REMOTE) $(BRANCH)
 
 ssh-remote-git-pull:
-	ssh $(REMOTE_HOST) 'set -e; cd $(REMOTE_PATH) && git pull $(REMOTE) $(BRANCH)'
+	ssh $(REMOTE_HOST) 'set -e; cd $(REMOTE_PATH) && git pull $(REMOTE) $(BRANCH) && git rev-parse HEAD > version.txt'
 
 deploy: push ssh-remote-git-pull
 

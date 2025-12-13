@@ -240,6 +240,7 @@
         </div>
         <div class="subtitle">
           WebTorrent → blob URL → DPlayer, demoed with “Charge – Blender Open Movie”.
+          · <span id="cinema-version">commit ?</span>
         </div>
       </div>
       <span class="badge-soft">POC · DPlayer</span>
@@ -318,6 +319,24 @@
       "wss://tracker.webtorrent.dev",
     ];
 
+    function attachCinemaVersion() {
+      const el = document.getElementById("cinema-version");
+      if (!el || typeof fetch === "undefined") return;
+      fetch("version.txt", { cache: "no-store" })
+        .then((res) => (res.ok ? res.text() : ""))
+        .then((text) => {
+          const raw = (text || "").trim();
+          if (!raw) {
+            el.textContent = "commit unknown";
+            return;
+          }
+          el.textContent = "commit " + raw.slice(0, 7);
+        })
+        .catch(() => {
+          el.textContent = "commit unknown";
+        });
+    }
+
     function buildTrackersQuery(trackers) {
       if (!Array.isArray(trackers) || !trackers.length) return "";
       return trackers
@@ -368,6 +387,8 @@
       let statusInterval = null;
       let dp = null;
       let peerWatchTimeout = null;
+
+      attachCinemaVersion();
 
       function log(line) {
         if (!logEl) return;

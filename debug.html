@@ -285,6 +285,7 @@
         </div>
         <div class="subtitle">
           Single-infohash WebTorrent debug for “Charge – Blender Open Movie”.
+          · <span id="cinema-version">commit ?</span>
         </div>
       </div>
       <span class="badge-soft">POC0 · debug</span>
@@ -426,6 +427,24 @@
       encodeURIComponent(DEBUG_TITLE) +
       DEFAULT_TRACKERS_QUERY;
 
+    function attachCinemaVersion() {
+      const el = document.getElementById("cinema-version");
+      if (!el || typeof fetch === "undefined") return;
+      fetch("version.txt", { cache: "no-store" })
+        .then((res) => (res.ok ? res.text() : ""))
+        .then((text) => {
+          const raw = (text || "").trim();
+          if (!raw) {
+            el.textContent = "commit unknown";
+            return;
+          }
+          el.textContent = "commit " + raw.slice(0, 7);
+        })
+        .catch(() => {
+          el.textContent = "commit unknown";
+        });
+    }
+
     function formatSize(bytes) {
       if (!Number.isFinite(bytes) || bytes <= 0) return "unknown";
       const units = ["B", "kB", "MB", "GB", "TB"];
@@ -443,6 +462,7 @@
     }
 
     function initTorrentDebug() {
+      attachCinemaVersion();
       const infohashEl = document.getElementById("infohash");
       const magnetEl = document.getElementById("magnet");
       const titleInput = document.getElementById("title-input");
