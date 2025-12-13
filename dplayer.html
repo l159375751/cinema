@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Mini Cinema · DPlayer POC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="cinema:mode" content="dplayer-poc">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050608;
+      --bg-alt: #111219;
+      --accent: #e0c680;
+      --accent-soft: rgba(224, 198, 128, 0.14);
+      --text: #f3f3f5;
+      --muted: #a3a3b5;
+      --border: #252637;
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 16px 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title-mark {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: #e2e2ea;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .panel {
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 12px 12px 14px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .badge-soft {
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .field-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      word-break: break-all;
+    }
+
+    .client-button {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(224, 198, 128, 0.4);
+      background: transparent;
+      color: var(--accent);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .client-button:hover {
+      border-color: rgba(224, 198, 128, 0.7);
+      background: rgba(224, 198, 128, 0.08);
+    }
+
+    .client-button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(260px, 1fr);
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .status-item {
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      min-height: 54px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .status-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .status-value {
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+      margin-top: 3px;
+    }
+
+    .status-value-strong {
+      color: var(--accent);
+    }
+
+    .nostr-block {
+      margin-top: 4px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #090a10;
+      color: var(--muted);
+      font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      max-height: 160px;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+
+    #dplayer {
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #050608;
+    }
+
+    #dplayer > div {
+      position: absolute !important;
+      inset: 0;
+    }
+
+    footer {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 2px 2px;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 780px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/dplayer/dist/DPlayer.min.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <div class="title">
+          <span class="title-mark"></span>
+          DPlayer POC
+        </div>
+        <div class="subtitle">
+          WebTorrent → blob URL → DPlayer, demoed with “Charge – Blender Open Movie”.
+        </div>
+      </div>
+      <span class="badge-soft">POC · DPlayer</span>
+    </header>
+
+    <main class="layout">
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Player</div>
+        </div>
+        <div id="dplayer"></div>
+      </section>
+
+      <aside class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Torrent status</div>
+          <span class="badge-soft" id="status-label">Idle</span>
+        </div>
+        <div>
+          <div class="field-label">Demo title</div>
+          <div>Charge – Blender Open Movie</div>
+        </div>
+        <div style="margin-top: 6px;">
+          <div class="field-label">Infohash</div>
+          <div class="mono" id="infohash"></div>
+        </div>
+        <div style="margin-top: 6px;">
+          <div class="field-label">Magnet</div>
+          <div class="mono" id="magnet"></div>
+        </div>
+        <div style="margin-top: 8px;">
+          <button class="client-button" id="start-poc">Start DPlayer demo</button>
+          <button class="client-button" id="stop-poc">Stop / reset</button>
+        </div>
+        <div style="margin-top: 8px;" class="status-grid">
+          <div class="status-item">
+            <div class="status-label">Progress</div>
+            <div class="status-value status-value-strong" id="status-progress">0%</div>
+          </div>
+          <div class="status-item">
+            <div class="status-label">Peers</div>
+            <div class="status-value" id="status-peers">0</div>
+          </div>
+          <div class="status-item">
+            <div class="status-label">Down / Up</div>
+            <div class="status-value" id="status-speed">0 kB/s · 0 kB/s</div>
+          </div>
+          <div class="status-item">
+            <div class="status-label">File</div>
+            <div class="status-value" id="status-file">–</div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Debug log</div>
+      </div>
+      <pre class="nostr-block" id="debug-log">// DPlayer + WebTorrent events will appear here.</pre>
+    </section>
+
+    <footer>
+      <span>Compare with <code>index.html</code> and <code>debug.html</code> for other playback modes.</span>
+      <span>This page is a minimal DPlayer experiment wired to the Charge torrent.</span>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+  <script src="https://unpkg.com/dplayer/dist/DPlayer.min.js"></script>
+  <script>
+    const DEMO_INFOHASH = "460b0b5d942af2de6e3d69333c782f391fcc1ee0";
+    const DEMO_TITLE = "Charge \u2013 Blender Open Movie";
+    const DEMO_TRACKERS = [
+      "wss://tracker.openwebtorrent.com",
+      "wss://tracker.webtorrent.dev",
+    ];
+
+    function buildTrackersQuery(trackers) {
+      if (!Array.isArray(trackers) || !trackers.length) return "";
+      return trackers
+        .map((tracker) => tracker && tracker.trim())
+        .filter(Boolean)
+        .map((tracker) => "&tr=" + encodeURIComponent(tracker))
+        .join("");
+    }
+
+    const DEMO_MAGNET =
+      "magnet:?xt=urn:btih:" +
+      DEMO_INFOHASH +
+      "&dn=" +
+      encodeURIComponent(DEMO_TITLE) +
+      buildTrackersQuery(DEMO_TRACKERS);
+
+    function formatSize(bytes) {
+      if (!Number.isFinite(bytes) || bytes <= 0) return "unknown";
+      const units = ["B", "kB", "MB", "GB", "TB"];
+      let value = bytes;
+      let unitIndex = 0;
+      while (value >= 1024 && unitIndex < units.length - 1) {
+        value /= 1024;
+        unitIndex += 1;
+      }
+      return (
+        value.toFixed(value >= 100 || unitIndex === 0 ? 0 : 1) +
+        " " +
+        units[unitIndex]
+      );
+    }
+
+    function initDPlayerPoc() {
+      const infohashEl = document.getElementById("infohash");
+      const magnetEl = document.getElementById("magnet");
+      const statusLabelEl = document.getElementById("status-label");
+      const progressEl = document.getElementById("status-progress");
+      const peersEl = document.getElementById("status-peers");
+      const speedEl = document.getElementById("status-speed");
+      const fileEl = document.getElementById("status-file");
+      const logEl = document.getElementById("debug-log");
+      const startButton = document.getElementById("start-poc");
+      const stopButton = document.getElementById("stop-poc");
+      const dplayerContainer = document.getElementById("dplayer");
+
+      let client = null;
+      let activeTorrent = null;
+      let statusInterval = null;
+      let dp = null;
+
+      function log(line) {
+        if (!logEl) return;
+        const existing = (logEl.textContent || "").replace(/^\/\/.*\n?/, "");
+        const time = new Date().toISOString().split("T")[1].replace("Z", "");
+        const next = "[" + time + "] " + line;
+        logEl.textContent = existing ? existing + "\n" + next : next;
+      }
+
+      function resetStatus() {
+        statusLabelEl.textContent = "Idle";
+        progressEl.textContent = "0%";
+        peersEl.textContent = "0";
+        speedEl.textContent = "0 kB/s · 0 kB/s";
+        fileEl.textContent = "\u2013";
+      }
+
+      function ensureClient() {
+        if (client) return client;
+        if (typeof WebTorrent === "undefined") {
+          statusLabelEl.textContent = "No WebTorrent";
+          log("WebTorrent is not available in this browser.");
+          return null;
+        }
+        client = new WebTorrent();
+        log("Created WebTorrent client.");
+        return client;
+      }
+
+      function ensureDPlayer(url, name) {
+        if (!dplayerContainer) return;
+        if (typeof DPlayer === "undefined") {
+          statusLabelEl.textContent = "No DPlayer";
+          log("DPlayer is not available (script failed to load?).");
+          return;
+        }
+        if (dp) {
+          try {
+            dp.destroy();
+          } catch (e) {
+            // ignore
+          }
+          dp = null;
+        }
+        dp = new DPlayer({
+          container: dplayerContainer,
+          autoplay: true,
+          video: {
+            url,
+            type: "auto",
+          },
+          screenshot: false,
+        });
+        log("DPlayer initialised with " + (name || "video") + ".");
+      }
+
+      function updateStatusFromTorrent(torrent) {
+        const percent = (torrent.progress || 0) * 100;
+        const down = torrent.downloadSpeed || 0;
+        const up = torrent.uploadSpeed || 0;
+        progressEl.textContent = percent.toFixed(1).replace(/\.0$/, "") + "%";
+        peersEl.textContent = String(torrent.numPeers || 0);
+        speedEl.textContent =
+          formatSize(down) + "/s · " + formatSize(up) + "/s";
+        statusLabelEl.textContent =
+          percent >= 99.5 ? "Done / seeding" : "Streaming";
+      }
+
+      function attachTorrent(torrent) {
+        activeTorrent = torrent;
+        statusLabelEl.textContent = "Connecting";
+        log(
+          "Torrent metadata received. Infohash: " +
+            (torrent.infoHash || "").toLowerCase()
+        );
+
+        const videoPattern = /\.(mp4|m4v|webm|mkv|avi|mov)$/i;
+        const files = Array.isArray(torrent.files) ? torrent.files : [];
+        const videoFiles = files.filter((f) =>
+          videoPattern.test((f.path || f.name || "").toLowerCase())
+        );
+
+        const chosen =
+          videoFiles[0] ||
+          files[0] ||
+          null;
+
+        if (!chosen) {
+          statusLabelEl.textContent = "No video";
+          fileEl.textContent = "No playable file in torrent";
+          log("No playable media file found in torrent.");
+          return;
+        }
+
+        fileEl.textContent = chosen.path || chosen.name || "Unnamed file";
+
+        updateStatusFromTorrent(torrent);
+        if (statusInterval) {
+          clearInterval(statusInterval);
+        }
+        statusInterval = setInterval(() => {
+          if (!activeTorrent) return;
+          updateStatusFromTorrent(activeTorrent);
+        }, 1000);
+
+        try {
+          chosen.getBlobURL((err, url) => {
+            if (err) {
+              statusLabelEl.textContent = "Error";
+              log(
+                "Error generating blob URL: " +
+                  (err && err.message ? err.message : String(err))
+              );
+              return;
+            }
+            log(
+              "Blob URL generated for " +
+                (chosen.name || chosen.path || "video") +
+                ". Handing off to DPlayer."
+            );
+            ensureDPlayer(url, chosen.name || chosen.path || "video");
+          });
+        } catch (e) {
+          statusLabelEl.textContent = "Error";
+          log(
+            "Blob URL error: " +
+              (e && e.message ? e.message : String(e))
+          );
+        }
+
+        torrent.on("download", () => {
+          updateStatusFromTorrent(torrent);
+        });
+
+        torrent.on("wire", (wire) => {
+          const addr = wire && (wire.remoteAddress || wire.peerAddress);
+          log("Peer connected: " + (addr || "unknown address"));
+        });
+
+        torrent.on("done", () => {
+          updateStatusFromTorrent(torrent);
+          log("Torrent download complete.");
+        });
+
+        torrent.on("error", (err) => {
+          statusLabelEl.textContent = "Error";
+          log(
+            "Torrent error: " +
+              (err && err.message ? err.message : String(err))
+          );
+        });
+      }
+
+      function startPoc() {
+        const c = ensureClient();
+        if (!c) return;
+        if (activeTorrent) {
+          log("Torrent already active; stop/reset before starting again.");
+          return;
+        }
+
+        resetStatus();
+        statusLabelEl.textContent = "Connecting";
+        infohashEl.textContent = DEMO_INFOHASH;
+        magnetEl.textContent = DEMO_MAGNET;
+        log("Adding demo magnet to WebTorrent client.");
+
+        const existing = c.get(DEMO_INFOHASH) || null;
+        if (existing) {
+          log("Reusing existing demo torrent in client.");
+          attachTorrent(existing);
+          return;
+        }
+
+        try {
+          c.add(DEMO_MAGNET, (torrent) => {
+            attachTorrent(torrent);
+          });
+        } catch (e) {
+          statusLabelEl.textContent = "Error";
+          log(
+            "Error adding magnet: " +
+              (e && e.message ? e.message : String(e))
+          );
+        }
+      }
+
+      function stopPoc() {
+        if (statusInterval) {
+          clearInterval(statusInterval);
+          statusInterval = null;
+        }
+        if (activeTorrent) {
+          try {
+            log("Destroying active torrent.");
+            activeTorrent.destroy();
+          } catch (e) {
+            // ignore
+          }
+        }
+        activeTorrent = null;
+
+        if (client) {
+          try {
+            log("Destroying WebTorrent client.");
+            client.destroy();
+          } catch (e) {
+            // ignore
+          }
+        }
+        client = null;
+
+        if (dp) {
+          try {
+            log("Destroying DPlayer instance.");
+            dp.destroy();
+          } catch (e) {
+            // ignore
+          }
+        }
+        dp = null;
+
+        resetStatus();
+      }
+
+      startButton.addEventListener("click", startPoc);
+      stopButton.addEventListener("click", stopPoc);
+
+      infohashEl.textContent = DEMO_INFOHASH;
+      magnetEl.textContent = DEMO_MAGNET;
+      resetStatus();
+      log("Ready. Click \"Start DPlayer demo\" to load the Charge torrent into DPlayer.");
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initDPlayerPoc);
+    } else {
+      initDPlayerPoc();
+    }
+  </script>
+</body>
+</html>
+
