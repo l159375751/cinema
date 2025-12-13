@@ -367,6 +367,7 @@
       let activeTorrent = null;
       let statusInterval = null;
       let dp = null;
+      let peerWatchTimeout = null;
 
       function log(line) {
         if (!logEl) return;
@@ -393,6 +394,22 @@
         }
         client = new WebTorrent();
         log("Created WebTorrent client.");
+        try {
+          client.on("error", (err) => {
+            log(
+              "[client error] " +
+                (err && err.message ? err.message : String(err))
+            );
+          });
+          client.on("warning", (err) => {
+            log(
+              "[client warning] " +
+                (err && err.message ? err.message : String(err))
+            );
+          });
+        } catch (e) {
+          // ignore
+        }
         return client;
       }
 
@@ -518,6 +535,24 @@
               (err && err.message ? err.message : String(err))
           );
         });
+
+        try {
+          torrent.on("warning", (err) => {
+            log(
+              "[torrent warning] " +
+                (err && err.message ? err.message : String(err))
+            );
+          });
+          torrent.on("noPeers", (announceType) => {
+            log(
+              "No peers reported from " +
+                (announceType || "all sources") +
+                "."
+            );
+          });
+        } catch (e) {
+          // ignore
+        }
       }
 
       function startPoc() {
@@ -532,7 +567,10 @@
         statusLabelEl.textContent = "Connecting";
         infohashEl.textContent = DEMO_INFOHASH;
         magnetEl.textContent = DEMO_MAGNET;
-        log("Adding demo magnet to WebTorrent client.");
+        log(
+          "Adding demo magnet to WebTorrent client. Trackers: " +
+            DEMO_TRACKERS.join(", ")
+        );
 
         const existing = c.get(DEMO_INFOHASH) || null;
         if (existing) {
@@ -552,12 +590,29 @@
               (e && e.message ? e.message : String(e))
           );
         }
+
+        if (peerWatchTimeout) {
+          clearTimeout(peerWatchTimeout);
+        }
+        peerWatchTimeout = setTimeout(() => {
+          if (!activeTorrent) return;
+          if ((activeTorrent.numPeers || 0) === 0) {
+            statusLabelEl.textContent = "No peers";
+            log(
+              "No WebRTC peers after 20s. Likely no reachable WebTorrent/WebRTC seeder for this torrent on the configured trackers."
+            );
+          }
+        }, 20000);
       }
 
       function stopPoc() {
         if (statusInterval) {
           clearInterval(statusInterval);
           statusInterval = null;
+        }
+        if (peerWatchTimeout) {
+          clearTimeout(peerWatchTimeout);
+          peerWatchTimeout = null;
         }
         if (activeTorrent) {
           try {
@@ -609,4 +664,3 @@
   </script>
 </body>
 </html>
-
