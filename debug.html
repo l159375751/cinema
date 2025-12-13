@@ -683,12 +683,13 @@
       }
 
       function startDebug() {
-        if (activeTorrent) {
-          log("Torrent already active; reset first if needed.");
-          return;
-        }
         const c = ensureClient();
         if (!c) return;
+
+        if (activeTorrent) {
+          log("Torrent already active; reset first if needed or stop before starting again.");
+          return;
+        }
 
         resetStatus();
         statusLabelEl.textContent = "Connecting";
@@ -746,18 +747,29 @@
         }
 
         magnetEl.textContent = magnet;
-        log("Adding magnet to WebTorrent client.");
+        const existing =
+          (infohash && c.get(infohash)) ||
+          null;
 
-        try {
-          c.add(magnet, (torrent) => {
-            attachTorrent(torrent);
-          });
-        } catch (e) {
-          statusLabelEl.textContent = "Error";
+        if (existing) {
           log(
-            "Error adding magnet: " +
-              (e && e.message ? e.message : String(e))
+            "Reusing existing torrent in client (no duplicate add): " +
+              (infohash || "unknown")
           );
+          attachTorrent(existing);
+        } else {
+          log("Adding magnet to WebTorrent client.");
+          try {
+            c.add(magnet, (torrent) => {
+              attachTorrent(torrent);
+            });
+          } catch (e) {
+            statusLabelEl.textContent = "Error";
+            log(
+              "Error adding magnet: " +
+                (e && e.message ? e.message : String(e))
+            );
+          }
         }
       }
 
