@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Mini Cinema · Browser Seeder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="cinema:mode" content="browser-seeder">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050608;
+      --bg-alt: #111219;
+      --accent: #e0c680;
+      --accent-soft: rgba(224, 198, 128, 0.14);
+      --text: #f3f3f5;
+      --muted: #a3a3b5;
+      --border: #252637;
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 16px 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title-mark {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: #e2e2ea;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .panel {
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 12px 12px 14px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .badge-soft {
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(260px, 1fr);
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .field-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      word-break: break-all;
+    }
+
+    .input,
+    .textarea {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #090a10;
+      color: var(--text);
+      font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+    }
+
+    .input::placeholder,
+    .textarea::placeholder {
+      color: rgba(163, 163, 181, 0.7);
+    }
+
+    .textarea {
+      resize: vertical;
+      min-height: 52px;
+    }
+
+    .file-input {
+      width: 100%;
+      padding: 4px 0;
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    .controls-row {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .button {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(224, 198, 128, 0.4);
+      background: transparent;
+      color: var(--accent);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      border-color: rgba(224, 198, 128, 0.7);
+      background: rgba(224, 198, 128, 0.08);
+    }
+
+    .button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .status-item {
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      min-height: 54px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .status-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .status-value {
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+      margin-top: 3px;
+    }
+
+    .status-value-strong {
+      color: var(--accent);
+    }
+
+    .log {
+      background: #050608;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      height: 260px;
+      overflow: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    footer {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    footer code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+    }
+
+    @media (max-width: 780px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <div class="title">
+          <span class="title-mark"></span>
+          Browser Seeder
+        </div>
+        <div class="subtitle">
+          WebTorrent in browser, seeding local files via WebRTC on the same trackers as the mini cinema tools.
+        </div>
+      </div>
+      <span class="badge-soft" id="status-label">Idle</span>
+    </header>
+
+    <main class="layout">
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Seed configuration</div>
+        </div>
+        <div>
+          <div class="field-label">Files to seed (keeps seeding while this page is open)</div>
+          <input
+            id="file-input"
+            class="file-input"
+            type="file"
+            multiple
+          >
+        </div>
+        <div style="margin-top: 6px;">
+          <div class="field-label">Trackers (one per line, optional)</div>
+          <textarea
+            id="trackers-input"
+            class="textarea"
+            rows="3"
+            placeholder="Default: WebTorrent WebRTC trackers. Leave blank to match debug.html/dplayer.html."
+          ></textarea>
+        </div>
+        <div style="margin-top: 6px;">
+          <div class="field-label">Magnet URI (generated after seeding starts)</div>
+          <div class="input" style="height:auto; min-height: 32px; padding-top: 6px;" id="magnet-output"></div>
+        </div>
+        <div style="margin-top: 6px;">
+          <div class="field-label">Infohash</div>
+          <div class="mono" id="infohash-output">–</div>
+        </div>
+        <div class="controls-row">
+          <button class="button" id="start-seed">Start seeding</button>
+          <button class="button" id="stop-seed">Stop</button>
+          <span style="font-size: 11px; color: var(--muted);">
+            For WebRTC-only experiments, keep this tab open while using debug.html / dplayer.html.
+          </span>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Swarm status</div>
+        </div>
+        <div class="status-grid">
+          <div class="status-item">
+            <div class="status-label">Files</div>
+            <div class="status-value status-value-strong" id="status-files">0</div>
+          </div>
+          <div class="status-item">
+            <div class="status-label">Peers</div>
+            <div class="status-value" id="status-peers">0</div>
+          </div>
+          <div class="status-item">
+            <div class="status-label">Down / Up</div>
+            <div class="status-value" id="status-speed">0 kB/s · 0 kB/s</div>
+          </div>
+          <div class="status-item">
+            <div class="status-label">Uploaded</div>
+            <div class="status-value" id="status-uploaded">0 kB</div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Seeder log</div>
+      </div>
+      <div class="log" id="log">// Select file(s) and click "Start seeding" to begin.</div>
+    </section>
+
+    <footer>
+      <span>Use the generated magnet/infohash with <code>debug.html</code> or <code>dplayer.html</code> to test WebRTC-only swarms.</span>
+      <span>This seeder is ephemeral: close the tab to stop seeding.</span>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+  <script>
+    const DEFAULT_TRACKERS = [
+      "wss://tracker.openwebtorrent.com",
+      "wss://tracker.webtorrent.dev",
+    ];
+
+    function formatSize(bytes) {
+      if (!Number.isFinite(bytes) || bytes <= 0) return "0 kB";
+      const units = ["B", "kB", "MB", "GB", "TB"];
+      let value = bytes;
+      let unitIndex = 0;
+      while (value >= 1024 && unitIndex < units.length - 1) {
+        value /= 1024;
+        unitIndex += 1;
+      }
+      return (
+        value.toFixed(value >= 100 || unitIndex === 0 ? 0 : 1) +
+        " " +
+        units[unitIndex]
+      );
+    }
+
+    function initBrowserSeeder() {
+      const fileInput = document.getElementById("file-input");
+      const trackersInput = document.getElementById("trackers-input");
+      const magnetOutput = document.getElementById("magnet-output");
+      const infohashOutput = document.getElementById("infohash-output");
+      const statusLabelEl = document.getElementById("status-label");
+
+      const filesEl = document.getElementById("status-files");
+      const peersEl = document.getElementById("status-peers");
+      const speedEl = document.getElementById("status-speed");
+      const uploadedEl = document.getElementById("status-uploaded");
+
+      const logEl = document.getElementById("log");
+      const startButton = document.getElementById("start-seed");
+      const stopButton = document.getElementById("stop-seed");
+
+      let client = null;
+      let activeTorrent = null;
+      let statusInterval = null;
+
+      function appendLog(line) {
+        if (!logEl) return;
+        const existing = (logEl.textContent || "").replace(/^\/\/.*\n?/, "");
+        const now = new Date();
+        const ts = now.toTimeString().split(" ")[0];
+        const next = "[" + ts + "] " + line;
+        logEl.textContent = existing ? existing + "\n" + next : next;
+        logEl.scrollTop = logEl.scrollHeight;
+      }
+
+      function resetStatus() {
+        filesEl.textContent = "0";
+        peersEl.textContent = "0";
+        speedEl.textContent = "0 kB/s · 0 kB/s";
+        uploadedEl.textContent = "0 kB";
+        infohashOutput.textContent = "–";
+        magnetOutput.textContent = "";
+        statusLabelEl.textContent = "Idle";
+      }
+
+      function ensureClient() {
+        if (client) return client;
+        if (typeof WebTorrent === "undefined") {
+          appendLog("WebTorrent is not available in this browser.");
+          statusLabelEl.textContent = "No WebTorrent";
+          return null;
+        }
+        client = new WebTorrent();
+        appendLog("Created WebTorrent client (browser seeder).");
+        client.on("error", (err) => {
+          appendLog(
+            "[client error] " +
+              (err && err.message ? err.message : String(err))
+          );
+        });
+        client.on("warning", (err) => {
+          appendLog(
+            "[client warning] " +
+              (err && err.message ? err.message : String(err))
+          );
+        });
+        return client;
+      }
+
+      function stopSeeding() {
+        if (statusInterval) {
+          clearInterval(statusInterval);
+          statusInterval = null;
+        }
+        if (activeTorrent) {
+          try {
+            appendLog("Destroying active torrent (seeder).");
+            activeTorrent.destroy();
+          } catch (e) {
+            // ignore
+          }
+        }
+        activeTorrent = null;
+        if (client) {
+          try {
+            appendLog("Destroying WebTorrent client.");
+            client.destroy();
+          } catch (e) {
+            // ignore
+          }
+        }
+        client = null;
+        resetStatus();
+      }
+
+      function startSeeding() {
+        const c = ensureClient();
+        if (!c) return;
+        if (activeTorrent) {
+          appendLog("Already seeding; stop first to change files or trackers.");
+          return;
+        }
+
+        const files = fileInput && fileInput.files ? Array.from(fileInput.files) : [];
+        if (!files.length) {
+          appendLog("Select at least one file to seed.");
+          statusLabelEl.textContent = "Error";
+          return;
+        }
+
+        const trackerLines = trackersInput.value
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter(Boolean);
+        const trackers = trackerLines.length ? trackerLines : DEFAULT_TRACKERS.slice();
+
+        resetStatus();
+        filesEl.textContent = String(files.length);
+        statusLabelEl.textContent = "Connecting";
+        appendLog(
+          "Starting WebRTC seeding with trackers: " + trackers.join(", ")
+        );
+
+        try {
+          activeTorrent = c.seed(files, { announce: trackers }, (torrent) => {
+            infohashOutput.textContent = torrent.infoHash || "–";
+            magnetOutput.textContent = torrent.magnetURI || "";
+            appendLog(
+              "Seeding torrent: " +
+                (torrent.name || torrent.infoHash || "unnamed")
+            );
+            appendLog("Magnet: " + (torrent.magnetURI || ""));
+            statusLabelEl.textContent = "Seeding";
+
+            if (statusInterval) {
+              clearInterval(statusInterval);
+            }
+            statusInterval = setInterval(() => {
+              if (!activeTorrent) return;
+              const t = activeTorrent;
+              peersEl.textContent = String(t.numPeers || 0);
+              const down = t.downloadSpeed || 0;
+              const up = t.uploadSpeed || 0;
+              speedEl.textContent =
+                formatSize(down) + "/s · " + formatSize(up) + "/s";
+              uploadedEl.textContent = formatSize(t.uploaded || 0);
+            }, 1000);
+          });
+        } catch (e) {
+          statusLabelEl.textContent = "Error";
+          appendLog(
+            "Error starting seeding: " +
+              (e && e.message ? e.message : String(e))
+          );
+          return;
+        }
+
+        const t = activeTorrent;
+
+        t.on("wire", (wire, addr) => {
+          appendLog("Peer connected: " + (addr || "WebRTC peer"));
+        });
+
+        t.on("noPeers", (announceType) => {
+          appendLog(
+            "noPeers from " +
+              (announceType || "all sources") +
+              " (seeder side)."
+          );
+        });
+
+        t.on("error", (err) => {
+          statusLabelEl.textContent = "Error";
+          appendLog(
+            "Torrent error: " +
+              (err && err.message ? err.message : String(err))
+          );
+        });
+      }
+
+      startButton.addEventListener("click", startSeeding);
+      stopButton.addEventListener("click", stopSeeding);
+
+      resetStatus();
+      appendLog(
+        "Ready. Choose file(s) to seed and click \"Start seeding\". Keep this tab open while testing debug.html / dplayer.html."
+      );
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initBrowserSeeder);
+    } else {
+      initBrowserSeeder();
+    }
+  </script>
+</body>
+</html>
+
