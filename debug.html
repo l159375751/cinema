@@ -400,6 +400,81 @@
 
   <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
   <script>
+    (function patchWebRTCLogging() {
+      const NativePC =
+        window.RTCPeerConnection ||
+        window.webkitRTCPeerConnection ||
+        window.mozRTCPeerConnection;
+      if (!NativePC) return;
+
+      function randomId() {
+        return Math.random().toString(16).slice(2, 8);
+      }
+
+      window.RTCPeerConnection = function (...args) {
+        const pc = new NativePC(...args);
+        const id = randomId();
+        try {
+          // Log creation + basic config
+          console.log("[ICE]", id, "RTCPeerConnection created", args[0] || {});
+        } catch (e) {
+          // ignore console errors
+        }
+
+        pc.addEventListener("icecandidate", (event) => {
+          if (!event.candidate) return;
+          try {
+            console.log(
+              "[ICE]",
+              id,
+              "candidate",
+              event.candidate.candidate
+            );
+          } catch (e) {
+            // ignore
+          }
+        });
+
+        pc.addEventListener("iceconnectionstatechange", () => {
+          try {
+            console.log(
+              "[ICE]",
+              id,
+              "iceConnectionState",
+              pc.iceConnectionState
+            );
+          } catch (e) {
+            // ignore
+          }
+        });
+
+        const origSetLocalDescription = pc.setLocalDescription.bind(pc);
+        pc.setLocalDescription = function (desc) {
+          try {
+            if (desc && desc.sdp) {
+              const lines = desc.sdp.split("\n").slice(0, 20).join("\\n");
+              console.log(
+                "[ICE]",
+                id,
+                "setLocalDescription",
+                desc.type,
+                lines
+              );
+            } else {
+              console.log("[ICE]", id, "setLocalDescription", desc && desc.type);
+            }
+          } catch (e) {
+            // ignore
+          }
+          return origSetLocalDescription(desc);
+        };
+
+        return pc;
+      };
+
+      window.RTCPeerConnection.prototype = NativePC.prototype;
+    })();
+
     const DEBUG_INFOHASH = "460b0b5d942af2de6e3d69333c782f391fcc1ee0";
     const DEBUG_TITLE = "Charge \u2013 Blender Open Movie";
     const DEFAULT_TRACKERS = [
