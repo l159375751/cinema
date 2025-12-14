@@ -38,6 +38,8 @@ Also consider replacing the hand-rolled `<video>` UI with DPlayer:
   - https://github.com/cdnbye/hlsjs-p2p-engine
   - idea: torrent layer (or webtor) → HLS stream → hls.js + cdnbye for P2P +
     DPlayer as the front-end player
+  - also study the Novage p2p-media-loader DPlayer HLS demo as a reference:
+    - https://novage.com.ua/p2p-media-loader/demo.html?player=dplayer_hls
 
 BIG FAT NOTE – BLAZE / REFERENCE APP
 
