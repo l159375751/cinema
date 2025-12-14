@@ -501,10 +501,7 @@
           <span class="title-mark"></span>
           Mini Cinema
         </div>
-        <div class="subtitle">
-          POC0.2 · WebTorrent Herzog mini archive
-          · <span id="cinema-version">commit ?</span>
-        </div>
+        <div class="subtitle">POC0.2 · WebTorrent Herzog mini archive</div>
       </div>
       <span class="chip">POC0.2</span>
     </header>
@@ -700,24 +697,6 @@
       MAGNET_TRACKERS;
     const DEFAULT_FILE_MATCH = "grizzly man";
 
-    function attachCinemaVersion() {
-      const el = document.getElementById("cinema-version");
-      if (!el || typeof fetch === "undefined") return;
-      fetch("version.txt", { cache: "no-store" })
-        .then((res) => (res.ok ? res.text() : ""))
-        .then((text) => {
-          const raw = (text || "").trim();
-          if (!raw) {
-            el.textContent = "commit unknown";
-            return;
-          }
-          el.textContent = "commit " + raw.slice(0, 7);
-        })
-        .catch(() => {
-          el.textContent = "commit unknown";
-        });
-    }
-
     function formatSize(bytes) {
       if (!Number.isFinite(bytes) || bytes <= 0) return "unknown";
       const units = ["B", "kB", "MB", "GB", "TB"];
@@ -857,7 +836,6 @@
     }
 
     function initMiniCinema() {
-      attachCinemaVersion();
       const listEl = document.getElementById("movie-list");
       const countEl = document.getElementById("library-count");
       const overlayBadge = document.getElementById("player-overlay-badge");
