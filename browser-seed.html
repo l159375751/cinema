@@ -90,11 +90,34 @@
       content: "● ACTIVE";
       position: absolute;
       top: 8px;
-      right: 10px;
+      right: 52px;
       font-size: 10px;
       font-weight: 600;
       letter-spacing: 0.08em;
       color: var(--accent);
+    }
+
+    .panel-stop-btn {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(224, 198, 128, 0.4);
+      background: transparent;
+      color: var(--accent);
+      font-size: 11px;
+      cursor: pointer;
+      display: none;
+    }
+
+    .panel.active .panel-stop-btn {
+      display: block;
+    }
+
+    .panel-stop-btn:hover {
+      border-color: rgba(224, 198, 128, 0.7);
+      background: rgba(224, 198, 128, 0.08);
     }
 
     .panel-header {
@@ -325,6 +348,7 @@
 
     <main class="layout">
       <div class="panel" id="method-create">
+        <button class="panel-stop-btn" onclick="stopSeeding()">⏸ Stop</button>
         <div class="panel-header">
           <div class="panel-title">1. Create Torrent</div>
         </div>
@@ -351,6 +375,7 @@
         </div>
       </div>
       <div class="panel" id="method-torrent">
+        <button class="panel-stop-btn" onclick="stopSeeding()">⏸ Stop</button>
         <div class="panel-header">
           <div class="panel-title">2. Seed from .torrent file</div>
         </div>
@@ -377,6 +402,7 @@
         </div>
       </div>
       <div class="panel" id="method-seed-magnet">
+        <button class="panel-stop-btn" onclick="stopSeeding()">⏸ Stop</button>
         <div class="panel-header">
           <div class="panel-title">3. Seed from magnet/infohash</div>
         </div>
@@ -403,6 +429,7 @@
         </div>
       </div>
       <div class="panel" id="method-download">
+        <button class="panel-stop-btn" onclick="stopSeeding()">⏸ Stop</button>
         <div class="panel-header">
           <div class="panel-title">4. Download from magnet</div>
         </div>
@@ -571,25 +598,23 @@
         }
         if (activeTorrent) {
           try {
-            appendLog("Destroying active torrent (seeder).");
+            appendLog("Stopping " + (activeTorrent.name || "torrent") + "...");
             activeTorrent.destroy();
           } catch (e) {
             // ignore
           }
+          activeTorrent = null;
         }
-        activeTorrent = null;
         if (client) {
           try {
-            appendLog("Destroying WebTorrent client.");
             client.destroy();
           } catch (e) {
             // ignore
           }
+          client = null;
         }
-        client = null;
         clearActiveMethod();
         resetStatus();
-        appendLog("Seeding stopped.");
       }
       
       function onTorrent(torrent, method) {
@@ -643,10 +668,6 @@
       function startSeeding(files, opts, method, expectedInfoHash = null) {
         const c = ensureClient();
         if (!c) return;
-        if (activeTorrent) {
-          appendLog("Already seeding; stop first to change files or trackers.");
-          return;
-        }
 
         if (!files.length) {
           appendLog("Select at least one file to seed.");
@@ -680,6 +701,11 @@
       }
 
       function createTorrent() {
+        // Auto-stop if already active
+        if (activeTorrent) {
+          stopSeeding();
+        }
+
         const files = createTorrentFileInput && createTorrentFileInput.files ? Array.from(createTorrentFileInput.files) : [];
         const trackerLines = createTorrentTrackersInput.value
           .split(/\r?\n/)
@@ -691,6 +717,11 @@
       }
 
       function seedFromTorrentFile() {
+        // Auto-stop if already active
+        if (activeTorrent) {
+          stopSeeding();
+        }
+
         const torrentFile = seedTorrentFileInput.files[0];
         const contentFiles = seedTorrentContentInput && seedTorrentContentInput.files ? Array.from(seedTorrentContentInput.files) : [];
 
@@ -760,6 +791,11 @@
       }
 
       function seedFromMagnetOrInfohash() {
+        // Auto-stop if already active
+        if (activeTorrent) {
+          stopSeeding();
+        }
+
         const magnetInput = seedMagnetUriInput.value.trim();
         const contentFiles = seedMagnetContentInput && seedMagnetContentInput.files ? Array.from(seedMagnetContentInput.files) : [];
 
@@ -774,10 +810,6 @@
 
         const c = ensureClient();
         if (!c) return;
-        if (activeTorrent) {
-          appendLog("Already seeding; stop first to change files or trackers.");
-          return;
-        }
 
         // Parse magnet or convert infohash to magnet
         let magnetURI;
@@ -854,6 +886,11 @@
       }
 
       function downloadFromMagnet() {
+        // Auto-stop if already active
+        if (activeTorrent) {
+          stopSeeding();
+        }
+
         const magnetInput = downloadMagnetUriInput.value.trim();
 
         if (!magnetInput) {
@@ -863,10 +900,6 @@
 
         const c = ensureClient();
         if (!c) return;
-        if (activeTorrent) {
-          appendLog("Already seeding/downloading; stop first.");
-          return;
-        }
 
         // Parse magnet or convert infohash to magnet
         let magnetURI;
