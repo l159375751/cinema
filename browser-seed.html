@@ -76,6 +76,12 @@
       border-radius: var(--radius);
       border: 1px solid var(--border);
       padding: 12px 12px 14px;
+      transition: border-color 0.3s, background 0.3s;
+    }
+
+    .panel.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
     }
 
     .panel-header {
@@ -262,87 +268,6 @@
       <span class="badge-soft" id="status-label">Idle</span>
     </header>
 
-    <main class="layout">
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">1. Create Torrent</div>
-        </div>
-        <div>
-          <div class="field-label">Files to seed (creates a new torrent)</div>
-          <input
-            id="create-torrent-file-input"
-            class="file-input"
-            type="file"
-            multiple
-          >
-        </div>
-        <div style="margin-top: 6px;">
-          <div class="field-label">Trackers (one per line, optional)</div>
-          <textarea
-            id="create-torrent-trackers-input"
-            class="textarea"
-            rows="3"
-            placeholder="Default: WebTorrent WebRTC trackers."
-          ></textarea>
-        </div>
-        <div class="controls-row">
-          <button class="button" id="create-torrent-button">Create & Seed</button>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">2. Seed from .torrent file</div>
-        </div>
-        <div>
-          <div class="field-label">.torrent file</div>
-          <input
-            id="seed-torrent-file-input"
-            class="file-input"
-            type="file"
-            accept=".torrent"
-          >
-        </div>
-        <div style="margin-top: 6px;">
-          <div class="field-label">Content files</div>
-          <input
-            id="seed-torrent-content-input"
-            class="file-input"
-            type="file"
-            multiple
-          >
-        </div>
-        <div class="controls-row">
-          <button class="button" id="seed-torrent-button">Seed from .torrent</button>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">3. Seed from magnet/infohash</div>
-        </div>
-        <div>
-          <div class="field-label">Magnet URI or infohash (fetches metadata from swarm)</div>
-          <textarea
-            id="seed-magnet-uri-input"
-            class="textarea"
-            rows="3"
-            placeholder="magnet:?xt=urn:btih:abc123... or just: abc123..."
-          ></textarea>
-        </div>
-        <div style="margin-top: 6px;">
-          <div class="field-label">Content files</div>
-          <input
-            id="seed-magnet-content-input"
-            class="file-input"
-            type="file"
-            multiple
-          >
-        </div>
-        <div class="controls-row">
-          <button class="button" id="seed-magnet-button">Seed from magnet</button>
-        </div>
-      </div>
-    </main>
-
     <section class="panel">
       <div class="panel-header">
         <div class="panel-title">Seeding status</div>
@@ -384,6 +309,104 @@
         </div>
       </aside>
     </section>
+
+    <main class="layout">
+      <div class="panel" id="method-create">
+        <div class="panel-header">
+          <div class="panel-title">1. Create Torrent</div>
+        </div>
+        <div>
+          <div class="field-label">Files to seed (creates a new torrent)</div>
+          <input
+            id="create-torrent-file-input"
+            class="file-input"
+            type="file"
+            multiple
+          >
+        </div>
+        <div style="margin-top: 6px;">
+          <div class="field-label">Trackers (one per line, optional)</div>
+          <textarea
+            id="create-torrent-trackers-input"
+            class="textarea"
+            rows="3"
+            placeholder="Default: WebTorrent WebRTC trackers."
+          ></textarea>
+        </div>
+        <div class="controls-row">
+          <button class="button" id="create-torrent-button">Create & Seed</button>
+        </div>
+      </div>
+      <div class="panel" id="method-torrent">
+        <div class="panel-header">
+          <div class="panel-title">2. Seed from .torrent file</div>
+        </div>
+        <div>
+          <div class="field-label">.torrent file</div>
+          <input
+            id="seed-torrent-file-input"
+            class="file-input"
+            type="file"
+            accept=".torrent"
+          >
+        </div>
+        <div style="margin-top: 6px;">
+          <div class="field-label">Content files</div>
+          <input
+            id="seed-torrent-content-input"
+            class="file-input"
+            type="file"
+            multiple
+          >
+        </div>
+        <div class="controls-row">
+          <button class="button" id="seed-torrent-button">Seed from .torrent</button>
+        </div>
+      </div>
+      <div class="panel" id="method-seed-magnet">
+        <div class="panel-header">
+          <div class="panel-title">3. Seed from magnet/infohash</div>
+        </div>
+        <div>
+          <div class="field-label">Magnet URI or infohash (fetches metadata from swarm)</div>
+          <textarea
+            id="seed-magnet-uri-input"
+            class="textarea"
+            rows="3"
+            placeholder="magnet:?xt=urn:btih:abc123... or just: abc123..."
+          ></textarea>
+        </div>
+        <div style="margin-top: 6px;">
+          <div class="field-label">Content files</div>
+          <input
+            id="seed-magnet-content-input"
+            class="file-input"
+            type="file"
+            multiple
+          >
+        </div>
+        <div class="controls-row">
+          <button class="button" id="seed-magnet-button">Seed from magnet</button>
+        </div>
+      </div>
+      <div class="panel" id="method-download">
+        <div class="panel-header">
+          <div class="panel-title">4. Download from magnet</div>
+        </div>
+        <div>
+          <div class="field-label">Magnet URI or infohash (downloads and seeds)</div>
+          <textarea
+            id="download-magnet-uri-input"
+            class="textarea"
+            rows="3"
+            placeholder="magnet:?xt=urn:btih:abc123... or just: abc123..."
+          ></textarea>
+        </div>
+        <div class="controls-row">
+          <button class="button" id="download-magnet-button">Download & Seed</button>
+        </div>
+      </div>
+    </main>
 
     <section class="panel">
       <div class="panel-header">
@@ -440,7 +463,11 @@
       const seedMagnetUriInput = document.getElementById("seed-magnet-uri-input");
       const seedMagnetContentInput = document.getElementById("seed-magnet-content-input");
       const seedMagnetButton = document.getElementById("seed-magnet-button");
-      
+
+      // Download from magnet
+      const downloadMagnetUriInput = document.getElementById("download-magnet-uri-input");
+      const downloadMagnetButton = document.getElementById("download-magnet-button");
+
       const stopButton = document.getElementById("stop-seed");
 
       // Status
@@ -457,6 +484,27 @@
       let client = null;
       let activeTorrent = null;
       let statusInterval = null;
+      let activeMethodPanel = null;
+
+      function setActiveMethod(methodId) {
+        // Clear previous active panel
+        if (activeMethodPanel) {
+          activeMethodPanel.classList.remove('active');
+        }
+        // Set new active panel
+        const panel = document.getElementById(methodId);
+        if (panel) {
+          panel.classList.add('active');
+          activeMethodPanel = panel;
+        }
+      }
+
+      function clearActiveMethod() {
+        if (activeMethodPanel) {
+          activeMethodPanel.classList.remove('active');
+          activeMethodPanel = null;
+        }
+      }
 
       function appendLog(line) {
         if (!logEl) return;
@@ -478,6 +526,7 @@
         statusLabelEl.textContent = "Idle";
         statusMethodEl.textContent = "–";
         stopButton.style.display = "none";
+        clearActiveMethod();
       }
 
       function ensureClient() {
@@ -625,6 +674,7 @@
           .map((line) => line.trim())
           .filter(Boolean);
         const trackers = trackerLines.length ? trackerLines : DEFAULT_TRACKERS.slice();
+        setActiveMethod('method-create');
         startSeeding(files, { announce: trackers }, "Create");
       }
 
@@ -661,6 +711,7 @@
             if (torrentData.creationDate) opts.creationDate = torrentData.creationDate;
 
             appendLog("Parsed .torrent: " + torrentData.name + " (pieceLength: " + torrentData.pieceLength + ")");
+            setActiveMethod('method-torrent');
             startSeeding(contentFiles, opts, "Torrent file", infoHash);
           } catch (err) {
             appendLog("Error parsing torrent file: " + err.message);
@@ -728,6 +779,7 @@
           appendLog("Converted infohash to magnet URI.");
         }
 
+        setActiveMethod('method-seed-magnet');
         resetStatus();
         filesEl.textContent = String(contentFiles.length);
         statusLabelEl.textContent = "Fetching metadata";
@@ -789,9 +841,109 @@
         }
       }
 
+      function downloadFromMagnet() {
+        const magnetInput = downloadMagnetUriInput.value.trim();
+
+        if (!magnetInput) {
+          appendLog("Please enter a magnet URI or infohash.");
+          return;
+        }
+
+        const c = ensureClient();
+        if (!c) return;
+        if (activeTorrent) {
+          appendLog("Already seeding/downloading; stop first.");
+          return;
+        }
+
+        // Parse magnet or convert infohash to magnet
+        let magnetURI;
+        if (magnetInput.startsWith('magnet:')) {
+          magnetURI = magnetInput;
+        } else {
+          // Assume it's an infohash - convert to magnet URI
+          const infohash = magnetInput.toLowerCase();
+          const trackerParams = DEFAULT_TRACKERS.map(t => '&tr=' + encodeURIComponent(t)).join('');
+          magnetURI = 'magnet:?xt=urn:btih:' + infohash + trackerParams;
+          appendLog("Converted infohash to magnet URI.");
+        }
+
+        setActiveMethod('method-download');
+        resetStatus();
+        statusLabelEl.textContent = "Downloading";
+        appendLog("Starting download from magnet URI...");
+
+        try {
+          const torrent = c.add(magnetURI);
+
+          torrent.on('metadata', () => {
+            appendLog("Metadata received: " + torrent.name);
+            filesEl.textContent = String(torrent.files.length);
+            statusMethodEl.textContent = "Download";
+          });
+
+          torrent.on('ready', () => {
+            activeTorrent = torrent;
+            infohashOutput.textContent = torrent.infoHash || "–";
+            magnetOutput.textContent = torrent.magnetURI || "";
+            appendLog("Torrent ready. Files: " + torrent.files.map(f => f.name).join(", "));
+            statusLabelEl.textContent = "Downloading";
+            stopButton.style.display = "block";
+
+            if (statusInterval) {
+              clearInterval(statusInterval);
+            }
+            statusInterval = setInterval(() => {
+              if (!activeTorrent) return;
+              const t = activeTorrent;
+              peersEl.textContent = String(t.numPeers || 0);
+              const down = t.downloadSpeed || 0;
+              const up = t.uploadSpeed || 0;
+              speedEl.textContent =
+                formatSize(down) + "/s · " + formatSize(up) + "/s";
+              uploadedEl.textContent = formatSize(t.uploaded || 0);
+
+              // Check if download is complete
+              if (t.progress === 1) {
+                statusLabelEl.textContent = "Seeding";
+              }
+            }, 1000);
+          });
+
+          torrent.on('done', () => {
+            appendLog("Download complete! Now seeding...");
+            statusLabelEl.textContent = "Seeding";
+          });
+
+          torrent.on('wire', (wire, addr) => {
+            appendLog("Peer connected: " + (addr || "WebRTC peer"));
+          });
+
+          torrent.on('noPeers', (announceType) => {
+            appendLog(
+              "noPeers from " +
+                (announceType || "all sources")
+            );
+          });
+
+          torrent.on('error', (err) => {
+            statusLabelEl.textContent = "Error";
+            appendLog(
+              "Torrent error: " +
+                (err && err.message ? err.message : String(err))
+            );
+          });
+
+        } catch (e) {
+          statusLabelEl.textContent = "Error";
+          appendLog("Error adding magnet: " + (e && e.message ? e.message : String(e)));
+        }
+      }
+
       createTorrentButton.addEventListener("click", createTorrent);
       seedTorrentButton.addEventListener("click", seedFromTorrentFile);
       seedMagnetButton.addEventListener("click", seedFromMagnetOrInfohash);
+      downloadMagnetButton.addEventListener("click", downloadFromMagnet);
       stopButton.addEventListener("click", stopSeeding);
 
       resetStatus();
