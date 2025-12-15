@@ -462,7 +462,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
-  <script src="https://unpkg.com/parse-torrent@7.1.3/dist/parse-torrent.min.js"></script>
   <script>
     const DEFAULT_TRACKERS = [
       "wss://tracker.openwebtorrent.com",
@@ -734,30 +733,53 @@
           return;
         }
 
+        const c = ensureClient();
+        if (!c) return;
+
+        resetStatus();
+        statusLabelEl.textContent = "Parsing torrent...";
+        appendLog("Parsing .torrent file...");
+
         const reader = new FileReader();
         reader.onload = function(e) {
           try {
-            const torrentData = parseTorrent(new Uint8Array(e.target.result));
-            const infoHash = torrentData.infoHash;
-            const trackers = (torrentData.announce || []).length ? torrentData.announce : DEFAULT_TRACKERS.slice();
+            // Use WebTorrent to parse the .torrent file
+            const tempTorrent = c.add(new Uint8Array(e.target.result), { path: '/tmp' });
 
-            // Extract all metadata to recreate the exact same torrent
-            const opts = {
-              announce: trackers,
-              name: torrentData.name,
-              pieceLength: torrentData.pieceLength
-            };
+            tempTorrent.on('metadata', () => {
+              const infoHash = tempTorrent.infoHash;
+              const trackers = (tempTorrent.announce || []).length ? tempTorrent.announce : DEFAULT_TRACKERS.slice();
 
-            // Add comment and creation date if present
-            if (torrentData.comment) opts.comment = torrentData.comment;
-            if (torrentData.createdBy) opts.createdBy = torrentData.createdBy;
-            if (torrentData.creationDate) opts.creationDate = torrentData.creationDate;
+              // Extract metadata
+              const opts = {
+                announce: trackers,
+                name: tempTorrent.name,
+                pieceLength: tempTorrent.pieceLength
+              };
 
-            appendLog("Parsed .torrent: " + torrentData.name + " (pieceLength: " + torrentData.pieceLength + ")");
-            startSeeding(contentFiles, opts, "Torrent file", infoHash);
-            setActiveMethod('method-torrent');
+              appendLog("Parsed .torrent: " + tempTorrent.name + " (infohash: " + infoHash + ")");
+
+              // Destroy temp torrent
+              tempTorrent.destroy(() => {
+                // Now seed with the actual files
+                filesEl.textContent = String(contentFiles.length);
+                startSeeding(contentFiles, opts, "Torrent file", infoHash);
+                setActiveMethod('method-torrent');
+              });
+            });
+
+            tempTorrent.on('error', (err) => {
+              appendLog("Error parsing .torrent: " + err.message);
+              statusLabelEl.textContent = "Error";
+              try {
+                tempTorrent.destroy();
+              } catch (e) {
+                // ignore
+              }
+            });
           } catch (err) {
-            appendLog("Error parsing torrent file: " + err.message);
+            appendLog("Error reading torrent file: " + err.message);
+            statusLabelEl.textContent = "Error";
           }
         };
         reader.readAsArrayBuffer(torrentFile);
