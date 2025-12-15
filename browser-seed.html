@@ -263,14 +263,14 @@
     </header>
 
     <main class="layout">
-      <section class="panel">
+      <div class="panel">
         <div class="panel-header">
-          <div class="panel-title">Seed configuration</div>
+          <div class="panel-title">1. Create Torrent</div>
         </div>
         <div>
-          <div class="field-label">Files to seed (keeps seeding while this page is open)</div>
+          <div class="field-label">Files to seed (creates a new torrent)</div>
           <input
-            id="file-input"
+            id="create-torrent-file-input"
             class="file-input"
             type="file"
             multiple
@@ -279,30 +279,84 @@
         <div style="margin-top: 6px;">
           <div class="field-label">Trackers (one per line, optional)</div>
           <textarea
-            id="trackers-input"
+            id="create-torrent-trackers-input"
             class="textarea"
             rows="3"
-            placeholder="Default: WebTorrent WebRTC trackers. Leave blank to match debug.html/dplayer.html."
+            placeholder="Default: WebTorrent WebRTC trackers."
+          ></textarea>
+        </div>
+        <div class="controls-row">
+          <button class="button" id="create-torrent-button">Create & Seed</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">2. Seed from .torrent file</div>
+        </div>
+        <div>
+          <div class="field-label">.torrent file</div>
+          <input
+            id="seed-torrent-file-input"
+            class="file-input"
+            type="file"
+            accept=".torrent"
+          >
+        </div>
+        <div style="margin-top: 6px;">
+          <div class="field-label">Content files</div>
+          <input
+            id="seed-torrent-content-input"
+            class="file-input"
+            type="file"
+            multiple
+          >
+        </div>
+        <div class="controls-row">
+          <button class="button" id="seed-torrent-button">Seed from .torrent</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">3. Seed from magnet link</div>
+        </div>
+        <div>
+          <div class="field-label">Magnet URI</div>
+          <textarea
+            id="seed-magnet-uri-input"
+            class="textarea"
+            rows="3"
+            placeholder="magnet:?xt=urn:btih:..."
           ></textarea>
         </div>
         <div style="margin-top: 6px;">
-          <div class="field-label">Magnet URI (generated after seeding starts)</div>
-          <div class="input" style="height:auto; min-height: 32px; padding-top: 6px;" id="magnet-output"></div>
-        </div>
-        <div style="margin-top: 6px;">
-          <div class="field-label">Infohash</div>
-          <div class="mono" id="infohash-output">–</div>
+          <div class="field-label">Content files</div>
+          <input
+            id="seed-magnet-content-input"
+            class="file-input"
+            type="file"
+            multiple
+          >
         </div>
         <div class="controls-row">
-          <button class="button" id="start-seed">Start seeding</button>
-          <button class="button" id="stop-seed">Stop</button>
-          <span style="font-size: 11px; color: var(--muted);">
-            For WebRTC-only experiments, keep this tab open while using debug.html / dplayer.html.
-          </span>
+          <button class="button" id="seed-magnet-button">Seed from magnet</button>
         </div>
-      </section>
+      </div>
+    </main>
 
-      <aside class="panel">
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Seeding status</div>
+        <button class="button" id="stop-seed" style="display: none;">Stop</button>
+      </div>
+      <div style="margin-top: 6px;">
+        <div class="field-label">Magnet URI</div>
+        <div class="input" style="height:auto; min-height: 32px; padding-top: 6px;" id="magnet-output"></div>
+      </div>
+      <div style="margin-top: 6px;">
+        <div class="field-label">Infohash</div>
+        <div class="mono" id="infohash-output">–</div>
+      </div>
+      <aside class="panel" style="margin-top: 12px; background-color: #050608;">
         <div class="panel-header">
           <div class="panel-title">Swarm status</div>
         </div>
@@ -325,7 +379,7 @@
           </div>
         </div>
       </aside>
-    </main>
+    </section>
 
     <section class="panel">
       <div class="panel-header">
@@ -341,6 +395,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+  <script src="https://bundle.run/parse-torrent"></script>
   <script>
     const DEFAULT_TRACKERS = [
       "wss://tracker.openwebtorrent.com",
@@ -367,20 +422,32 @@
     }
 
     function initBrowserSeeder() {
-      const fileInput = document.getElementById("file-input");
-      const trackersInput = document.getElementById("trackers-input");
+      // Create/seed
+      const createTorrentFileInput = document.getElementById("create-torrent-file-input");
+      const createTorrentTrackersInput = document.getElementById("create-torrent-trackers-input");
+      const createTorrentButton = document.getElementById("create-torrent-button");
+
+      // Seed from .torrent
+      const seedTorrentFileInput = document.getElementById("seed-torrent-file-input");
+      const seedTorrentContentInput = document.getElementById("seed-torrent-content-input");
+      const seedTorrentButton = document.getElementById("seed-torrent-button");
+
+      // Seed from magnet
+      const seedMagnetUriInput = document.getElementById("seed-magnet-uri-input");
+      const seedMagnetContentInput = document.getElementById("seed-magnet-content-input");
+      const seedMagnetButton = document.getElementById("seed-magnet-button");
+      
+      const stopButton = document.getElementById("stop-seed");
+
+      // Status
       const magnetOutput = document.getElementById("magnet-output");
       const infohashOutput = document.getElementById("infohash-output");
       const statusLabelEl = document.getElementById("status-label");
-
       const filesEl = document.getElementById("status-files");
       const peersEl = document.getElementById("status-peers");
       const speedEl = document.getElementById("status-speed");
       const uploadedEl = document.getElementById("status-uploaded");
-
       const logEl = document.getElementById("log");
-      const startButton = document.getElementById("start-seed");
-      const stopButton = document.getElementById("stop-seed");
 
       let client = null;
       let activeTorrent = null;
@@ -404,6 +471,7 @@
         infohashOutput.textContent = "–";
         magnetOutput.textContent = "";
         statusLabelEl.textContent = "Idle";
+        stopButton.style.display = "none";
       }
 
       function ensureClient() {
@@ -454,77 +522,40 @@
         }
         client = null;
         resetStatus();
+        appendLog("Seeding stopped.");
       }
-
-      function startSeeding() {
-        const c = ensureClient();
-        if (!c) return;
-        if (activeTorrent) {
-          appendLog("Already seeding; stop first to change files or trackers.");
-          return;
-        }
-
-        const files = fileInput && fileInput.files ? Array.from(fileInput.files) : [];
-        if (!files.length) {
-          appendLog("Select at least one file to seed.");
-          statusLabelEl.textContent = "Error";
-          return;
-        }
-
-        const trackerLines = trackersInput.value
-          .split(/\r?\n/)
-          .map((line) => line.trim())
-          .filter(Boolean);
-        const trackers = trackerLines.length ? trackerLines : DEFAULT_TRACKERS.slice();
-
-        resetStatus();
-        filesEl.textContent = String(files.length);
-        statusLabelEl.textContent = "Connecting";
+      
+      function onTorrent(torrent) {
+        activeTorrent = torrent;
+        infohashOutput.textContent = torrent.infoHash || "–";
+        magnetOutput.textContent = torrent.magnetURI || "";
         appendLog(
-          "Starting WebRTC seeding with trackers: " + trackers.join(", ")
+          "Seeding torrent: " +
+            (torrent.name || torrent.infoHash || "unnamed")
         );
+        appendLog("Magnet: " + (torrent.magnetURI || ""));
+        statusLabelEl.textContent = "Seeding";
+        stopButton.style.display = "block";
 
-        try {
-          activeTorrent = c.seed(files, { announce: trackers }, (torrent) => {
-            infohashOutput.textContent = torrent.infoHash || "–";
-            magnetOutput.textContent = torrent.magnetURI || "";
-            appendLog(
-              "Seeding torrent: " +
-                (torrent.name || torrent.infoHash || "unnamed")
-            );
-            appendLog("Magnet: " + (torrent.magnetURI || ""));
-            statusLabelEl.textContent = "Seeding";
-
-            if (statusInterval) {
-              clearInterval(statusInterval);
-            }
-            statusInterval = setInterval(() => {
-              if (!activeTorrent) return;
-              const t = activeTorrent;
-              peersEl.textContent = String(t.numPeers || 0);
-              const down = t.downloadSpeed || 0;
-              const up = t.uploadSpeed || 0;
-              speedEl.textContent =
-                formatSize(down) + "/s · " + formatSize(up) + "/s";
-              uploadedEl.textContent = formatSize(t.uploaded || 0);
-            }, 1000);
-          });
-        } catch (e) {
-          statusLabelEl.textContent = "Error";
-          appendLog(
-            "Error starting seeding: " +
-              (e && e.message ? e.message : String(e))
-          );
-          return;
+        if (statusInterval) {
+          clearInterval(statusInterval);
         }
+        statusInterval = setInterval(() => {
+          if (!activeTorrent) return;
+          const t = activeTorrent;
+          peersEl.textContent = String(t.numPeers || 0);
+          const down = t.downloadSpeed || 0;
+          const up = t.uploadSpeed || 0;
+          speedEl.textContent =
+            formatSize(down) + "/s · " + formatSize(up) + "/s";
+          uploadedEl.textContent = formatSize(t.uploaded || 0);
+        }, 1000);
 
-        const t = activeTorrent;
-
-        t.on("wire", (wire, addr) => {
+        torrent.on("wire", (wire, addr) => {
           appendLog("Peer connected: " + (addr || "WebRTC peer"));
         });
 
-        t.on("noPeers", (announceType) => {
+        torrent.on("noPeers", (announceType) => {
           appendLog(
             "noPeers from " +
               (announceType || "all sources") +
@@ -532,7 +563,7 @@
           );
         });
 
-        t.on("error", (err) => {
+        torrent.on("error", (err) => {
           statusLabelEl.textContent = "Error";
           appendLog(
             "Torrent error: " +
@@ -541,12 +572,134 @@
         });
       }
 
-      startButton.addEventListener("click", startSeeding);
+      function startSeeding(files, opts, expectedInfoHash = null) {
+        const c = ensureClient();
+        if (!c) return;
+        if (activeTorrent) {
+          appendLog("Already seeding; stop first to change files or trackers.");
+          return;
+        }
+
+        if (!files.length) {
+          appendLog("Select at least one file to seed.");
+          statusLabelEl.textContent = "Error";
+          return;
+        }
+
+        resetStatus();
+        filesEl.textContent = String(files.length);
+        statusLabelEl.textContent = "Connecting";
+        appendLog(
+          "Starting WebRTC seeding with trackers: " + (opts.announce || []).join(", ")
+        );
+
+        try {
+          c.seed(files, opts, (torrent) => {
+            if (expectedInfoHash && torrent.infoHash !== expectedInfoHash) {
+              appendLog(`Error: Infohash mismatch. Expected ${expectedInfoHash}, but got ${torrent.infoHash}. Make sure you selected the correct content files.`);
+              stopSeeding();
+              return;
+            }
+            onTorrent(torrent);
+          });
+        } catch (e) {
+          statusLabelEl.textContent = "Error";
+          appendLog(
+            "Error starting seeding: " +
+              (e && e.message ? e.message : String(e))
+          );
+        }
+      }
+
+      function createTorrent() {
+        const files = createTorrentFileInput && createTorrentFileInput.files ? Array.from(createTorrentFileInput.files) : [];
+        const trackerLines = createTorrentTrackersInput.value
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter(Boolean);
+        const trackers = trackerLines.length ? trackerLines : DEFAULT_TRACKERS.slice();
+        startSeeding(files, { announce: trackers });
+      }
+
+      function seedFromTorrentFile() {
+        const torrentFile = seedTorrentFileInput.files[0];
+        const contentFiles = seedTorrentContentInput && seedTorrentContentInput.files ? Array.from(seedTorrentContentInput.files) : [];
+
+        if (!torrentFile) {
+          appendLog("Please select a .torrent file.");
+          return;
+        }
+        if (contentFiles.length === 0) {
+          appendLog("Please select the content files to seed.");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const torrentData = parseTorrent(new Uint8Array(e.target.result));
+            const infoHash = torrentData.infoHash;
+            const trackers = (torrentData.announce || []).length ? torrentData.announce : DEFAULT_TRACKERS.slice();
+             startSeeding(contentFiles, { announce: trackers }, infoHash);
+          } catch (err) {
+            appendLog("Error parsing torrent file: " + err.message);
+          }
+        };
+        reader.readAsArrayBuffer(torrentFile);
+      }
+      
+      function parseMagnetURI(uri) {
+        const result = { xt: null, dn: null, tr: [] };
+        if (!uri) return result;
+        const parts = uri.split('&');
+        parts.forEach(part => {
+          if (part.startsWith('magnet:?xt=')) {
+            result.xt = part.substring('magnet:?xt='.length);
+          } else if (part.startsWith('xt=')) {
+            result.xt = part.substring('xt='.length);
+          } else if (part.startsWith('dn=')) {
+            result.dn = decodeURIComponent(part.substring('dn='.length));
+          } else if (part.startsWith('tr=')) {
+            result.tr.push(decodeURIComponent(part.substring('tr='.length)));
+          }
+        });
+        if (result.xt && result.xt.startsWith('urn:btih:')) {
+            result.xt = result.xt.substring('urn:btih:'.length);
+        }
+        return result;
+      }
+
+      function seedFromMagnet() {
+        const magnetURI = seedMagnetUriInput.value;
+        const contentFiles = seedMagnetContentInput && seedMagnetContentInput.files ? Array.from(seedMagnetContentInput.files) : [];
+        
+        if (!magnetURI) {
+          appendLog("Please enter a magnet URI.");
+          return;
+        }
+        if (contentFiles.length === 0) {
+          appendLog("Please select the content files to seed.");
+          return;
+        }
+        
+        const parsedMagnet = parseMagnetURI(magnetURI);
+        if (!parsedMagnet.xt) {
+          appendLog("Invalid magnet URI: could not find infohash (xt).");
+          return;
+        }
+        
+        const trackers = parsedMagnet.tr.length > 0 ? parsedMagnet.tr : DEFAULT_TRACKERS.slice();
+        startSeeding(contentFiles, { announce: trackers }, parsedMagnet.xt.toLowerCase());
+      }
+
+      createTorrentButton.addEventListener("click", createTorrent);
+      seedTorrentButton.addEventListener("click", seedFromTorrentFile);
+      seedMagnetButton.addEventListener("click", seedFromMagnet);
       stopButton.addEventListener("click", stopSeeding);
 
       resetStatus();
       appendLog(
-        "Ready. Choose file(s) to seed and click \"Start seeding\". Keep this tab open while testing debug.html / dplayer.html."
+        "Ready. Choose a seeding method."
       );
     }
 
