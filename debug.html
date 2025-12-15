@@ -480,6 +480,9 @@
     const DEFAULT_TRACKERS = [
       "wss://tracker.openwebtorrent.com",
       "wss://tracker.webtorrent.dev",
+      "wss://tracker.btorrent.xyz",
+      "wss://tracker.fastcast.nz",
+      "wss://tracker.0x6d.net"
     ];
 
     function buildTrackersQuery(trackers) {
@@ -794,6 +797,60 @@
                 "."
             );
           });
+
+          if (torrent._tracker && typeof torrent._tracker.on === "function") {
+            log("Attaching tracker listeners for debug.");
+            try {
+              torrent._tracker.on("update", (data) => {
+                try {
+                  const url =
+                    (data && (data.announce || data.announceUrl || data.url)) ||
+                    "unknown";
+                  const complete =
+                    data && typeof data.complete === "number"
+                      ? data.complete
+                      : "n/a";
+                  const incomplete =
+                    data && typeof data.incomplete === "number"
+                      ? data.incomplete
+                      : "n/a";
+                  const downloaded =
+                    data && typeof data.downloaded === "number"
+                      ? data.downloaded
+                      : "n/a";
+                  log(
+                    "[tracker update] " +
+                      url +
+                      " complete=" +
+                      complete +
+                      " incomplete=" +
+                      incomplete +
+                      " downloaded=" +
+                      downloaded
+                  );
+                } catch (e) {
+                  log(
+                    "[tracker update] " +
+                      (data ? String(data) : "unknown payload")
+                  );
+                }
+              });
+              torrent._tracker.on("warning", (err) => {
+                log(
+                  "[tracker warning] " +
+                    (err && err.message ? err.message : String(err))
+                );
+              });
+              torrent._tracker.on("error", (err) => {
+                log(
+                  "[tracker error] " +
+                    (err && err.message ? err.message : String(err))
+                );
+              });
+            } catch (e) {
+              // ignore
+            }
+          }
         } catch (e) {
           // ignore
         }
