@@ -538,7 +538,6 @@
         statusLabelEl.textContent = "Idle";
         statusMethodEl.textContent = "–";
         stopButton.style.display = "none";
-        clearActiveMethod();
       }
 
       function ensureClient() {
@@ -588,6 +587,7 @@
           }
         }
         client = null;
+        clearActiveMethod();
         resetStatus();
         appendLog("Seeding stopped.");
       }
@@ -686,8 +686,8 @@
           .map((line) => line.trim())
           .filter(Boolean);
         const trackers = trackerLines.length ? trackerLines : DEFAULT_TRACKERS.slice();
-        setActiveMethod('method-create');
         startSeeding(files, { announce: trackers }, "Create");
+        setActiveMethod('method-create');
       }
 
       function seedFromTorrentFile() {
@@ -723,8 +723,8 @@
             if (torrentData.creationDate) opts.creationDate = torrentData.creationDate;
 
             appendLog("Parsed .torrent: " + torrentData.name + " (pieceLength: " + torrentData.pieceLength + ")");
-            setActiveMethod('method-torrent');
             startSeeding(contentFiles, opts, "Torrent file", infoHash);
+            setActiveMethod('method-torrent');
           } catch (err) {
             appendLog("Error parsing torrent file: " + err.message);
           }
@@ -791,11 +791,11 @@
           appendLog("Converted infohash to magnet URI.");
         }
 
-        setActiveMethod('method-seed-magnet');
         resetStatus();
         filesEl.textContent = String(contentFiles.length);
         statusLabelEl.textContent = "Fetching metadata";
         appendLog("Fetching torrent metadata from magnet URI...");
+        setActiveMethod('method-seed-magnet');
 
         // First, add the magnet to fetch metadata (without downloading)
         try {
@@ -880,10 +880,10 @@
           appendLog("Converted infohash to magnet URI.");
         }
 
-        setActiveMethod('method-download');
         resetStatus();
         statusLabelEl.textContent = "Downloading";
         appendLog("Starting download from magnet URI...");
+        setActiveMethod('method-download');
 
         try {
           const torrent = c.add(magnetURI);
