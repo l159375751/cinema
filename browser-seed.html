@@ -320,12 +320,12 @@
           <div class="panel-title">3. Seed from magnet/infohash</div>
         </div>
         <div>
-          <div class="field-label">Magnet URI or infohash</div>
+          <div class="field-label">Magnet URI or infohash (fetches metadata from swarm)</div>
           <textarea
             id="seed-magnet-uri-input"
             class="textarea"
             rows="3"
-            placeholder="magnet:?xt=urn:btih:... or infohash"
+            placeholder="magnet:?xt=urn:btih:abc123... or just: abc123..."
           ></textarea>
         </div>
         <div style="margin-top: 6px;">
@@ -399,7 +399,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
-  <script src="https://unpkg.com/parse-torrent@latest/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/parse-torrent@9.1.5/dist/parse-torrent.min.js"></script>
   <script>
     const DEFAULT_TRACKERS = [
       "wss://tracker.openwebtorrent.com",
@@ -603,7 +603,7 @@
         try {
           c.seed(files, opts, (torrent) => {
             if (expectedInfoHash && torrent.infoHash !== expectedInfoHash) {
-              appendLog(`Error: Infohash mismatch. Expected ${expectedInfoHash}, but got ${torrent.infoHash}. Make sure you selected the correct content files.`);
+              appendLog(`Error: Infohash mismatch. Expected ${expectedInfoHash}, but got ${torrent.infoHash}. Make sure you selected the correct content files and they match the original torrent structure.`);
               stopSeeding();
               return;
             }
@@ -647,7 +647,21 @@
             const torrentData = parseTorrent(new Uint8Array(e.target.result));
             const infoHash = torrentData.infoHash;
             const trackers = (torrentData.announce || []).length ? torrentData.announce : DEFAULT_TRACKERS.slice();
-             startSeeding(contentFiles, { announce: trackers }, "Torrent file", infoHash);
+
+            // Extract all metadata to recreate the exact same torrent
+            const opts = {
+              announce: trackers,
+              name: torrentData.name,
+              pieceLength: torrentData.pieceLength
+            };
+
+            // Add comment and creation date if present
+            if (torrentData.comment) opts.comment = torrentData.comment;
+            if (torrentData.createdBy) opts.createdBy = torrentData.createdBy;
+            if (torrentData.creationDate) opts.creationDate = torrentData.creationDate;
+
+            appendLog("Parsed .torrent: " + torrentData.name + " (pieceLength: " + torrentData.pieceLength + ")");
+            startSeeding(contentFiles, opts, "Torrent file", infoHash);
           } catch (err) {
             appendLog("Error parsing torrent file: " + err.message);
           }
@@ -683,10 +697,10 @@
       }
 
       function seedFromMagnetOrInfohash() {
-        const magnetURI = seedMagnetUriInput.value;
+        const magnetInput = seedMagnetUriInput.value.trim();
         const contentFiles = seedMagnetContentInput && seedMagnetContentInput.files ? Array.from(seedMagnetContentInput.files) : [];
-        
-        if (!magnetURI) {
+
+        if (!magnetInput) {
           appendLog("Please enter a magnet URI or infohash.");
           return;
         }
@@ -694,15 +708,85 @@
           appendLog("Please select the content files to seed.");
           return;
         }
-        
-        const parsedMagnet = parseMagnetURI(magnetURI);
-        if (!parsedMagnet.xt) {
-          appendLog("Invalid magnet URI or infohash.");
+
+        const c = ensureClient();
+        if (!c) return;
+        if (activeTorrent) {
+          appendLog("Already seeding; stop first to change files or trackers.");
           return;
         }
-        
-        const trackers = parsedMagnet.tr.length > 0 ? parsedMagnet.tr : DEFAULT_TRACKERS.slice();
-        startSeeding(contentFiles, { announce: trackers }, "Magnet/Infohash", parsedMagnet.xt.toLowerCase());
+
+        // Parse magnet or convert infohash to magnet
+        let magnetURI;
+        if (magnetInput.startsWith('magnet:')) {
+          magnetURI = magnetInput;
+        } else {
+          // Assume it's an infohash - convert to magnet URI
+          const infohash = magnetInput.toLowerCase();
+          const trackerParams = DEFAULT_TRACKERS.map(t => '&tr=' + encodeURIComponent(t)).join('');
+          magnetURI = 'magnet:?xt=urn:btih:' + infohash + trackerParams;
+          appendLog("Converted infohash to magnet URI.");
+        }
+
+        resetStatus();
+        filesEl.textContent = String(contentFiles.length);
+        statusLabelEl.textContent = "Fetching metadata";
+        appendLog("Fetching torrent metadata from magnet URI...");
+
+        // First, add the magnet to fetch metadata (without downloading)
+        try {
+          const tempTorrent = c.add(magnetURI, {
+            path: '/tmp/cinema-metadata-fetch',
+            skipVerify: true
+          });
+
+          tempTorrent.on('metadata', () => {
+            appendLog("Metadata received: " + tempTorrent.name);
+
+            // Extract metadata
+            const opts = {
+              announce: tempTorrent.announce || DEFAULT_TRACKERS.slice(),
+              name: tempTorrent.name,
+              pieceLength: tempTorrent.pieceLength
+            };
+
+            const expectedInfoHash = tempTorrent.infoHash;
+
+            // Destroy the temp torrent
+            tempTorrent.destroy(() => {
+              appendLog("Starting seeding with extracted metadata...");
+              // Now seed with the actual files using the extracted metadata
+              startSeeding(contentFiles, opts, "Magnet/Infohash", expectedInfoHash);
+            });
+          });
+
+          tempTorrent.on('error', (err) => {
+            statusLabelEl.textContent = "Error";
+            appendLog("Error fetching metadata: " + (err && err.message ? err.message : String(err)));
+            try {
+              tempTorrent.destroy();
+            } catch (e) {
+              // ignore
+            }
+          });
+
+          // Set a timeout for metadata fetch
+          setTimeout(() => {
+            if (tempTorrent && !tempTorrent.metadata) {
+              appendLog("Timeout waiting for metadata. Make sure the magnet/infohash is valid and has seeders.");
+              statusLabelEl.textContent = "Timeout";
+              try {
+                tempTorrent.destroy();
+              } catch (e) {
+                // ignore
+              }
+            }
+          }, 30000); // 30 second timeout
+
+        } catch (e) {
+          statusLabelEl.textContent = "Error";
+          appendLog("Error adding magnet: " + (e && e.message ? e.message : String(e)));
+        }
       }
 
       createTorrentButton.addEventListener("click", createTorrent);
