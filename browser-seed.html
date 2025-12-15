@@ -338,7 +338,7 @@
 
     <main class="layout">
       <div class="panel" id="method-create">
-        <button class="panel-stop-btn" onclick="stopSeeding()">⏸ Stop</button>
+        <button class="panel-stop-btn">⏸ Stop</button>
         <div class="panel-header">
           <div class="panel-title">1. Create Torrent</div>
         </div>
@@ -365,7 +365,7 @@
         </div>
       </div>
       <div class="panel" id="method-torrent">
-        <button class="panel-stop-btn" onclick="stopSeeding()">⏸ Stop</button>
+        <button class="panel-stop-btn">⏸ Stop</button>
         <div class="panel-header">
           <div class="panel-title">2. Seed from .torrent file</div>
         </div>
@@ -392,7 +392,7 @@
         </div>
       </div>
       <div class="panel" id="method-seed-magnet">
-        <button class="panel-stop-btn" onclick="stopSeeding()">⏸ Stop</button>
+        <button class="panel-stop-btn">⏸ Stop</button>
         <div class="panel-header">
           <div class="panel-title">3. Seed from magnet/infohash</div>
         </div>
@@ -419,7 +419,7 @@
         </div>
       </div>
       <div class="panel" id="method-download">
-        <button class="panel-stop-btn" onclick="stopSeeding()">⏸ Stop</button>
+        <button class="panel-stop-btn">⏸ Stop</button>
         <div class="panel-header">
           <div class="panel-title">4. Download from magnet</div>
         </div>
@@ -1002,6 +1002,11 @@
       seedMagnetButton.addEventListener("click", seedFromMagnetOrInfohash);
       downloadMagnetButton.addEventListener("click", downloadFromMagnet);
       stopButton.addEventListener("click", stopSeeding);
+
+      // Add event listeners to all panel stop buttons
+      document.querySelectorAll('.panel-stop-btn').forEach(btn => {
+        btn.addEventListener('click', stopSeeding);
+      });
 
       resetStatus();
       appendLog(
