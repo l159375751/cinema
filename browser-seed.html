@@ -103,10 +103,10 @@
     }
 
     .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(260px, 1fr);
+      display: flex;
+      flex-direction: column;
       gap: 16px;
-      align-items: flex-start;
+      align-items: stretch;
     }
 
     .field-label {
@@ -317,15 +317,15 @@
       </div>
       <div class="panel">
         <div class="panel-header">
-          <div class="panel-title">3. Seed from magnet link</div>
+          <div class="panel-title">3. Seed from magnet/infohash</div>
         </div>
         <div>
-          <div class="field-label">Magnet URI</div>
+          <div class="field-label">Magnet URI or infohash</div>
           <textarea
             id="seed-magnet-uri-input"
             class="textarea"
             rows="3"
-            placeholder="magnet:?xt=urn:btih:..."
+            placeholder="magnet:?xt=urn:btih:... or infohash"
           ></textarea>
         </div>
         <div style="margin-top: 6px;">
@@ -361,6 +361,10 @@
           <div class="panel-title">Swarm status</div>
         </div>
         <div class="status-grid">
+          <div class="status-item">
+            <div class="status-label">Active method</div>
+            <div class="status-value" id="status-method">–</div>
+          </div>
           <div class="status-item">
             <div class="status-label">Files</div>
             <div class="status-value status-value-strong" id="status-files">0</div>
@@ -443,6 +447,7 @@
       const magnetOutput = document.getElementById("magnet-output");
       const infohashOutput = document.getElementById("infohash-output");
       const statusLabelEl = document.getElementById("status-label");
+      const statusMethodEl = document.getElementById("status-method");
       const filesEl = document.getElementById("status-files");
       const peersEl = document.getElementById("status-peers");
       const speedEl = document.getElementById("status-speed");
@@ -471,6 +476,7 @@
         infohashOutput.textContent = "–";
         magnetOutput.textContent = "";
         statusLabelEl.textContent = "Idle";
+        statusMethodEl.textContent = "–";
         stopButton.style.display = "none";
       }
 
@@ -525,10 +531,11 @@
         appendLog("Seeding stopped.");
       }
       
-      function onTorrent(torrent) {
+      function onTorrent(torrent, method) {
         activeTorrent = torrent;
         infohashOutput.textContent = torrent.infoHash || "–";
         magnetOutput.textContent = torrent.magnetURI || "";
+        statusMethodEl.textContent = method;
         appendLog(
           "Seeding torrent: " +
             (torrent.name || torrent.infoHash || "unnamed")
@@ -572,7 +579,7 @@
         });
       }
 
-      function startSeeding(files, opts, expectedInfoHash = null) {
+      function startSeeding(files, opts, method, expectedInfoHash = null) {
         const c = ensureClient();
         if (!c) return;
         if (activeTorrent) {
@@ -600,7 +607,7 @@
               stopSeeding();
               return;
             }
-            onTorrent(torrent);
+            onTorrent(torrent, method);
           });
         } catch (e) {
           statusLabelEl.textContent = "Error";
@@ -618,7 +625,7 @@
           .map((line) => line.trim())
           .filter(Boolean);
         const trackers = trackerLines.length ? trackerLines : DEFAULT_TRACKERS.slice();
-        startSeeding(files, { announce: trackers });
+        startSeeding(files, { announce: trackers }, "Create");
       }
 
       function seedFromTorrentFile() {
@@ -640,7 +647,7 @@
             const torrentData = parseTorrent(new Uint8Array(e.target.result));
             const infoHash = torrentData.infoHash;
             const trackers = (torrentData.announce || []).length ? torrentData.announce : DEFAULT_TRACKERS.slice();
-             startSeeding(contentFiles, { announce: trackers }, infoHash);
+             startSeeding(contentFiles, { announce: trackers }, "Torrent file", infoHash);
           } catch (err) {
             appendLog("Error parsing torrent file: " + err.message);
           }
@@ -651,30 +658,36 @@
       function parseMagnetURI(uri) {
         const result = { xt: null, dn: null, tr: [] };
         if (!uri) return result;
-        const parts = uri.split('&');
-        parts.forEach(part => {
-          if (part.startsWith('magnet:?xt=')) {
-            result.xt = part.substring('magnet:?xt='.length);
-          } else if (part.startsWith('xt=')) {
-            result.xt = part.substring('xt='.length);
-          } else if (part.startsWith('dn=')) {
-            result.dn = decodeURIComponent(part.substring('dn='.length));
-          } else if (part.startsWith('tr=')) {
-            result.tr.push(decodeURIComponent(part.substring('tr='.length)));
-          }
-        });
-        if (result.xt && result.xt.startsWith('urn:btih:')) {
-            result.xt = result.xt.substring('urn:btih:'.length);
+        
+        if (uri.startsWith('magnet:?')) {
+            const parts = uri.split('&');
+            parts.forEach(part => {
+              if (part.startsWith('magnet:?xt=')) {
+                result.xt = part.substring('magnet:?xt='.length);
+              } else if (part.startsWith('xt=')) {
+                result.xt = part.substring('xt='.length);
+              } else if (part.startsWith('dn=')) {
+                result.dn = decodeURIComponent(part.substring('dn='.length));
+              } else if (part.startsWith('tr=')) {
+                result.tr.push(decodeURIComponent(part.substring('tr='.length)));
+              }
+            });
+            if (result.xt && result.xt.startsWith('urn:btih:')) {
+                result.xt = result.xt.substring('urn:btih:'.length);
+            }
+        } else {
+            // Assume it's an infohash
+            result.xt = uri;
         }
         return result;
       }
 
-      function seedFromMagnet() {
+      function seedFromMagnetOrInfohash() {
         const magnetURI = seedMagnetUriInput.value;
         const contentFiles = seedMagnetContentInput && seedMagnetContentInput.files ? Array.from(seedMagnetContentInput.files) : [];
         
         if (!magnetURI) {
-          appendLog("Please enter a magnet URI.");
+          appendLog("Please enter a magnet URI or infohash.");
           return;
         }
         if (contentFiles.length === 0) {
@@ -684,17 +697,17 @@
         
         const parsedMagnet = parseMagnetURI(magnetURI);
         if (!parsedMagnet.xt) {
-          appendLog("Invalid magnet URI: could not find infohash (xt).");
+          appendLog("Invalid magnet URI or infohash.");
           return;
         }
         
         const trackers = parsedMagnet.tr.length > 0 ? parsedMagnet.tr : DEFAULT_TRACKERS.slice();
-        startSeeding(contentFiles, { announce: trackers }, parsedMagnet.xt.toLowerCase());
+        startSeeding(contentFiles, { announce: trackers }, "Magnet/Infohash", parsedMagnet.xt.toLowerCase());
       }
 
       createTorrentButton.addEventListener("click", createTorrent);
       seedTorrentButton.addEventListener("click", seedFromTorrentFile);
-      seedMagnetButton.addEventListener("click", seedFromMagnet);
+      seedMagnetButton.addEventListener("click", seedFromMagnetOrInfohash);
       stopButton.addEventListener("click", stopSeeding);
 
       resetStatus();
