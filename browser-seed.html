@@ -1102,6 +1102,11 @@
         }
       }
 
+      // Auto-inspect torrent file when selected in method 5
+      inspectTorrentFileInput.addEventListener("change", function() {
+        inspectTorrent();
+      });
+
       // Auto-inspect torrent file when selected in method 2
       seedTorrentFileInput.addEventListener("change", function() {
         const torrentFile = seedTorrentFileInput.files[0];
