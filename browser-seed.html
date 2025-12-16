@@ -790,8 +790,16 @@
               pieceLength: tempTorrent.pieceLength
             };
 
-            appendLog("Parsed .torrent: " + tempTorrent.name);
-            appendLog("Infohash: " + infoHash + ", Piece length: " + tempTorrent.pieceLength + " bytes");
+            appendLog("=== TORRENT FILE INFO ===");
+            appendLog("Name: " + tempTorrent.name);
+            appendLog("Infohash: " + infoHash);
+            appendLog("Piece Length: " + tempTorrent.pieceLength + " bytes (" + (tempTorrent.pieceLength / 1024) + " KB)");
+            appendLog("Total Length: " + tempTorrent.length + " bytes (" + formatSize(tempTorrent.length) + ")");
+            appendLog("Files (" + tempTorrent.files.length + "):");
+            tempTorrent.files.forEach((file, idx) => {
+              appendLog("  [" + idx + "] " + file.name + " (" + formatSize(file.length) + ")");
+            });
+            appendLog("=== PREPARING TO SEED ===");
 
             // Destroy temp torrent
             tempTorrent.destroy(() => {
