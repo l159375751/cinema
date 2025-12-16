@@ -737,7 +737,8 @@
         reader.onload = function(e) {
           try {
             // Use WebTorrent to parse the .torrent file
-            const tempTorrent = c.add(new Uint8Array(e.target.result), { path: '/tmp' });
+            const torrentBlob = new Blob([e.target.result]);
+            const tempTorrent = c.add(torrentBlob, { path: '/tmp' });
 
             tempTorrent.on('metadata', () => {
               const infoHash = tempTorrent.infoHash;
