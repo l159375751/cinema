@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Mini Cinema · P2P Streaming</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050608;
+      --bg-alt: #111219;
+      --accent: #e0c680;
+      --accent-soft: rgba(224, 198, 128, 0.14);
+      --text: #f3f3f5;
+      --muted: #a3a3b5;
+      --border: #252637;
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 16px 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title-mark {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: #e2e2ea;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(240px, 1fr);
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .panel {
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 12px 12px 14px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .player-panel {
+      padding: 10px;
+    }
+
+    .player-shell {
+      position: relative;
+      border-radius: calc(var(--radius) - 2px);
+      overflow: hidden;
+      background: #151621;
+      aspect-ratio: 16 / 9;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .media-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .media-item {
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .media-item:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .media-item.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .media-title {
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .media-meta {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .stat-item {
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+      margin-top: 2px;
+      color: var(--accent);
+    }
+
+    .chart-container {
+      position: relative;
+      height: 180px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 780px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <div class="title">
+          <span class="title-mark"></span>
+          Mini Cinema · P2P
+        </div>
+        <div class="subtitle">
+          Peer-to-peer HLS streaming with WebRTC
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <div>
+        <div class="panel player-panel">
+          <div class="player-shell">
+            <video id="player" controls></video>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">P2P Statistics</div>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-label">Peers</div>
+              <div class="stat-value" id="stat-peers">0</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Download</div>
+              <div class="stat-value" id="stat-download">0 kB/s</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Upload</div>
+              <div class="stat-value" id="stat-upload">0 kB/s</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">P2P Ratio</div>
+              <div class="stat-value" id="stat-p2p">0%</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="bandwidth-chart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="panel-title">Media Library</div>
+          <div class="media-list" id="media-list">
+            <!-- Will be populated by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@latest/build/p2p-media-loader-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@latest/build/p2p-media-loader-hlsjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <script>
+    // Demo media library (HLS streams)
+    const mediaLibrary = [
+      {
+        title: "Big Buck Bunny",
+        url: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+        meta: "Mux · 1080p · HLS"
+      },
+      {
+        title: "Elephants Dream",
+        url: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8",
+        meta: "Unified Streaming · HLS"
+      },
+      {
+        title: "Sintel",
+        url: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
+        meta: "Akamai · Multi-bitrate · HLS"
+      }
+    ];
+
+    let hls = null;
+    let chart = null;
+    let statsInterval = null;
+
+    const video = document.getElementById('player');
+    const mediaListEl = document.getElementById('media-list');
+
+    // Populate media library
+    mediaLibrary.forEach((media, idx) => {
+      const item = document.createElement('div');
+      item.className = 'media-item';
+      item.innerHTML = `
+        <div class="media-title">${media.title}</div>
+        <div class="media-meta">${media.meta}</div>
+      `;
+      item.addEventListener('click', () => loadMedia(media.url, idx));
+      mediaListEl.appendChild(item);
+    });
+
+    // Initialize bandwidth chart
+    const ctx = document.getElementById('bandwidth-chart').getContext('2d');
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: 'HTTP',
+            data: [],
+            borderColor: '#e0c680',
+            backgroundColor: 'rgba(224, 198, 128, 0.1)',
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'P2P',
+            data: [],
+            borderColor: '#5a8f63',
+            backgroundColor: 'rgba(90, 143, 99, 0.1)',
+            tension: 0.4,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          intersect: false,
+          mode: 'index'
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: '#a3a3b5',
+              font: {
+                size: 11
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            display: false
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#a3a3b5',
+              font: {
+                size: 10
+              },
+              callback: function(value) {
+                return formatSpeed(value * 1024);
+              }
+            },
+            grid: {
+              color: 'rgba(255, 255, 255, 0.05)'
+            }
+          }
+        }
+      }
+    });
+
+    function formatSpeed(bytesPerSecond) {
+      if (bytesPerSecond < 1024) return bytesPerSecond.toFixed(0) + ' B/s';
+      if (bytesPerSecond < 1024 * 1024) return (bytesPerSecond / 1024).toFixed(1) + ' kB/s';
+      return (bytesPerSecond / (1024 * 1024)).toFixed(2) + ' MB/s';
+    }
+
+    function updateStats() {
+      if (!hls || !hls.p2pEngine) return;
+
+      const stats = hls.p2pEngine.getStats();
+
+      document.getElementById('stat-peers').textContent = stats.numPeers || 0;
+      document.getElementById('stat-download').textContent = formatSpeed(stats.totalDownloadSpeed || 0);
+      document.getElementById('stat-upload').textContent = formatSpeed(stats.totalUploadSpeed || 0);
+
+      const totalDownloaded = (stats.totalHttpDownloaded || 0) + (stats.totalP2PDownloaded || 0);
+      const p2pRatio = totalDownloaded > 0 ? ((stats.totalP2PDownloaded || 0) / totalDownloaded * 100).toFixed(1) : 0;
+      document.getElementById('stat-p2p').textContent = p2pRatio + '%';
+
+      // Update chart
+      const now = new Date().toLocaleTimeString();
+      const httpSpeed = (stats.totalHttpDownloadSpeed || 0) / 1024; // Convert to kB/s
+      const p2pSpeed = (stats.totalP2PDownloadSpeed || 0) / 1024;
+
+      chart.data.labels.push(now);
+      chart.data.datasets[0].data.push(httpSpeed);
+      chart.data.datasets[1].data.push(p2pSpeed);
+
+      // Keep only last 20 data points
+      if (chart.data.labels.length > 20) {
+        chart.data.labels.shift();
+        chart.data.datasets[0].data.shift();
+        chart.data.datasets[1].data.shift();
+      }
+
+      chart.update('none');
+    }
+
+    function loadMedia(url, idx) {
+      // Update active state
+      document.querySelectorAll('.media-item').forEach((item, i) => {
+        item.classList.toggle('active', i === idx);
+      });
+
+      // Stop previous stream
+      if (hls) {
+        hls.destroy();
+        clearInterval(statsInterval);
+      }
+
+      // Initialize P2P engine
+      const engine = new p2pml.hlsjs.Engine();
+
+      // Initialize HLS.js with P2P engine
+      hls = new Hls({
+        liveSyncDurationCount: 7,
+        loader: engine.createLoaderClass()
+      });
+
+      // Attach P2P engine to HLS instance
+      p2pml.hlsjs.initHlsJsPlayer(hls);
+
+      hls.loadSource(url);
+      hls.attachMedia(video);
+
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        video.play();
+      });
+
+      // Start stats updates
+      statsInterval = setInterval(updateStats, 1000);
+    }
+
+    // Load first media by default
+    loadMedia(mediaLibrary[0].url, 0);
+  </script>
+</body>
+</html>
