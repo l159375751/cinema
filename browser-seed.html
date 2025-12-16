@@ -1102,6 +1102,48 @@
         }
       }
 
+      // Auto-inspect torrent file when selected in method 2
+      seedTorrentFileInput.addEventListener("change", function() {
+        const torrentFile = seedTorrentFileInput.files[0];
+        if (!torrentFile) return;
+
+        const c = ensureClient();
+        if (!c) return;
+
+        appendLog("=== TORRENT FILE INFO ===");
+        appendLog("File: " + torrentFile.name);
+
+        try {
+          const tempTorrent = c.add(torrentFile, { path: '/tmp' });
+
+          tempTorrent.on('metadata', () => {
+            appendLog("Name: " + tempTorrent.name);
+            appendLog("Infohash: " + tempTorrent.infoHash);
+            appendLog("Piece Length: " + tempTorrent.pieceLength + " bytes (" + (tempTorrent.pieceLength / 1024) + " KB)");
+            appendLog("Total Length: " + tempTorrent.length + " bytes (" + formatSize(tempTorrent.length) + ")");
+            appendLog("Files (" + tempTorrent.files.length + "):");
+            tempTorrent.files.forEach((file, idx) => {
+              appendLog("  [" + idx + "] " + file.name + " (" + formatSize(file.length) + ")");
+            });
+            appendLog("=== END INFO ===");
+
+            // Cleanup
+            tempTorrent.destroy();
+          });
+
+          tempTorrent.on('error', (err) => {
+            appendLog("Error reading .torrent: " + err.message);
+            try {
+              tempTorrent.destroy();
+            } catch (e) {
+              // ignore
+            }
+          });
+        } catch (err) {
+          appendLog("Error: " + err.message);
+        }
+      });
+
       createTorrentButton.addEventListener("click", createTorrent);
       seedTorrentButton.addEventListener("click", seedFromTorrentFile);
       seedMagnetButton.addEventListener("click", seedFromMagnetOrInfohash);
