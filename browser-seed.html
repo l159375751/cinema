@@ -353,6 +353,16 @@
           >
         </div>
         <div style="margin-top: 6px;">
+          <div class="field-label">Piece length (bytes)</div>
+          <input
+            id="create-torrent-piece-length"
+            class="input"
+            type="number"
+            value="524288"
+            placeholder="524288 (512 KB)"
+          >
+        </div>
+        <div style="margin-top: 6px;">
           <div class="field-label">Trackers (one per line, optional)</div>
           <textarea
             id="create-torrent-trackers-input"
@@ -482,6 +492,7 @@
     function initBrowserSeeder() {
       // Create/seed
       const createTorrentFileInput = document.getElementById("create-torrent-file-input");
+      const createTorrentPieceLengthInput = document.getElementById("create-torrent-piece-length");
       const createTorrentTrackersInput = document.getElementById("create-torrent-trackers-input");
       const createTorrentButton = document.getElementById("create-torrent-button");
 
@@ -704,13 +715,15 @@
           .filter(Boolean);
         const trackers = trackerLines.length ? trackerLines : DEFAULT_TRACKERS.slice();
 
-        // Enforce 512 KB piece length
+        // Get piece length from input (default 512 KB)
+        const pieceLength = parseInt(createTorrentPieceLengthInput.value) || 524288;
+
         const opts = {
           announce: trackers,
-          pieceLength: 524288  // 512 KB
+          pieceLength: pieceLength
         };
 
-        appendLog("Creating torrent with 512 KB piece length...");
+        appendLog("Creating torrent with piece length: " + pieceLength + " bytes...");
         startSeeding(files, opts, "Create");
         setActiveMethod('method-create');
       }
