@@ -704,7 +704,15 @@
           .map((line) => line.trim())
           .filter(Boolean);
         const trackers = trackerLines.length ? trackerLines : DEFAULT_TRACKERS.slice();
-        startSeeding(files, { announce: trackers }, "Create");
+
+        // Enforce 512 KB piece length
+        const opts = {
+          announce: trackers,
+          pieceLength: 524288  // 512 KB
+        };
+
+        appendLog("Creating torrent with 512 KB piece length...");
+        startSeeding(files, opts, "Create");
         setActiveMethod('method-create');
       }
 
@@ -748,7 +756,8 @@
               pieceLength: tempTorrent.pieceLength
             };
 
-            appendLog("Parsed .torrent: " + tempTorrent.name + " (infohash: " + infoHash + ")");
+            appendLog("Parsed .torrent: " + tempTorrent.name);
+            appendLog("Infohash: " + infoHash + ", Piece length: " + tempTorrent.pieceLength + " bytes");
 
             // Destroy temp torrent
             tempTorrent.destroy(() => {
