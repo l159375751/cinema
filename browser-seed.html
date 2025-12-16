@@ -449,6 +449,23 @@
           <button class="button" id="download-magnet-button">Download & Seed</button>
         </div>
       </div>
+      <div class="panel" id="method-inspect">
+        <div class="panel-header">
+          <div class="panel-title">5. Inspect .torrent file</div>
+        </div>
+        <div>
+          <div class="field-label">.torrent file (debug only, does not seed)</div>
+          <input
+            id="inspect-torrent-file-input"
+            class="file-input"
+            type="file"
+            accept=".torrent"
+          >
+        </div>
+        <div class="controls-row">
+          <button class="button" id="inspect-torrent-button">Inspect</button>
+        </div>
+      </div>
     </main>
 
     <section class="panel">
@@ -509,6 +526,10 @@
       // Download from magnet
       const downloadMagnetUriInput = document.getElementById("download-magnet-uri-input");
       const downloadMagnetButton = document.getElementById("download-magnet-button");
+
+      // Inspect torrent
+      const inspectTorrentFileInput = document.getElementById("inspect-torrent-file-input");
+      const inspectTorrentButton = document.getElementById("inspect-torrent-button");
 
       const stopButton = document.getElementById("stop-seed");
 
@@ -1017,10 +1038,66 @@
         }
       }
 
+      function inspectTorrent() {
+        const torrentFile = inspectTorrentFileInput.files[0];
+
+        if (!torrentFile) {
+          appendLog("Please select a .torrent file to inspect.");
+          return;
+        }
+
+        const c = ensureClient();
+        if (!c) return;
+
+        appendLog("=== INSPECTING TORRENT FILE ===");
+        appendLog("File: " + torrentFile.name);
+
+        try {
+          const tempTorrent = c.add(torrentFile, { path: '/tmp' });
+
+          tempTorrent.on('metadata', () => {
+            appendLog("Name: " + tempTorrent.name);
+            appendLog("Infohash: " + tempTorrent.infoHash);
+            appendLog("Piece Length: " + tempTorrent.pieceLength + " bytes (" + (tempTorrent.pieceLength / 1024) + " KB)");
+            appendLog("Total Length: " + tempTorrent.length + " bytes (" + formatSize(tempTorrent.length) + ")");
+            appendLog("Number of Pieces: " + tempTorrent.pieces.length);
+            appendLog("Files (" + tempTorrent.files.length + "):");
+            tempTorrent.files.forEach((file, idx) => {
+              appendLog("  [" + idx + "] " + file.name + " (" + formatSize(file.length) + ")");
+            });
+            if (tempTorrent.announce && tempTorrent.announce.length > 0) {
+              appendLog("Trackers (" + tempTorrent.announce.length + "):");
+              tempTorrent.announce.forEach((tracker, idx) => {
+                appendLog("  [" + idx + "] " + tracker);
+              });
+            }
+            appendLog("Comment: " + (tempTorrent.comment || "none"));
+            appendLog("Created By: " + (tempTorrent.createdBy || "unknown"));
+            appendLog("Creation Date: " + (tempTorrent.creationDate ? new Date(tempTorrent.creationDate).toISOString() : "unknown"));
+            appendLog("=== END INSPECTION ===");
+
+            // Cleanup
+            tempTorrent.destroy();
+          });
+
+          tempTorrent.on('error', (err) => {
+            appendLog("Error inspecting .torrent: " + err.message);
+            try {
+              tempTorrent.destroy();
+            } catch (e) {
+              // ignore
+            }
+          });
+        } catch (err) {
+          appendLog("Error reading torrent file: " + err.message);
+        }
+      }
+
       createTorrentButton.addEventListener("click", createTorrent);
       seedTorrentButton.addEventListener("click", seedFromTorrentFile);
       seedMagnetButton.addEventListener("click", seedFromMagnetOrInfohash);
       downloadMagnetButton.addEventListener("click", downloadFromMagnet);
+      inspectTorrentButton.addEventListener("click", inspectTorrent);
       stopButton.addEventListener("click", stopSeeding);
 
       // Add event listeners to all panel stop buttons
