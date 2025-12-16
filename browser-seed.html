@@ -733,50 +733,45 @@
         statusLabelEl.textContent = "Parsing torrent...";
         appendLog("Parsing .torrent file...");
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          try {
-            // Use WebTorrent to parse the .torrent file
-            const torrentBlob = new Blob([e.target.result]);
-            const tempTorrent = c.add(torrentBlob, { path: '/tmp' });
+        try {
+          // Pass the file directly to WebTorrent
+          const tempTorrent = c.add(torrentFile, { path: '/tmp' });
 
-            tempTorrent.on('metadata', () => {
-              const infoHash = tempTorrent.infoHash;
-              const trackers = (tempTorrent.announce || []).length ? tempTorrent.announce : DEFAULT_TRACKERS.slice();
+          tempTorrent.on('metadata', () => {
+            const infoHash = tempTorrent.infoHash;
+            const trackers = (tempTorrent.announce || []).length ? tempTorrent.announce : DEFAULT_TRACKERS.slice();
 
-              // Extract metadata
-              const opts = {
-                announce: trackers,
-                name: tempTorrent.name,
-                pieceLength: tempTorrent.pieceLength
-              };
+            // Extract metadata
+            const opts = {
+              announce: trackers,
+              name: tempTorrent.name,
+              pieceLength: tempTorrent.pieceLength
+            };
 
-              appendLog("Parsed .torrent: " + tempTorrent.name + " (infohash: " + infoHash + ")");
+            appendLog("Parsed .torrent: " + tempTorrent.name + " (infohash: " + infoHash + ")");
 
-              // Destroy temp torrent
-              tempTorrent.destroy(() => {
-                // Now seed with the actual files
-                filesEl.textContent = String(contentFiles.length);
-                startSeeding(contentFiles, opts, "Torrent file", infoHash);
-                setActiveMethod('method-torrent');
-              });
+            // Destroy temp torrent
+            tempTorrent.destroy(() => {
+              // Now seed with the actual files
+              filesEl.textContent = String(contentFiles.length);
+              startSeeding(contentFiles, opts, "Torrent file", infoHash);
+              setActiveMethod('method-torrent');
             });
+          });
 
-            tempTorrent.on('error', (err) => {
-              appendLog("Error parsing .torrent: " + err.message);
-              statusLabelEl.textContent = "Error";
-              try {
-                tempTorrent.destroy();
-              } catch (e) {
-                // ignore
-              }
-            });
-          } catch (err) {
-            appendLog("Error reading torrent file: " + err.message);
+          tempTorrent.on('error', (err) => {
+            appendLog("Error parsing .torrent: " + err.message);
             statusLabelEl.textContent = "Error";
-          }
-        };
-        reader.readAsArrayBuffer(torrentFile);
+            try {
+              tempTorrent.destroy();
+            } catch (e) {
+              // ignore
+            }
+          });
+        } catch (err) {
+          appendLog("Error reading torrent file: " + err.message);
+          statusLabelEl.textContent = "Error";
+        }
       }
       
       function parseMagnetURI(uri) {
