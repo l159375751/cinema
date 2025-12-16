@@ -348,12 +348,21 @@
           <div class="panel-title">1. Create Torrent</div>
         </div>
         <div>
-          <div class="field-label">Files to seed (creates a new torrent)</div>
+          <div class="field-label">Select files</div>
           <input
             id="create-torrent-file-input"
             class="file-input"
             type="file"
             multiple
+          >
+        </div>
+        <div style="margin-top: 6px;">
+          <div class="field-label">Or select folder</div>
+          <input
+            id="create-torrent-folder-input"
+            class="file-input"
+            type="file"
+            webkitdirectory
           >
         </div>
         <div style="margin-top: 6px;">
@@ -513,6 +522,7 @@
     function initBrowserSeeder() {
       // Create/seed
       const createTorrentFileInput = document.getElementById("create-torrent-file-input");
+      const createTorrentFolderInput = document.getElementById("create-torrent-folder-input");
       const createTorrentPieceLengthInput = document.getElementById("create-torrent-piece-length");
       const createTorrentTrackersInput = document.getElementById("create-torrent-trackers-input");
       const createTorrentButton = document.getElementById("create-torrent-button");
@@ -730,13 +740,33 @@
         }
       }
 
+      // Make file/folder inputs mutually exclusive
+      createTorrentFileInput.addEventListener("change", function() {
+        if (createTorrentFileInput.files.length > 0) {
+          createTorrentFolderInput.value = "";
+        }
+      });
+
+      createTorrentFolderInput.addEventListener("change", function() {
+        if (createTorrentFolderInput.files.length > 0) {
+          createTorrentFileInput.value = "";
+        }
+      });
+
       function createTorrent() {
         // Auto-stop if already active
         if (activeTorrent) {
           stopSeeding();
         }
 
-        const files = createTorrentFileInput && createTorrentFileInput.files ? Array.from(createTorrentFileInput.files) : [];
+        // Get files from either input
+        let files = [];
+        if (createTorrentFileInput.files.length > 0) {
+          files = Array.from(createTorrentFileInput.files);
+        } else if (createTorrentFolderInput.files.length > 0) {
+          files = Array.from(createTorrentFolderInput.files);
+        }
+
         const trackerLines = createTorrentTrackersInput.value
           .split(/\r?\n/)
           .map((line) => line.trim())
