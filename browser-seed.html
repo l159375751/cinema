@@ -614,10 +614,9 @@
         infohashOutput.textContent = torrent.infoHash || "–";
         magnetOutput.textContent = torrent.magnetURI || "";
         statusMethodEl.textContent = method;
-        appendLog(
-          "Seeding torrent: " +
-            (torrent.name || torrent.infoHash || "unnamed")
-        );
+        appendLog("Seeding: " + (torrent.name || "unnamed"));
+        appendLog("Infohash: " + torrent.infoHash);
+        appendLog("Piece length: " + torrent.pieceLength + " bytes");
         appendLog("Magnet: " + (torrent.magnetURI || ""));
         statusLabelEl.textContent = "Seeding";
         stopButton.style.display = "block";
