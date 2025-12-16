@@ -657,6 +657,9 @@
     const MAGNET_TRACKERS =
       "&tr=wss%3A%2F%2Ftracker.openwebtorrent.com" +
       "&tr=wss%3A%2F%2Ftracker.webtorrent.dev";
+
+    let whdaStatus = {};
+
     const EXAMPLE_WHDA_ITEMS = [
       {
         hash: "c9c47e7b12586a59d83e3e519570835625d44b3e",
@@ -861,7 +864,6 @@
       let statusInterval = null;
       let filmBag = [];
       let localNostrSk = null;
-      let whdaStatus = {};
       let mediaResolveTimeout = null;
 
       function ensureClient() {
