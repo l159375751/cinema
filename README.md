@@ -11,6 +11,7 @@ infohash. It:
 
 ### see:
 * https://l159375751.github.io/cinema/
+* https://l159375751.github.io/cinema/browser-seed.html
 * https://c.0x6d.net/
 
 
