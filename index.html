@@ -1222,6 +1222,13 @@
           typeof window.NostrTools.signEvent === "function" &&
           !!localNostrSk;
 
+        console.log("[WHDA] Signing check:", {
+          hasNostrTools,
+          hasNostrSigner,
+          hasLocalKey: !!localNostrSk,
+          nostrToolsAvailable: !!window.NostrTools
+        });
+
         const sendEvent = (eventToSend, label) => {
           refreshNostrEventFrame(eventToSend);
 
@@ -1271,13 +1278,15 @@
             const id = window.NostrTools.getEventHash(baseEvent);
             const sig = window.NostrTools.signEvent(baseEvent, localNostrSk);
             const signedEvent = Object.assign({}, baseEvent, { id, sig });
+            console.log("[WHDA] Signed event:", signedEvent);
             sendEvent(
               signedEvent,
               "Nostr presets: syncing signed WHDA to relay (nostr-tools)"
             );
           } catch (e) {
+            console.error("[WHDA] Signing failed:", e);
             setNostrStatus(
-              "Nostr presets: nostr-tools signing failed, sending unsigned POC"
+              "Nostr presets: nostr-tools signing failed: " + e.message
             );
             const unsignedEvent = Object.assign(
               {
