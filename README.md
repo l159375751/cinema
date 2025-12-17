@@ -24,7 +24,7 @@ and/or https://github.com/Novage/wt-tracker
 
 ---
 
-## 🔥 **BIG FAT NOTE: BTorrent is SUPER NICE!** 🔥
+## NOTE: BTorrent is SUPER NICE 🔥
 
 **https://btorrent.xyz/** is an absolutely fantastic WebTorrent-based browser torrent client!
 
