@@ -321,6 +321,27 @@
             placeholder="Default: WebTorrent WebRTC trackers. Leave blank for defaults."
           ></textarea>
         </div>
+        <div style="margin-top: 6px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+          <div>
+            <div class="field-label">Max connections (default: 55)</div>
+            <input
+              class="input"
+              id="input-max-conns"
+              type="number"
+              placeholder="55"
+              min="10"
+              max="200"
+            >
+          </div>
+          <div>
+            <div class="field-label">Download strategy</div>
+            <select class="input" id="input-strategy">
+              <option value="">Default (sequential)</option>
+              <option value="rarest">Rarest first</option>
+              <option value="sequential">Sequential</option>
+            </select>
+          </div>
+        </div>
         <div style="margin-top: 6px;">
           <div class="field-label">Resolved infohash</div>
           <div class="mono" id="infohash"></div>
@@ -332,9 +353,11 @@
         <div class="controls-row">
           <button class="client-button" id="start-debug">Start debug</button>
           <button class="client-button" id="stop-debug">Stop / reset</button>
-          <span style="font-size: 11px; color: var(--muted);">
-            Uses in-browser WebTorrent and public WebRTC trackers.
-          </span>
+        </div>
+        <div style="margin-top: 6px; font-size: 11px; color: var(--muted); line-height: 1.4;">
+          <strong>Speed tips:</strong> Try maxConns=100-150 for faster downloads.
+          Rarest-first helps swarm health. Sequential is best for video streaming.
+          Most important: ensure trackers respond and seeders exist (check panels below).
         </div>
       </section>
 
@@ -570,6 +593,8 @@
       const peerCountEl = document.getElementById("peer-count");
       const trackerListEl = document.getElementById("tracker-list");
       const trackerCountEl = document.getElementById("tracker-count");
+      const maxConnsInput = document.getElementById("input-max-conns");
+      const strategyInput = document.getElementById("input-strategy");
 
       let client = null;
       let activeTorrent = null;
@@ -623,8 +648,22 @@
           log("WebTorrent is not available in this browser.");
           return null;
         }
-        client = new WebTorrent();
-        log("Created WebTorrent client.");
+
+        // Get max connections setting
+        const maxConns = maxConnsInput && maxConnsInput.value
+          ? parseInt(maxConnsInput.value, 10)
+          : 55;
+
+        const opts = {};
+        if (maxConns && maxConns >= 10 && maxConns <= 200) {
+          opts.maxConns = maxConns;
+          log("Creating WebTorrent client with maxConns=" + maxConns);
+        } else {
+          log("Creating WebTorrent client with default settings.");
+        }
+
+        client = new WebTorrent(opts);
+
         try {
           client.on("error", (err) => {
             log(
@@ -1184,8 +1223,23 @@
             "Adding magnet to WebTorrent client. Trackers: " +
               (trackers.length ? trackers.join(", ") : DEFAULT_TRACKERS.join(", "))
           );
+
+          // Get download strategy
+          const strategy = strategyInput && strategyInput.value
+            ? strategyInput.value
+            : "";
+
+          const addOpts = {};
+          if (strategy === "rarest") {
+            addOpts.strategy = "rarest";
+            log("Using rarest-first piece selection strategy.");
+          } else if (strategy === "sequential") {
+            addOpts.strategy = "sequential";
+            log("Using sequential piece selection strategy.");
+          }
+
           try {
-            c.add(magnet, (torrent) => {
+            c.add(magnet, addOpts, (torrent) => {
               attachTorrent(torrent);
             });
           } catch (e) {
