@@ -22,6 +22,8 @@ later, consider useing:
 https://github.com/Novage/p2p-media-loader
 and/or https://github.com/Novage/wt-tracker
 
+for general speedup of peer discovery, to emulte DHT, consider using: https://github.com/xtr-dev/rondevu-webtorrent
+
 ---
 
 NOTE:
