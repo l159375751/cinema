@@ -1036,6 +1036,22 @@
             );
           });
 
+          // More detailed tracker debugging
+          if (torrent.discovery && torrent.discovery.tracker) {
+            log("Tracker discovery available, attaching listeners...");
+            try {
+              torrent.discovery.tracker.on("update", (data) => {
+                log("[tracker.discovery.update] " + JSON.stringify(data));
+              });
+            } catch (e) {
+              log("Could not attach discovery.tracker listeners: " + e.message);
+            }
+          }
+
+          // Log what's in the torrent object for debugging
+          log("Torrent object keys: " + Object.keys(torrent).filter(k => k.includes('track')).join(", "));
+          log("Announce list: " + JSON.stringify(torrent.announce));
+
           if (torrent._tracker && typeof torrent._tracker.on === "function") {
             log("Attaching tracker listeners for debug.");
             try {
@@ -1103,11 +1119,21 @@
 
           // Also check if torrent has direct tracker clients array
           if (Array.isArray(torrent._trackers)) {
-            torrent._trackers.forEach((tracker) => {
-              if (!tracker || typeof tracker.on !== "function") return;
+            log("Found torrent._trackers array with " + torrent._trackers.length + " trackers");
+            torrent._trackers.forEach((tracker, idx) => {
+              if (!tracker) {
+                log("  Tracker[" + idx + "]: null");
+                return;
+              }
+              log("  Tracker[" + idx + "]: " + (tracker.announceUrl || tracker.announce || "unknown"));
+              if (typeof tracker.on !== "function") {
+                log("  Tracker[" + idx + "]: No .on() method - cannot attach listeners");
+                return;
+              }
               try {
                 tracker.on("update", (data) => {
                   const url = tracker.announceUrl || tracker.announce || "unknown";
+                  log("[tracker[" + idx + "].update] " + url + " seeders=" + (data && data.complete) + " leechers=" + (data && data.incomplete));
                   if (url && url !== "unknown") {
                     trackerData.set(url, {
                       complete: data && data.complete,
@@ -1118,10 +1144,25 @@
                     renderTrackers();
                   }
                 });
+                tracker.on("announce", (data) => {
+                  const url = tracker.announceUrl || tracker.announce || "unknown";
+                  log("[tracker[" + idx + "].announce] " + url);
+                });
+                tracker.on("scrape", (data) => {
+                  const url = tracker.announceUrl || tracker.announce || "unknown";
+                  log("[tracker[" + idx + "].scrape] " + url);
+                });
               } catch (e) {
-                // ignore
+                log("  Tracker[" + idx + "]: Error attaching listeners - " + e.message);
               }
             });
+          } else {
+            log("No torrent._trackers array found");
+          }
+
+          // Try client-level tracker access
+          if (client && client._trackers) {
+            log("Client has _trackers: " + Object.keys(client._trackers).length + " entries");
           }
         } catch (e) {
           // ignore
