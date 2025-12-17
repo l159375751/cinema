@@ -28,6 +28,8 @@ and/or https://github.com/Novage/wt-tracker
 
 **https://btorrent.xyz/** is an absolutely fantastic WebTorrent-based browser torrent client!
 
+- **Site:** https://btorrent.xyz/
+- **Source:** https://github.com/DiegoRBaquero/btorrent
 - **Based on:** https://github.com/webtorrent/webtorrent
 - **Why it's awesome:** Clean UI, instant browser-based seeding/downloading, no installation needed
 - **Perfect for:** Testing WebTorrent torrents, instant file sharing, understanding WebRTC peer connections
