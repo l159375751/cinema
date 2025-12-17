@@ -366,6 +366,36 @@
 
     <section class="panel">
       <div class="panel-header">
+        <div class="panel-title">Active Peers</div>
+        <span class="badge-soft" id="peer-count">0 peers</span>
+      </div>
+      <ul class="file-list" id="peer-list">
+        <li class="file-row">
+          <div class="file-main">
+            <div class="file-name">No peers connected</div>
+            <div class="file-meta">Peer connections will appear here once discovered via trackers</div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Tracker Status</div>
+        <span class="badge-soft" id="tracker-count">0 trackers</span>
+      </div>
+      <ul class="file-list" id="tracker-list">
+        <li class="file-row">
+          <div class="file-main">
+            <div class="file-name">No trackers configured</div>
+            <div class="file-meta">Tracker announce status will appear here</div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
         <div class="panel-title">Files in swarm</div>
         <span class="badge-soft" id="file-count">0 files</span>
       </div>
@@ -482,7 +512,6 @@
       "wss://tracker.openwebtorrent.com",
       "wss://tracker.webtorrent.dev",
       "wss://tracker.btorrent.xyz",
-      "wss://tracker.fastcast.nz",
       "wss://tracker.0x6d.net"
     ];
 
@@ -537,12 +566,19 @@
       const stopButton = document.getElementById("stop-debug");
       const previewVideo = document.getElementById("preview-video");
       const previewLabel = document.getElementById("preview-label");
+      const peerListEl = document.getElementById("peer-list");
+      const peerCountEl = document.getElementById("peer-count");
+      const trackerListEl = document.getElementById("tracker-list");
+      const trackerCountEl = document.getElementById("tracker-count");
 
       let client = null;
       let activeTorrent = null;
       let statusInterval = null;
       let currentLabel = DEBUG_TITLE;
       let peerWatchTimeout = null;
+      let peerData = new Map(); // addr -> {wire, downloaded, uploaded}
+      let trackerData = new Map(); // url -> {seeders, leechers, lastUpdate}
+      let currentPreviewFile = null; // Track currently previewing file
 
       function log(line) {
         if (!logEl) return;
@@ -560,8 +596,14 @@
         nameEl.textContent = "\u2013";
         fileListEl.innerHTML = "";
         fileCountEl.textContent = "0 files";
+        peerData.clear();
+        trackerData.clear();
+        currentPreviewFile = null;
+        renderPeers();
+        renderTrackers();
         if (previewVideo) {
           try {
+            previewVideo.pause();
             previewVideo.removeAttribute("src");
             previewVideo.load();
           } catch (e) {
@@ -621,6 +663,99 @@
         nameEl.textContent = torrent.name || currentLabel;
       }
 
+      function renderPeers() {
+        if (!peerListEl) return;
+        peerListEl.innerHTML = "";
+
+        if (peerData.size === 0) {
+          peerCountEl.textContent = "0 peers";
+          const li = document.createElement("li");
+          li.className = "file-row";
+          const main = document.createElement("div");
+          main.className = "file-main";
+          const name = document.createElement("div");
+          name.className = "file-name";
+          name.textContent = "No peers connected";
+          const meta = document.createElement("div");
+          meta.className = "file-meta";
+          meta.textContent = "Waiting for peer discovery via trackers...";
+          main.appendChild(name);
+          main.appendChild(meta);
+          li.appendChild(main);
+          peerListEl.appendChild(li);
+          return;
+        }
+
+        peerCountEl.textContent = peerData.size + (peerData.size === 1 ? " peer" : " peers");
+
+        peerData.forEach((data, addr) => {
+          const li = document.createElement("li");
+          li.className = "file-row";
+          const main = document.createElement("div");
+          main.className = "file-main";
+          const name = document.createElement("div");
+          name.className = "file-name mono";
+          name.textContent = addr || "Unknown address";
+          const meta = document.createElement("div");
+          meta.className = "file-meta";
+          const down = formatSize(data.downloaded || 0);
+          const up = formatSize(data.uploaded || 0);
+          meta.textContent = "↓ " + down + " · ↑ " + up;
+          main.appendChild(name);
+          main.appendChild(meta);
+          li.appendChild(main);
+          peerListEl.appendChild(li);
+        });
+      }
+
+      function renderTrackers() {
+        if (!trackerListEl) return;
+        trackerListEl.innerHTML = "";
+
+        if (trackerData.size === 0) {
+          trackerCountEl.textContent = "0 trackers";
+          const li = document.createElement("li");
+          li.className = "file-row";
+          const main = document.createElement("div");
+          main.className = "file-main";
+          const name = document.createElement("div");
+          name.className = "file-name";
+          name.textContent = "No tracker responses yet";
+          const meta = document.createElement("div");
+          meta.className = "file-meta";
+          meta.textContent = "Waiting for tracker announces...";
+          main.appendChild(name);
+          main.appendChild(meta);
+          li.appendChild(main);
+          trackerListEl.appendChild(li);
+          return;
+        }
+
+        trackerCountEl.textContent = trackerData.size + (trackerData.size === 1 ? " tracker" : " trackers");
+
+        trackerData.forEach((data, url) => {
+          const li = document.createElement("li");
+          li.className = "file-row";
+          const main = document.createElement("div");
+          main.className = "file-main";
+          const name = document.createElement("div");
+          name.className = "file-name mono";
+          name.textContent = url || "Unknown tracker";
+          const meta = document.createElement("div");
+          meta.className = "file-meta";
+          const seeders = typeof data.complete === "number" ? data.complete : "?";
+          const leechers = typeof data.incomplete === "number" ? data.incomplete : "?";
+          const timeAgo = data.lastUpdate
+            ? Math.floor((Date.now() - data.lastUpdate) / 1000) + "s ago"
+            : "never";
+          meta.textContent = "Seeders: " + seeders + " · Leechers: " + leechers + " · " + timeAgo;
+          main.appendChild(name);
+          main.appendChild(meta);
+          li.appendChild(main);
+          trackerListEl.appendChild(li);
+        });
+      }
+
       function renderFiles(torrent) {
         const files = Array.isArray(torrent.files) ? torrent.files : [];
         fileListEl.innerHTML = "";
@@ -676,22 +811,55 @@
             playButton.addEventListener("click", () => {
               playButton.disabled = true;
               playButton.textContent = "Loading\u2026";
+
+              // Clean up any existing preview
+              if (currentPreviewFile) {
+                try {
+                  currentPreviewFile.deselect();
+                } catch (e) {
+                  // ignore
+                }
+              }
+
+              // Reset video element
               try {
-                file.renderTo(previewVideo, { autoplay: true }, (err) => {
+                previewVideo.pause();
+                previewVideo.removeAttribute("src");
+                previewVideo.load();
+              } catch (e) {
+                // ignore
+              }
+
+              // Use getBlobURL for more reliable streaming
+              try {
+                file.getBlobURL((err, url) => {
                   if (err) {
                     log(
                       "Preview error: " +
                         (err && err.message ? err.message : String(err))
                     );
+                    playButton.disabled = false;
+                    playButton.textContent = "Play in preview";
+                    return;
                   }
+
+                  previewVideo.src = url;
+                  previewVideo.play().catch((e) => {
+                    log("Playback error: " + (e && e.message ? e.message : String(e)));
+                  });
+
+                  currentPreviewFile = file;
                   playButton.disabled = false;
                   playButton.textContent = "Play in preview";
+
+                  if (previewLabel) {
+                    previewLabel.textContent =
+                      "Preview: " +
+                      (file.name || file.path || "video");
+                  }
+
+                  log("Streaming " + (file.name || "video") + " to preview player.");
                 });
-                if (previewLabel) {
-                  previewLabel.textContent =
-                    "Preview: " +
-                    (file.name || file.path || "video");
-                }
               } catch (e) {
                 log(
                   "Preview error: " +
@@ -760,6 +928,8 @@
         statusInterval = setInterval(() => {
           if (!activeTorrent) return;
           updateStatusFromTorrent(activeTorrent);
+          renderPeers();
+          renderTrackers();
         }, 1000);
 
         torrent.on("download", () => {
@@ -767,8 +937,36 @@
         });
 
         torrent.on("wire", (wire) => {
-          const addr = wire && (wire.remoteAddress || wire.peerAddress);
-          log("Peer connected: " + (addr || "unknown address"));
+          const addr = wire && (wire.remoteAddress || wire.peerAddress || "unknown");
+          log("Peer connected: " + addr);
+
+          if (!peerData.has(addr)) {
+            peerData.set(addr, {
+              wire: wire,
+              downloaded: 0,
+              uploaded: 0
+            });
+          }
+
+          try {
+            wire.on("download", (bytes) => {
+              const data = peerData.get(addr);
+              if (data) {
+                data.downloaded = (data.downloaded || 0) + bytes;
+              }
+            });
+
+            wire.on("upload", (bytes) => {
+              const data = peerData.get(addr);
+              if (data) {
+                data.uploaded = (data.uploaded || 0) + bytes;
+              }
+            });
+          } catch (e) {
+            // ignore
+          }
+
+          renderPeers();
         });
 
         torrent.on("done", () => {
@@ -829,6 +1027,17 @@
                       " downloaded=" +
                       downloaded
                   );
+
+                  // Track tracker stats
+                  if (url && url !== "unknown") {
+                    trackerData.set(url, {
+                      complete: data.complete,
+                      incomplete: data.incomplete,
+                      downloaded: data.downloaded,
+                      lastUpdate: Date.now()
+                    });
+                    renderTrackers();
+                  }
                 } catch (e) {
                   log(
                     "[tracker update] " +
@@ -851,6 +1060,29 @@
             } catch (e) {
               // ignore
             }
+          }
+
+          // Also check if torrent has direct tracker clients array
+          if (Array.isArray(torrent._trackers)) {
+            torrent._trackers.forEach((tracker) => {
+              if (!tracker || typeof tracker.on !== "function") return;
+              try {
+                tracker.on("update", (data) => {
+                  const url = tracker.announceUrl || tracker.announce || "unknown";
+                  if (url && url !== "unknown") {
+                    trackerData.set(url, {
+                      complete: data && data.complete,
+                      incomplete: data && data.incomplete,
+                      downloaded: data && data.downloaded,
+                      lastUpdate: Date.now()
+                    });
+                    renderTrackers();
+                  }
+                });
+              } catch (e) {
+                // ignore
+              }
+            });
           }
         } catch (e) {
           // ignore
@@ -922,6 +1154,21 @@
         }
 
         magnetEl.textContent = magnet;
+
+        // Initialize tracker list with configured trackers
+        const activeTrackers = trackers.length ? trackers : DEFAULT_TRACKERS;
+        activeTrackers.forEach((url) => {
+          if (!trackerData.has(url)) {
+            trackerData.set(url, {
+              complete: null,
+              incomplete: null,
+              downloaded: null,
+              lastUpdate: null
+            });
+          }
+        });
+        renderTrackers();
+
         const existing =
           (infohash && c.get(infohash)) ||
           null;
