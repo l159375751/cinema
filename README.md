@@ -26,15 +26,11 @@ for general speedup of peer discovery, to emulte DHT, consider using: https://gi
 
 ---
 
-NOTE:
-
-- BTorrent is SUPER NICE 🔥
-- **https://btorrent.xyz/** is an absolutely fantastic WebTorrent-based browser torrent client!
-- **Site:** https://btorrent.xyz/
-- **Source:** https://github.com/DiegoRBaquero/btorrent
-- **Based on:** https://github.com/webtorrent/webtorrent
-- **Why it's awesome:** Clean UI, instant browser-based seeding/downloading, no installation needed
-- **Perfect for:** Testing WebTorrent torrents, instant file sharing, understanding WebRTC peer connections
-- **Use case:** Great reference implementation for browser-based P2P file sharing
+NOTE and RANDOM THINGS THAT ARE SUPER NICE
+- https://github.com/blenderskool/blaze // https://blaze.vercel.app/app/t/
+- https://btorrent.xyz/ fantastic WebTorrent-based browser torrent client
+- https://btorrent.xyz/
+- https://github.com/DiegoRBaquero/btorrent
+- https://github.com/webtorrent/webtorrent
 
 If you're working on WebTorrent projects, btorrent.xyz is essential to check out!
