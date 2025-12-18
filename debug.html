@@ -383,6 +383,14 @@
             <div class="status-label">Name</div>
             <div class="status-value" id="status-name">–</div>
           </div>
+          <div class="status-item">
+            <div class="status-label">Downloaded</div>
+            <div class="status-value" id="status-downloaded">0 B</div>
+          </div>
+          <div class="status-item">
+            <div class="status-label">Uploaded</div>
+            <div class="status-value" id="status-uploaded">0 B</div>
+          </div>
         </div>
       </aside>
     </main>
@@ -584,6 +592,8 @@
       const peersEl = document.getElementById("status-peers");
       const speedEl = document.getElementById("status-speed");
       const nameEl = document.getElementById("status-name");
+      const downloadedTotalEl = document.getElementById("status-downloaded");
+      const uploadedTotalEl = document.getElementById("status-uploaded");
       const fileListEl = document.getElementById("file-list");
       const fileCountEl = document.getElementById("file-count");
       const logEl = document.getElementById("debug-log");
@@ -621,6 +631,8 @@
         peersEl.textContent = "0";
         speedEl.textContent = "0 kB/s · 0 kB/s";
         nameEl.textContent = "\u2013";
+        if (downloadedTotalEl) downloadedTotalEl.textContent = "0 B";
+        if (uploadedTotalEl) uploadedTotalEl.textContent = "0 B";
         fileListEl.innerHTML = "";
         fileCountEl.textContent = "0 files";
         peerData.clear();
@@ -695,10 +707,18 @@
         const percent = (torrent.progress || 0) * 100;
         const down = torrent.downloadSpeed || 0;
         const up = torrent.uploadSpeed || 0;
+        const totalDown = torrent.downloaded || 0;
+        const totalUp = torrent.uploaded || 0;
         progressEl.textContent = percent.toFixed(1).replace(/\.0$/, "") + "%";
         peersEl.textContent = String(torrent.numPeers || 0);
         speedEl.textContent =
           formatSize(down) + "/s · " + formatSize(up) + "/s";
+        if (downloadedTotalEl) {
+          downloadedTotalEl.textContent = formatSize(totalDown);
+        }
+        if (uploadedTotalEl) {
+          uploadedTotalEl.textContent = formatSize(totalUp);
+        }
         statusLabelEl.textContent =
           percent >= 99.5 ? "Done / seeding" : "Downloading";
         nameEl.textContent = torrent.name || currentLabel;
