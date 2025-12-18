@@ -799,12 +799,29 @@
           name.textContent = url || "Unknown tracker";
           const meta = document.createElement("div");
           meta.className = "file-meta";
-          const seeders = typeof data.complete === "number" ? data.complete : "?";
-          const leechers = typeof data.incomplete === "number" ? data.incomplete : "?";
-          const timeAgo = data.lastUpdate
-            ? Math.floor((Date.now() - data.lastUpdate) / 1000) + "s ago"
-            : "never";
-          meta.textContent = "Seeders: " + seeders + " · Leechers: " + leechers + " · " + timeAgo;
+          const hasCounts =
+            typeof data.complete === "number" ||
+            typeof data.incomplete === "number";
+          const seeders =
+            typeof data.complete === "number" ? data.complete : "?";
+          const leechers =
+            typeof data.incomplete === "number" ? data.incomplete : "?";
+          let timeLabel;
+          if (data.lastUpdate) {
+            const seconds = Math.floor((Date.now() - data.lastUpdate) / 1000);
+            timeLabel = hasCounts
+              ? seconds + "s ago"
+              : seconds + "s since announce";
+          } else {
+            timeLabel = "no stats yet";
+          }
+          meta.textContent =
+            "Seeders: " +
+            seeders +
+            " · Leechers: " +
+            leechers +
+            " · " +
+            timeLabel;
           main.appendChild(name);
           main.appendChild(meta);
           li.appendChild(main);
@@ -1289,7 +1306,9 @@
               complete: null,
               incomplete: null,
               downloaded: null,
-              lastUpdate: null
+              // Treat initialization time as "announce attempted" so UI
+              // doesn't show "never" when swarm is actually active.
+              lastUpdate: Date.now()
             });
           }
         });
