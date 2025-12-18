@@ -1,0 +1,20 @@
+sintel
+cosmos-laundromat
+big-buck-bunny
+tears-of-steel
+elephants-dream
+
+# newer/open movies – guessed slugs
+singularity
+wing-it
+charge
+sprite-fright
+coffee-run
+spring
+hero
+the-daily-dweebs
+agent-327
+caminandes-llamigos
+glass-half
+cosmos-laundromat-first-cycle
+caminandes-gran-dillama

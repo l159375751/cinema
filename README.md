@@ -32,5 +32,6 @@ NOTE and RANDOM THINGS THAT ARE SUPER NICE
 - https://btorrent.xyz/
 - https://github.com/DiegoRBaquero/btorrent
 - https://github.com/webtorrent/webtorrent
+- get random free/cc0 torrents  https://webtorrent.io/torrents/sintel.torrent [...]
 
 If you're working on WebTorrent projects, btorrent.xyz is essential to check out!

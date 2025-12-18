@@ -1,0 +1,5663 @@
+{
+  "log": {
+    "version": "1.2",
+    "creator": {
+      "name": "WebInspector",
+      "version": "537.36"
+    },
+    "pages": [
+      {
+        "startedDateTime": "2025-12-17T18:06:29.556Z",
+        "id": "page_3",
+        "title": "https://studio.blender.org/films/",
+        "pageTimings": {
+          "onContentLoad": 861.2039999570698,
+          "onLoad": 1161.246000090614
+        }
+      }
+    ],
+    "entries": [
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "other"
+        },
+        "_priority": "VeryHigh",
+        "_resourceType": "document",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/films/",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/films/"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "u=0, i"
+            },
+            {
+              "name": "referer",
+              "value": "https://www.google.com/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "document"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "navigate"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "cross-site"
+            },
+            {
+              "name": "sec-fetch-user",
+              "value": "?1"
+            },
+            {
+              "name": "upgrade-insecure-requests",
+              "value": "1"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "cache-control",
+              "value": "no-transform"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "DYNAMIC"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b890c2e3581-AMS"
+            },
+            {
+              "name": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "cross-origin-opener-policy",
+              "value": "same-origin"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "referrer-policy",
+              "value": "same-origin"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "server-timing",
+              "value": "cfCacheStatus;desc=\"DYNAMIC\""
+            },
+            {
+              "name": "server-timing",
+              "value": "cfEdge;dur=8,cfOrigin;dur=385"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000; preload"
+            },
+            {
+              "name": "vary",
+              "value": "Cookie"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-content-type-options",
+              "value": "nosniff"
+            },
+            {
+              "name": "x-content-type-options",
+              "value": "nosniff"
+            },
+            {
+              "name": "x-content-type-options",
+              "value": "nosniff"
+            },
+            {
+              "name": "x-frame-options",
+              "value": "DENY"
+            },
+            {
+              "name": "x-frame-options",
+              "value": "DENY"
+            },
+            {
+              "name": "x-frame-options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "name": "x-xss-protection",
+              "value": "1; mode=block"
+            },
+            {
+              "name": "x-xss-protection",
+              "value": "1; mode=block"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 57682,
+            "mimeType": "text/html"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 14725,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:29.554Z",
+        "time": 450.2659998834133,
+        "timings": {
+          "blocked": 3.510999889716506,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.2630000000000001,
+          "wait": 443.9489999549836,
+          "receive": 2.543000038713217,
+          "_blocked_queueing": 1.758999889716506,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 20
+        },
+        "_priority": "VeryHigh",
+        "_resourceType": "stylesheet",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/static/css/studio.637dae775f56.css",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/static/css/studio.637dae775f56.css"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "text/css,*/*;q=0.1"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "u=0"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "style"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "age",
+              "value": "778472"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c0c0f3581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "463710"
+            },
+            {
+              "name": "content-type",
+              "value": "text/css"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"6937104d-7135e\""
+            },
+            {
+              "name": "expires",
+              "value": "Mon, 15 Dec 2025 17:52:27 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Mon, 08 Dec 2025 17:52:13 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000; preload"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-content-type-options",
+              "value": "nosniff"
+            },
+            {
+              "name": "x-frame-options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "name": "x-xss-protection",
+              "value": "1; mode=block"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 463710,
+            "mimeType": "text/css"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 464367,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.018Z",
+        "time": 180.8760000858456,
+        "timings": {
+          "blocked": 22.844000004261733,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.23199999999999976,
+          "wait": 57.67099993750453,
+          "receive": 100.12900014407933,
+          "_blocked_queueing": 20.151000004261732,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 730
+        },
+        "_priority": "High",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/e9/01/e90151b6d612c5a4f357c220cc60bbd9.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/e9/01/e90151b6d612c5a4f357c220cc60bbd9.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "u=2, i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "1910208"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c0c123581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "151011"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"5acccbe88722ad5306646eb1c997b9af\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 23:32:17 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 11:04:51 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 151011,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 151359,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 676.6680001746863,
+        "timings": {
+          "blocked": 23.461000160872935,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.1419999999999999,
+          "wait": 86.67099993246794,
+          "receive": 566.3940000813454,
+          "_blocked_queueing": 20.936000160872936,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 765
+        },
+        "_priority": "High",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/d6/29/d6298873b2276dfed0c00955dd01904b.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/d6/29/d6298873b2276dfed0c00955dd01904b.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "u=2, i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "2497451"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c0c143581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "132107"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"037ec76b062fceeae422cda983a956cb\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 20:22:49 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 11:04:16 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 132107,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 132632,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 550.6629999727011,
+        "timings": {
+          "blocked": 23.570000089988113,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.040000000000000036,
+          "wait": 60.73199998469651,
+          "receive": 466.32099989801645,
+          "_blocked_queueing": 21.049000089988112,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 800
+        },
+        "_priority": "High",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/d9/c0/d9c022ec2424c446f273ce9be983bf20.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/d9/c0/d9c022ec2424c446f273ce9be983bf20.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "u=2, i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "2414744"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c4d3581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "132807"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"29a8a6d33cd53a70aa62f6ae2025cff2\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 23:32:18 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 11:04:22 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 132807,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 133111,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 678.3149999100715,
+        "timings": {
+          "blocked": 36.52199998028576,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 1.5859999999999994,
+          "wait": 98.61999991552531,
+          "receive": 541.5870000142604,
+          "_blocked_queueing": 29.106999980285764,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 835
+        },
+        "_priority": "Medium",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/63/1a/631a80132da91a5776fd23d6729323ac.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/63/1a/631a80132da91a5776fd23d6729323ac.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "u=2, i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "2496328"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c4f3581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "138147"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"27da98c552ca4f2427b2b1990c4fb101\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 20:22:49 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 11:00:38 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 138147,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 138416,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 679.1060001123697,
+        "timings": {
+          "blocked": 37.500000182271,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 1.5220000000000002,
+          "wait": 97.10800004951656,
+          "receive": 542.9759998805821,
+          "_blocked_queueing": 30.112000182271004,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 870
+        },
+        "_priority": "Medium",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/12/ca/12ca22ba0d7c0eb8659e2ae75d352d2a.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/12/ca/12ca22ba0d7c0eb8659e2ae75d352d2a.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "u=2, i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "2347318"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c543581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "92875"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"0cbda691697ac6caf282f82d3964ac8f\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 20:22:49 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 10:58:09 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 92875,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 93098,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 677.5590002071112,
+        "timings": {
+          "blocked": 37.70900004811585,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 1.2839999999999998,
+          "wait": 97.31000010399521,
+          "receive": 541.2560000550002,
+          "_blocked_queueing": 30.33900004811585,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 905
+        },
+        "_priority": "Low",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/31/78/31783bc821b4c957fb8327a98c697c83.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/31/78/31783bc821b4c957fb8327a98c697c83.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "1683094"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c5c3581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "152926"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"79cf0596720a6b4b2c4ae770d0db0c77\""
+            },
+            {
+              "name": "expires",
+              "value": "Fri, 05 Dec 2025 05:41:00 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 10:59:06 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 152926,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 153236,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 680.9010000433773,
+        "timings": {
+          "blocked": 38.0350000167191,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.9290000000000003,
+          "wait": 97.21100009205938,
+          "receive": 544.7259999345988,
+          "_blocked_queueing": 30.977000016719103,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 940
+        },
+        "_priority": "Low",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/9f/ff/9fff6b1fb742305f57c5c1c4a6b5db3c.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/9f/ff/9fff6b1fb742305f57c5c1c4a6b5db3c.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "2497451"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c5d3581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "76255"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"7af23bd1053e1e24c70abc00c3ba142b\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 20:22:49 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 11:02:36 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 76255,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 76454,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 626.5400000847876,
+        "timings": {
+          "blocked": 38.08299997629225,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.8520000000000003,
+          "wait": 97.39999995382131,
+          "receive": 490.20500015467405,
+          "_blocked_queueing": 31.093999976292253,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 975
+        },
+        "_priority": "Low",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/d7/4c/d74cb850b96c8c838211d7ab8e9b281c.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/d7/4c/d74cb850b96c8c838211d7ab8e9b281c.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "1853805"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c5e3581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "104979"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"d18fc7e662777d1b3f3a82f5f3556b74\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 22:12:36 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 11:04:18 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 104979,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 105267,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 678.4620000980794,
+        "timings": {
+          "blocked": 38.11000005447865,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.7930000000000001,
+          "wait": 97.57100000272692,
+          "receive": 541.9880000408739,
+          "_blocked_queueing": 31.196000054478645,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 1010
+        },
+        "_priority": "Low",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/46/07/4607b5e8119ff2ca9b66792a114d98c2.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/46/07/4607b5e8119ff2ca9b66792a114d98c2.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "1249897"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c603581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "142224"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"2dd426c77da6cf39c5f2a0b91dccc5e9\""
+            },
+            {
+              "name": "expires",
+              "value": "Mon, 08 Dec 2025 02:41:31 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 10:59:43 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 142224,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 142758,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 683.6590000893921,
+        "timings": {
+          "blocked": 38.14000013588369,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.7350000000000003,
+          "wait": 97.79300000154971,
+          "receive": 546.9909999519587,
+          "_blocked_queueing": 31.32900013588369,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 1045
+        },
+        "_priority": "Low",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/43/12/4312b1e370bc7c7fbc0e6401c0fa52c2.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/43/12/4312b1e370bc7c7fbc0e6401c0fa52c2.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "2497451"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c643581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "118491"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"ed9b0e820a4883bb5b42a27f50c4349f\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 20:22:49 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 10:59:38 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 118491,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 118743,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 681.2119998503476,
+        "timings": {
+          "blocked": 38.187999832168224,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.6629999999999994,
+          "wait": 120.02499990722536,
+          "receive": 522.336000110954,
+          "_blocked_queueing": 31.44199983216822,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 1080
+        },
+        "_priority": "Low",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/67/97/6797937dd60ca881a6225ce99c4618fc.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/67/97/6797937dd60ca881a6225ce99c4618fc.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "1610749"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c663581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "109504"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"6600765006a709bb56e77131c4d728cc\""
+            },
+            {
+              "name": "expires",
+              "value": "Sat, 06 Dec 2025 02:41:10 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 11:00:47 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 109504,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 109769,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 683.1209999509156,
+        "timings": {
+          "blocked": 38.37299986027181,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.7430000000000003,
+          "wait": 119.5859999511838,
+          "receive": 524.41900013946,
+          "_blocked_queueing": 31.56799986027181,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 1115
+        },
+        "_priority": "Low",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/31/8a/318a86afe0907636710c9c90dc9c9d15.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/31/8a/318a86afe0907636710c9c90dc9c9d15.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "2486082"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c683581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "97848"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"4a72b3b6389aa38d1942283632ca6e94\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 23:32:18 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 10:59:06 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 97848,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 98107,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 682.596999919042,
+        "timings": {
+          "blocked": 38.3989999384582,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.6870000000000003,
+          "wait": 141.13700006456673,
+          "receive": 502.37399991601706,
+          "_blocked_queueing": 31.669999938458204,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 1150
+        },
+        "_priority": "Low",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/6d/96/6d96e4fc01eb619a7677d98e574ce26a.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/6d/96/6d96e4fc01eb619a7677d98e574ce26a.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "2417062"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c6a3581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "113332"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"497ee38bf0831a32ae1a8fc52dc1681f\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 20:22:49 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 11:00:59 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 113332,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 113574,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 683.3209998439997,
+        "timings": {
+          "blocked": 38.435999943718315,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.6230000000000002,
+          "wait": 119.98399990314245,
+          "receive": 524.277999997139,
+          "_blocked_queueing": 31.792999943718314,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 1185
+        },
+        "_priority": "Low",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/6a/a9/6aa93b6f94bbe422ff0696f138a581e2.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/6a/a9/6aa93b6f94bbe422ff0696f138a581e2.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "2419797"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c6b3581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "146663"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"74fde623ddac0dc864e53a9b6a1d9da0\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 20:22:49 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 11:00:53 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 146663,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 146964,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 684.4599999021739,
+        "timings": {
+          "blocked": 38.59899989245832,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.4119999999999999,
+          "wait": 119.3460000859648,
+          "receive": 526.1029999237508,
+          "_blocked_queueing": 31.87799989245832,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 1220
+        },
+        "_priority": "Low",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/7d/81/7d81005541616e9f05aa992d508f19ff.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/7d/81/7d81005541616e9f05aa992d508f19ff.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "1305736"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c703581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "140709"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"8f8dfad0291d59e4cf444a3e2281efa9\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 20:22:49 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 11:01:30 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 140709,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 140987,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 684.7530000377446,
+        "timings": {
+          "blocked": 38.74600017301738,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.29800000000000004,
+          "wait": 119.76800001037121,
+          "receive": 525.940999854356,
+          "_blocked_queueing": 31.976000173017383,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 1255
+        },
+        "_priority": "Low",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/ce/7c/ce7c9dafc17fbbf47b190c6ee08e274b.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/ce/7c/ce7c9dafc17fbbf47b190c6ee08e274b.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "2497451"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c723581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "87595"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"471a807baa5d06e239bbe5d9bbbb9a96\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 20:22:49 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 11:04:02 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 87595,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 87835,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 685.2520001120865,
+        "timings": {
+          "blocked": 38.76499997268617,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.24100000000000055,
+          "wait": 120.18700008502603,
+          "receive": 526.0590000543743,
+          "_blocked_queueing": 32.07199997268617,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 1290
+        },
+        "_priority": "Low",
+        "_resourceType": "image",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/files/cache/bc/94/bc94c954783f851cdfe471c3311e24d5.jpg",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/files/cache/bc/94/bc94c954783f851cdfe471c3311e24d5.jpg"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Authorization,Accept,Origin,DNT,X-csrftoken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "age",
+              "value": "2414744"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c3c7c3581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "106775"
+            },
+            {
+              "name": "content-type",
+              "value": "image/jpeg"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"a639f24d7e755ce1e773a7ff352b6f08\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 20:22:49 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 11 Jun 2025 11:03:28 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-debug-bucket",
+              "value": "blender-studio-production"
+            },
+            {
+              "name": "x-rgw-object-type",
+              "value": "Normal"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 106775,
+            "mimeType": "image/jpeg"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 107012,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 685.4110001586378,
+        "timings": {
+          "blocked": 38.79100004090369,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.1869999999999994,
+          "wait": 120.03300002795459,
+          "receive": 526.4000000897795,
+          "_blocked_queueing": 32.29500004090369,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 1497
+        },
+        "_priority": "Medium",
+        "_resourceType": "script",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/static/js/vendor.b23f2d86e10b.js",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/static/js/vendor.b23f2d86e10b.js"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "*/*"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "u=2"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "script"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "age",
+              "value": "778472"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c563581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "453081"
+            },
+            {
+              "name": "content-type",
+              "value": "application/javascript; charset=utf-8"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"6937104d-6e9d9\""
+            },
+            {
+              "name": "expires",
+              "value": "Mon, 15 Dec 2025 17:52:27 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Mon, 08 Dec 2025 17:52:13 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000; preload"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-content-type-options",
+              "value": "nosniff"
+            },
+            {
+              "name": "x-frame-options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "name": "x-xss-protection",
+              "value": "1; mode=block"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 453081,
+            "mimeType": "application/javascript"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 453762,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 374.33700007386506,
+        "timings": {
+          "blocked": 37.356999877691266,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 1.1910000000000007,
+          "wait": 96.94399991983175,
+          "receive": 238.84500027634203,
+          "_blocked_queueing": 30.07199987769127,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 1499
+        },
+        "_priority": "Medium",
+        "_resourceType": "script",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/static/js/studio.76266952b2f2.js",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/static/js/studio.76266952b2f2.js"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "*/*"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "u=2"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "script"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "age",
+              "value": "2413425"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c573581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "42881"
+            },
+            {
+              "name": "content-type",
+              "value": "application/javascript; charset=utf-8"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"691d94dd-a781\""
+            },
+            {
+              "name": "expires",
+              "value": "Wed, 26 Nov 2025 19:43:15 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 19 Nov 2025 09:58:53 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000; preload"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-content-type-options",
+              "value": "nosniff"
+            },
+            {
+              "name": "x-frame-options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "name": "x-xss-protection",
+              "value": "1; mode=block"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 42881,
+            "mimeType": "application/javascript"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 43059,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 361.03000002913177,
+        "timings": {
+          "blocked": 37.401999875336884,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 1.1159999999999997,
+          "wait": 97.48500008790195,
+          "receive": 225.02700006589293,
+          "_blocked_queueing": 30.193999875336885,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 1501
+        },
+        "_priority": "Medium",
+        "_resourceType": "script",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/static/js/web-assets.220ec2564e81.js",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/static/js/web-assets.220ec2564e81.js"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "*/*"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "u=2"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "script"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "age",
+              "value": "1677412"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8c2c5a3581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "2034"
+            },
+            {
+              "name": "content-type",
+              "value": "application/javascript; charset=utf-8"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"692741c6-7f2\""
+            },
+            {
+              "name": "expires",
+              "value": "Fri, 05 Dec 2025 08:10:07 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 26 Nov 2025 18:07:02 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000; preload"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-content-type-options",
+              "value": "nosniff"
+            },
+            {
+              "name": "x-frame-options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "name": "x-xss-protection",
+              "value": "1; mode=block"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 2034,
+            "mimeType": "application/javascript"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 2213,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 361.28899990580976,
+        "timings": {
+          "blocked": 37.446999876201154,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 1.0410000000000004,
+          "wait": 97.89999999181926,
+          "receive": 224.90100003778934,
+          "_blocked_queueing": 30.346999876201153,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487337",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/films/",
+          "lineNumber": 1505
+        },
+        "_priority": "Low",
+        "_resourceType": "script",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://analytics.blender.org/js/script.js",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "analytics.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/js/script.js"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "*/*"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "script"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-site"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=86400, must-revalidate"
+            },
+            {
+              "name": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "name": "content-type",
+              "value": "application/javascript"
+            },
+            {
+              "name": "cross-origin-resource-policy",
+              "value": "cross-origin"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "server",
+              "value": "nginx"
+            },
+            {
+              "name": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "name": "x-content-type-options",
+              "value": "nosniff"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 2618,
+            "mimeType": "application/javascript"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 1451,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "91.107.241.167",
+        "startedDateTime": "2025-12-17T18:06:30.019Z",
+        "time": 179.3549999129027,
+        "timings": {
+          "blocked": 38.71899994513392,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.13100000000000023,
+          "wait": 138.86100002239644,
+          "receive": 1.643999945372343,
+          "_blocked_queueing": 32.312999945133924,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/static/css/studio.637dae775f56.css"
+        },
+        "_priority": "VeryHigh",
+        "_resourceType": "font",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/static/fonts/Inter-VariableFont_slnt,wght.32204736a429.ttf",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/static/fonts/Inter-VariableFont_slnt,wght.32204736a429.ttf"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "*/*"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "origin",
+              "value": "https://studio.blender.org"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "u=0"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/static/css/studio.637dae775f56.css"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "font"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "age",
+              "value": "2413933"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8d0e553581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "804612"
+            },
+            {
+              "name": "content-type",
+              "value": "application/octet-stream"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"68ada9ab-c4704\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 20:22:08 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Tue, 26 Aug 2025 12:33:47 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000; preload"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-content-type-options",
+              "value": "nosniff"
+            },
+            {
+              "name": "x-frame-options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "name": "x-xss-protection",
+              "value": "1; mode=block"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 804612,
+            "mimeType": "application/octet-stream"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 805733,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.207Z",
+        "time": 491.7199998162687,
+        "timings": {
+          "blocked": 2.244999944269657,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.39400000000000013,
+          "wait": 269.52700003637375,
+          "receive": 219.5539998356253,
+          "_blocked_queueing": 0.9099999442696571,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "parser",
+          "url": "https://studio.blender.org/static/css/studio.637dae775f56.css"
+        },
+        "_priority": "VeryHigh",
+        "_resourceType": "font",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/static/fonts/fontutti.f3d44da9d67a.woff2?4c873d21",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/static/fonts/fontutti.f3d44da9d67a.woff2?4c873d21"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "*/*"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "origin",
+              "value": "https://studio.blender.org"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "u=0"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/static/css/studio.637dae775f56.css"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "font"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [
+            {
+              "name": "4c873d21",
+              "value": ""
+            }
+          ],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "age",
+              "value": "2422598"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b8d0e603581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "28324"
+            },
+            {
+              "name": "content-type",
+              "value": "font/woff2"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:00 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"68ada9ab-6ea4\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 20:22:08 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Tue, 26 Aug 2025 12:33:47 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000; preload"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-content-type-options",
+              "value": "nosniff"
+            },
+            {
+              "name": "x-frame-options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "name": "x-xss-protection",
+              "value": "1; mode=block"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 28324,
+            "mimeType": "font/woff2"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 28446,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.207Z",
+        "time": 276.1949999257922,
+        "timings": {
+          "blocked": 2.4779998013228175,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.10400000000000009,
+          "wait": 269.6030000911653,
+          "receive": 4.010000033304095,
+          "_blocked_queueing": 1.1969998013228178,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "E",
+                "scriptId": "151",
+                "url": "https://analytics.blender.org/js/script.js",
+                "lineNumber": 0,
+                "columnNumber": 1715
+              },
+              {
+                "functionName": "n",
+                "scriptId": "151",
+                "url": "https://analytics.blender.org/js/script.js",
+                "lineNumber": 0,
+                "columnNumber": 1674
+              },
+              {
+                "functionName": "_",
+                "scriptId": "151",
+                "url": "https://analytics.blender.org/js/script.js",
+                "lineNumber": 0,
+                "columnNumber": 2248
+              },
+              {
+                "functionName": "",
+                "scriptId": "151",
+                "url": "https://analytics.blender.org/js/script.js",
+                "lineNumber": 0,
+                "columnNumber": 2545
+              },
+              {
+                "functionName": "",
+                "scriptId": "151",
+                "url": "https://analytics.blender.org/js/script.js",
+                "lineNumber": 0,
+                "columnNumber": 2615
+              }
+            ]
+          }
+        },
+        "_priority": "High",
+        "_resourceType": "fetch",
+        "cache": {},
+        "pageref": "page_3",
+        "request": {
+          "method": "POST",
+          "url": "https://analytics.blender.org/api/event",
+          "httpVersion": "",
+          "headers": [
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "Referer",
+              "value": ""
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "DNT",
+              "value": "1"
+            },
+            {
+              "name": "Content-Type",
+              "value": "text/plain"
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 117,
+          "postData": {
+            "mimeType": "text/plain",
+            "text": "{\"n\":\"pageview\",\"v\":3,\"u\":\"https://studio.blender.org/films/\",\"d\":\"studio.blender.org\",\"r\":\"https://www.google.com/\"}"
+          }
+        },
+        "response": {
+          "status": 0,
+          "statusText": "",
+          "httpVersion": "",
+          "headers": [],
+          "cookies": [],
+          "content": {
+            "size": 0,
+            "mimeType": "x-unknown"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 0,
+          "_error": "net::ERR_BLOCKED_BY_CLIENT",
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "",
+        "startedDateTime": "2025-12-17T18:06:30.415Z",
+        "time": 2.2330000065267086,
+        "timings": {
+          "blocked": 2.2330000065267086,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0,
+          "wait": 0,
+          "receive": 0,
+          "_blocked_queueing": -1
+        }
+      },
+      {
+        "_connectionId": "11487325",
+        "_initiator": {
+          "type": "other"
+        },
+        "_priority": "High",
+        "_resourceType": "other",
+        "cache": {},
+        "connection": "443",
+        "pageref": "page_3",
+        "request": {
+          "method": "GET",
+          "url": "https://studio.blender.org/static/common/images/favicon/favicon.d742f1f6283f.ico",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "studio.blender.org"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/static/common/images/favicon/favicon.d742f1f6283f.ico"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en-GB;q=0.9,en;q=0.8,ru-RU;q=0.7,ru;q=0.6,de;q=0.5,nl;q=0.4"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-cache"
+            },
+            {
+              "name": "dnt",
+              "value": "1"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "priority",
+              "value": "u=1, i"
+            },
+            {
+              "name": "referer",
+              "value": "https://studio.blender.org/films/"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "image"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "no-cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "http/2.0",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "age",
+              "value": "1681246"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=31536000, no-transform"
+            },
+            {
+              "name": "cf-cache-status",
+              "value": "HIT"
+            },
+            {
+              "name": "cf-ray",
+              "value": "9af85b905ee23581-AMS"
+            },
+            {
+              "name": "content-length",
+              "value": "15086"
+            },
+            {
+              "name": "content-type",
+              "value": "image/x-icon"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 17 Dec 2025 18:07:01 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "\"636bde6d-3aee\""
+            },
+            {
+              "name": "expires",
+              "value": "Tue, 25 Nov 2025 20:21:56 GMT"
+            },
+            {
+              "name": "last-modified",
+              "value": "Wed, 09 Nov 2022 17:07:57 GMT"
+            },
+            {
+              "name": "server",
+              "value": "cloudflare"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000; preload"
+            },
+            {
+              "name": "vary",
+              "value": "accept-encoding"
+            },
+            {
+              "name": "x-content-type-options",
+              "value": "nosniff"
+            },
+            {
+              "name": "x-frame-options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "name": "x-xss-protection",
+              "value": "1; mode=block"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 15086,
+            "mimeType": "image/x-icon"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 15309,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "104.20.41.146",
+        "startedDateTime": "2025-12-17T18:06:30.725Z",
+        "time": 57.92600009590387,
+        "timings": {
+          "blocked": 7.52500005158782,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.2869999999999999,
+          "wait": 47.74999997161329,
+          "receive": 2.3640000727027655,
+          "_blocked_queueing": 2.66700005158782,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "E",
+                "scriptId": "151",
+                "url": "https://analytics.blender.org/js/script.js",
+                "lineNumber": 0,
+                "columnNumber": 1715
+              },
+              {
+                "functionName": "y",
+                "scriptId": "151",
+                "url": "https://analytics.blender.org/js/script.js",
+                "lineNumber": 0,
+                "columnNumber": 829
+              },
+              {
+                "functionName": "S",
+                "scriptId": "151",
+                "url": "https://analytics.blender.org/js/script.js",
+                "lineNumber": 0,
+                "columnNumber": 975
+              }
+            ]
+          }
+        },
+        "_priority": "High",
+        "_resourceType": "fetch",
+        "cache": {},
+        "pageref": "page_3",
+        "request": {
+          "method": "POST",
+          "url": "https://analytics.blender.org/api/event",
+          "httpVersion": "",
+          "headers": [
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Linux\""
+            },
+            {
+              "name": "Referer",
+              "value": ""
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+            },
+            {
+              "name": "DNT",
+              "value": "1"
+            },
+            {
+              "name": "Content-Type",
+              "value": "text/plain"
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 106,
+          "postData": {
+            "mimeType": "text/plain",
+            "text": "{\"n\":\"engagement\",\"sd\":78,\"d\":\"studio.blender.org\",\"u\":\"https://studio.blender.org/films/\",\"e\":3779,\"v\":3}"
+          }
+        },
+        "response": {
+          "status": 0,
+          "statusText": "",
+          "httpVersion": "",
+          "headers": [],
+          "cookies": [],
+          "content": {
+            "size": 0,
+            "mimeType": "x-unknown"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 0,
+          "_error": "net::ERR_BLOCKED_BY_CLIENT",
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "",
+        "startedDateTime": "2025-12-17T18:06:34.195Z",
+        "time": 5.844999803230166,
+        "timings": {
+          "blocked": 5.844999803230166,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0,
+          "wait": 0,
+          "receive": 0,
+          "_blocked_queueing": -1
+        }
+      }
+    ]
+  }
+}

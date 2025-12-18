@@ -556,7 +556,9 @@
       DEFAULT_TRACKERS_QUERY;
 
     function formatSize(bytes) {
-      if (!Number.isFinite(bytes) || bytes <= 0) return "unknown";
+      if (!Number.isFinite(bytes)) return "unknown";
+      if (bytes === 0) return "0 B";
+      if (bytes < 0) return "unknown";
       const units = ["B", "kB", "MB", "GB", "TB"];
       let value = bytes;
       let unitIndex = 0;
@@ -601,7 +603,7 @@
       let statusInterval = null;
       let currentLabel = DEBUG_TITLE;
       let peerWatchTimeout = null;
-      let peerData = new Map(); // addr -> {wire, downloaded, uploaded}
+      let peerData = new Map(); // addr -> {wire, downloaded, uploaded, lastDownloaded, lastUploaded, lastUpdated}
       let trackerData = new Map(); // url -> {seeders, leechers, lastUpdate}
       let currentPreviewFile = null; // Track currently previewing file
 
@@ -727,6 +729,8 @@
 
         peerCountEl.textContent = peerData.size + (peerData.size === 1 ? " peer" : " peers");
 
+        const now = Date.now();
+
         peerData.forEach((data, addr) => {
           const li = document.createElement("li");
           li.className = "file-row";
@@ -734,12 +738,25 @@
           main.className = "file-main";
           const name = document.createElement("div");
           name.className = "file-name mono";
-          name.textContent = addr || "Unknown address";
+          const label =
+            addr && addr !== "unknown" ? addr : "Unknown address";
+          name.textContent = label;
           const meta = document.createElement("div");
           meta.className = "file-meta";
-          const down = formatSize(data.downloaded || 0);
-          const up = formatSize(data.uploaded || 0);
-          meta.textContent = "↓ " + down + " · ↑ " + up;
+          const lastUpdated = data.lastUpdated || now;
+          const elapsedMs = Math.max(1, now - lastUpdated);
+          const deltaDown = (data.downloaded || 0) - (data.lastDownloaded || 0);
+          const deltaUp = (data.uploaded || 0) - (data.lastUploaded || 0);
+          const downRateBytes = deltaDown > 0 ? (deltaDown * 1000) / elapsedMs : 0;
+          const upRateBytes = deltaUp > 0 ? (deltaUp * 1000) / elapsedMs : 0;
+          const downText = formatSize(downRateBytes) + "/s";
+          const upText = formatSize(upRateBytes) + "/s";
+          meta.textContent = "↓ " + downText + " · ↑ " + upText;
+
+          data.lastDownloaded = data.downloaded || 0;
+          data.lastUploaded = data.uploaded || 0;
+          data.lastUpdated = now;
+
           main.appendChild(name);
           main.appendChild(meta);
           li.appendChild(main);
@@ -975,15 +992,21 @@
           updateStatusFromTorrent(torrent);
         });
 
-        torrent.on("wire", (wire) => {
-          const addr = wire && (wire.remoteAddress || wire.peerAddress || "unknown");
+        torrent.on("wire", (wire, addrInfo) => {
+          const addr =
+            addrInfo ||
+            (wire && (wire.remoteAddress || wire.peerAddress)) ||
+            "unknown";
           log("Peer connected: " + addr);
 
           if (!peerData.has(addr)) {
             peerData.set(addr, {
               wire: wire,
               downloaded: 0,
-              uploaded: 0
+              uploaded: 0,
+              lastDownloaded: 0,
+              lastUploaded: 0,
+              lastUpdated: Date.now()
             });
           }
 
@@ -1046,6 +1069,29 @@
             } catch (e) {
               log("Could not attach discovery.tracker listeners: " + e.message);
             }
+          }
+
+          // Also listen for high-level trackerAnnounce events when available
+          try {
+            torrent.on("trackerAnnounce", (data) => {
+              log("[trackerAnnounce] " + JSON.stringify(data));
+              if (!data || typeof data !== "object") return;
+              const url =
+                data.announce || data.announceUrl || data.url || null;
+              if (!url) return;
+              trackerData.set(url, {
+                complete:
+                  typeof data.complete === "number" ? data.complete : null,
+                incomplete:
+                  typeof data.incomplete === "number" ? data.incomplete : null,
+                downloaded:
+                  typeof data.downloaded === "number" ? data.downloaded : null,
+                lastUpdate: Date.now()
+              });
+              renderTrackers();
+            });
+          } catch (e) {
+            // ignore
           }
 
           // Log what's in the torrent object for debugging

@@ -582,6 +582,13 @@
         <div class="client-label">Client controls</div>
       </div>
       <div class="client-row">
+        <div class="client-label">Collection</div>
+        <select class="input" id="collection-mode">
+          <option value="blender" selected>Blender films</option>
+          <option value="herzog">Werner Herzog collection</option>
+        </select>
+      </div>
+      <div class="client-row">
         <div class="client-label">Presets from Herzog archive</div>
         <ul class="client-presets" id="client-presets"></ul>
       </div>
@@ -659,6 +666,8 @@
       "&tr=wss%3A%2F%2Ftracker.webtorrent.dev";
 
     let whdaStatus = {};
+    let filmBag = [];
+    let collectionMode = "blender"; // "blender" or "herzog"
 
     const EXAMPLE_WHDA_ITEMS = [
       {
@@ -712,6 +721,45 @@
         unitIndex += 1;
       }
       return value.toFixed(value >= 100 || unitIndex === 0 ? 0 : 1) + " " + units[unitIndex];
+    }
+
+    function refreshWhdaInfohashes() {
+      const whdaInfohashesEl = document.getElementById("whda-infohashes");
+      if (!whdaInfohashesEl) return;
+      if (!Array.isArray(filmBag) || !filmBag.length) {
+        whdaInfohashesEl.textContent = "// WHDA bag empty.";
+        return;
+      }
+      const lines = filmBag.map((item, index) => {
+        const hash = (item.hash || "").trim();
+        const shortHash = hash ? hash.slice(0, 10) + "…" : "no-hash";
+        const title = item.title || hash || "Untitled";
+        const key = hash.toLowerCase();
+        const status = whdaStatus[key] || {};
+        const peers = status.peers != null ? status.peers : 0;
+        const progress =
+          status.progress != null
+            ? status.progress.toFixed(1).replace(/\.0$/, "") + "%"
+            : "0%";
+        const down = formatSize(status.down || 0);
+        const up = formatSize(status.up || 0);
+        return (
+          String(index + 1).padStart(2, "0") +
+          " [" +
+          shortHash +
+          "] " +
+          title +
+          " — peers=" +
+          String(peers) +
+          ", " +
+          progress +
+          ", ↓" +
+          down +
+          ", ↑" +
+          up
+        );
+      });
+      whdaInfohashesEl.textContent = lines.join("\n");
     }
 
     function createMovieElement(movie) {
@@ -826,7 +874,9 @@
         down,
         up,
       };
-      refreshWhdaInfohashes();
+      if (typeof refreshWhdaInfohashes === "function") {
+        refreshWhdaInfohashes();
+      }
     }
 
     function updateStatusError(message) {
@@ -838,6 +888,64 @@
       const dot = document.getElementById("status-dot");
       dot.style.background = "#b45b6a";
       dot.style.boxShadow = "none";
+    }
+
+    function loadBlenderFilmLibrary(listEl, countEl) {
+      if (!window.fetch) {
+        setScanStatus("Metadata scan: fetch() not available for Blender films");
+        return;
+      }
+
+      setScanStatus("Metadata scan: loading Blender films (local JSON)");
+
+      fetch("blender-films.json")
+        .then((res) => res.json())
+        .then((items) => {
+          const rows = Array.isArray(items) ? items : [];
+          if (!rows.length) {
+            setScanStatus("Metadata scan: no Blender films in blender-films.json");
+            filmBag = [];
+            refreshWhdaInfohashes();
+            listEl.innerHTML = "";
+            countEl.textContent = "0 films";
+            return;
+          }
+
+          filmBag = rows.map((row, index) => ({
+            hash: "", // no torrent wired yet
+            title: row.title || "Blender film " + String(index + 1).padStart(2, "0")
+          }));
+
+          whdaStatus = {};
+          refreshWhdaInfohashes();
+
+          listEl.innerHTML = "";
+          countEl.textContent = filmBag.length + " films (Blender catalog)";
+
+          filmBag.forEach((item, index) => {
+            const movie = {
+              id:
+                "blender-" +
+                String(index + 1)
+                  .toString()
+                  .padStart(2, "0"),
+              title: item.title,
+              sizeBytes: 0,
+              tags: ["blender"],
+            };
+            const node = createMovieElement(movie);
+            node.addEventListener("click", () => {
+              setPlayerMeta(movie.title, "No torrent wired (Blender catalog only)");
+              updateStatusError("No torrent wired for Blender films yet");
+            });
+            listEl.appendChild(node);
+          });
+
+          setScanStatus("Metadata scan: Blender films loaded (catalog only)");
+        })
+        .catch(() => {
+          setScanStatus("Metadata scan: error loading blender-films.json");
+        });
     }
 
     function initMiniCinema() {
@@ -858,11 +966,11 @@
       const nostrWhdaExampleButton = document.getElementById("nostr-whda-example");
       const nostrEventFrameEl = document.getElementById("nostr-event-frame");
       const nostrKeyLabelEl = document.getElementById("nostr-key-label");
+      const collectionModeEl = document.getElementById("collection-mode");
 
       let client = null;
       let activeTorrent = null;
       let statusInterval = null;
-      let filmBag = [];
       let localNostrSk = null;
       let mediaResolveTimeout = null;
 
@@ -895,7 +1003,7 @@
         });
       }
 
-      function setScanStatus(text) {
+	      function setScanStatus(text) {
         if (scanStatusEl) {
           scanStatusEl.textContent = text;
         }
@@ -970,7 +1078,7 @@
         }
       }
 
-      function refreshLocalNostrKeyLabel() {
+	      function refreshLocalNostrKeyLabel() {
         if (!nostrKeyLabelEl) return;
         if (!localNostrSk) {
           nostrKeyLabelEl.textContent =
@@ -981,44 +1089,7 @@
           "Local Nostr key (POC secret, hex): " + localNostrSk;
       }
 
-      function refreshWhdaInfohashes() {
-        if (!whdaInfohashesEl) return;
-        if (!Array.isArray(filmBag) || !filmBag.length) {
-          whdaInfohashesEl.textContent = "// WHDA bag empty.";
-          return;
-        }
-        const lines = filmBag.map((item, index) => {
-          const hash = (item.hash || "").trim();
-          const title = item.title || hash;
-          const key = hash.toLowerCase();
-          const status = whdaStatus[key] || {};
-          const peers = status.peers != null ? status.peers : 0;
-          const progress =
-            status.progress != null
-              ? status.progress.toFixed(1).replace(/\.0$/, "") + "%"
-              : "0%";
-          const down = formatSize(status.down || 0);
-          const up = formatSize(status.up || 0);
-          return (
-            String(index + 1).padStart(2, "0") +
-            ". " +
-            hash +
-            "  peers=" +
-            String(peers) +
-            "  prog=" +
-            progress +
-            "  down=" +
-            down +
-            "  up=" +
-            up +
-            "  " +
-            title
-          );
-        });
-        whdaInfohashesEl.textContent = lines.join("\n");
-      }
-
-      function refreshNostrDraftFromFilmBag() {
+	      function refreshNostrDraftFromFilmBag() {
         if (!nostrWhdaEl) return;
         if (!Array.isArray(filmBag) || !filmBag.length) {
           nostrWhdaEl.textContent = "// WHDA draft is empty – no films loaded yet";
@@ -1903,7 +1974,25 @@
       setPlayerMeta(null, null);
       localNostrSk = ensureLocalNostrKey();
       refreshLocalNostrKeyLabel();
-      loadFilmLibraryFromWhda();
+
+      if (collectionModeEl) {
+        collectionModeEl.value = collectionMode;
+        collectionModeEl.addEventListener("change", () => {
+          collectionMode =
+            collectionModeEl.value === "herzog" ? "herzog" : "blender";
+          if (collectionMode === "blender") {
+            loadBlenderFilmLibrary(listEl, countEl);
+          } else {
+            loadFilmLibraryFromWhda();
+          }
+        });
+      }
+
+      if (collectionMode === "blender") {
+        loadBlenderFilmLibrary(listEl, countEl);
+      } else {
+        loadFilmLibraryFromWhda();
+      }
 
       loadPresets();
 

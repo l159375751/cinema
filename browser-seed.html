@@ -322,6 +322,14 @@
             <div class="status-value status-value-strong" id="status-files">0</div>
           </div>
           <div class="status-item">
+            <div class="status-label">Total size</div>
+            <div class="status-value status-value-strong" id="status-total-size">0 kB</div>
+          </div>
+          <div class="status-item">
+            <div class="status-label">Download strategy</div>
+            <div class="status-value">Random</div>
+          </div>
+          <div class="status-item">
             <div class="status-label">Peers</div>
             <div class="status-value" id="status-peers">0</div>
           </div>
@@ -553,6 +561,7 @@
       const statusLabelEl = document.getElementById("status-label");
       const statusMethodEl = document.getElementById("status-method");
       const filesEl = document.getElementById("status-files");
+      const totalSizeEl = document.getElementById("status-total-size");
       const peersEl = document.getElementById("status-peers");
       const speedEl = document.getElementById("status-speed");
       const downloadedEl = document.getElementById("status-downloaded");
@@ -596,6 +605,7 @@
 
       function resetStatus() {
         filesEl.textContent = "0";
+        totalSizeEl.textContent = "0 kB";
         peersEl.textContent = "0";
         speedEl.textContent = "0 kB/s · 0 kB/s";
         downloadedEl.textContent = "0 kB";
@@ -661,6 +671,7 @@
         activeTorrent = torrent;
         infohashOutput.textContent = torrent.infoHash || "–";
         magnetOutput.textContent = torrent.magnetURI || "";
+        totalSizeEl.textContent = formatSize(torrent.length || 0);
         statusMethodEl.textContent = method;
         appendLog("Seeding: " + (torrent.name || "unnamed"));
         appendLog("Infohash: " + torrent.infoHash);
@@ -1022,6 +1033,7 @@
           torrent.on('metadata', () => {
             appendLog("Metadata received: " + torrent.name);
             filesEl.textContent = String(torrent.files.length);
+            totalSizeEl.textContent = formatSize(torrent.length || 0);
             statusMethodEl.textContent = "Download";
           });
 
