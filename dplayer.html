@@ -440,31 +440,26 @@
         return client;
       }
 
-      function ensureDPlayer(url, name) {
+      function ensureDPlayer(name) {
         if (!dplayerContainer) return;
         if (typeof DPlayer === "undefined") {
           statusLabelEl.textContent = "No DPlayer";
           log("DPlayer is not available (script failed to load?).");
           return;
         }
-        if (dp) {
-          try {
-            dp.destroy();
-          } catch (e) {
-            // ignore
-          }
-          dp = null;
+        if (!dp) {
+          dp = new DPlayer({
+            container: dplayerContainer,
+            autoplay: true,
+            video: {
+              url: "",
+              type: "auto",
+            },
+            screenshot: false,
+          });
         }
-        dp = new DPlayer({
-          container: dplayerContainer,
-          autoplay: true,
-          video: {
-            url,
-            type: "auto",
-          },
-          screenshot: false,
-        });
-        log("DPlayer initialised with " + (name || "video") + ".");
+        log("DPlayer ready for " + (name || "video") + ".");
+        return dp;
       }
 
       function updateStatusFromTorrent(torrent) {
@@ -516,27 +511,33 @@
           updateStatusFromTorrent(activeTorrent);
         }, 1000);
 
+        const player = ensureDPlayer(chosen.name || chosen.path || "video");
+        if (!player || !player.video) {
+          statusLabelEl.textContent = "Error";
+          log("DPlayer did not expose a video element.");
+          return;
+        }
+
         try {
-          chosen.getBlobURL((err, url) => {
+          chosen.renderTo(player.video, { autoplay: true }, (err) => {
             if (err) {
               statusLabelEl.textContent = "Error";
               log(
-                "Error generating blob URL: " +
+                "Render error: " +
                   (err && err.message ? err.message : String(err))
               );
-              return;
+            } else {
+              log(
+                "Streaming " +
+                  (chosen.name || chosen.path || "video") +
+                  " into DPlayer video element."
+              );
             }
-            log(
-              "Blob URL generated for " +
-                (chosen.name || chosen.path || "video") +
-                ". Handing off to DPlayer."
-            );
-            ensureDPlayer(url, chosen.name || chosen.path || "video");
           });
         } catch (e) {
           statusLabelEl.textContent = "Error";
           log(
-            "Blob URL error: " +
+            "Render exception: " +
               (e && e.message ? e.message : String(e))
           );
         }
