@@ -892,6 +892,13 @@
       dot.style.boxShadow = "none";
     }
 
+    function setScanStatus(text) {
+      const el = document.getElementById("metadata-scan-status");
+      if (el) {
+        el.textContent = text;
+      }
+    }
+
     function loadBlenderFilmLibrary(listEl, countEl) {
       if (!window.fetch) {
         setScanStatus("Metadata scan: fetch() not available for Blender films");
