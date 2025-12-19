@@ -1519,13 +1519,37 @@
           const fileName = (file.path || file.name || "").split("/").pop();
           setPlayerMeta(label, fileName);
 
-          file.renderTo(videoEl, { autoplay: true }, (err) => {
-            if (err) {
-              updateStatusError("Render failed: " + err.message);
+          try {
+            if (videoEl) {
+              try {
+                videoEl.pause();
+                videoEl.removeAttribute("src");
+                videoEl.load();
+              } catch (e) {
+                // ignore
+              }
             }
-          });
-
-          overlayBadge.textContent = "";
+            file.getBlobURL((err, url) => {
+              if (err) {
+                updateStatusError("Render failed: " + (err.message || String(err)));
+                return;
+              }
+              if (!videoEl) return;
+              videoEl.src = url;
+              videoEl.play().catch((e) => {
+                updateStatusError(
+                  "Playback failed: " +
+                    (e && e.message ? e.message : String(e))
+                );
+              });
+              overlayBadge.textContent = "";
+            });
+          } catch (e) {
+            updateStatusError(
+              "Render exception: " +
+                (e && e.message ? e.message : String(e))
+            );
+          }
 
           updateStatusFromTorrent(torrent);
           statusInterval = setInterval(() => {
@@ -1831,13 +1855,39 @@
               return;
             }
 
-            file.renderTo(videoEl, { autoplay: true }, (err) => {
-              if (err) {
-                updateStatusError("Render failed: " + err.message);
+            try {
+              if (videoEl) {
+                try {
+                  videoEl.pause();
+                  videoEl.removeAttribute("src");
+                  videoEl.load();
+                } catch (e) {
+                  // ignore
+                }
               }
-            });
-
-            overlayBadge.textContent = "";
+              file.getBlobURL((err, url) => {
+                if (err) {
+                  updateStatusError(
+                    "Render failed: " + (err.message || String(err))
+                  );
+                  return;
+                }
+                if (!videoEl) return;
+                videoEl.src = url;
+                videoEl.play().catch((e) => {
+                  updateStatusError(
+                    "Playback failed: " +
+                      (e && e.message ? e.message : String(e))
+                  );
+                });
+                overlayBadge.textContent = "";
+              });
+            } catch (e) {
+              updateStatusError(
+                "Render exception: " +
+                  (e && e.message ? e.message : String(e))
+              );
+            }
 
             updateStatusFromTorrent(torrent);
             statusInterval = setInterval(() => {
