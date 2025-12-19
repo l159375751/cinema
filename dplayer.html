@@ -114,6 +114,20 @@
       word-break: break-all;
     }
 
+    .input {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #090a10;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .input::placeholder {
+      color: rgba(163, 163, 181, 0.7);
+    }
+
     .client-button {
       padding: 5px 10px;
       border-radius: 999px;
@@ -263,11 +277,20 @@
           <div>Charge – Blender Open Movie</div>
         </div>
         <div style="margin-top: 6px;">
-          <div class="field-label">Infohash</div>
+          <div class="field-label">Infohash or magnet URI</div>
+          <input
+            class="input mono"
+            id="input-target"
+            type="text"
+            placeholder="Paste infohash or magnet; default is Charge demo."
+          >
+        </div>
+        <div style="margin-top: 6px;">
+          <div class="field-label">Resolved infohash</div>
           <div class="mono" id="infohash"></div>
         </div>
         <div style="margin-top: 6px;">
-          <div class="field-label">Magnet</div>
+          <div class="field-label">Resolved magnet</div>
           <div class="mono" id="magnet"></div>
         </div>
         <div style="margin-top: 8px;">
@@ -356,6 +379,7 @@
     function initDPlayerPoc() {
       const infohashEl = document.getElementById("infohash");
       const magnetEl = document.getElementById("magnet");
+      const targetInput = document.getElementById("input-target");
       const statusLabelEl = document.getElementById("status-label");
       const progressEl = document.getElementById("status-progress");
       const peersEl = document.getElementById("status-peers");
@@ -568,14 +592,49 @@
 
         resetStatus();
         statusLabelEl.textContent = "Connecting";
-        infohashEl.textContent = DEMO_INFOHASH;
-        magnetEl.textContent = DEMO_MAGNET;
+
+        const rawTarget =
+          (targetInput && targetInput.value && targetInput.value.trim()) || "";
+        let infohash = "";
+        let magnet = "";
+
+        if (rawTarget && rawTarget.toLowerCase().startsWith("magnet:")) {
+          magnet = rawTarget;
+          const match = magnet.match(/xt=urn:btih:([^&]+)/i);
+          if (match && match[1]) {
+            infohash = match[1].toLowerCase();
+          }
+
+          if (DEMO_TRACKERS && DEMO_TRACKERS.length) {
+            magnet = magnet.replace(/&tr=[^&]*/gi, "");
+            magnet += buildTrackersQuery(DEMO_TRACKERS);
+          }
+        } else {
+          const candidate = rawTarget || DEMO_INFOHASH;
+          const cleanHash = candidate.replace(/\s+/g, "");
+          if (!/^[0-9a-fA-F]{40}$/.test(cleanHash)) {
+            statusLabelEl.textContent = "Error";
+            log("Invalid infohash or magnet URI: " + candidate);
+            return;
+          }
+          infohash = cleanHash.toLowerCase();
+          magnet =
+            "magnet:?xt=urn:btih:" +
+            infohash +
+            "&dn=" +
+            encodeURIComponent(DEMO_TITLE) +
+            buildTrackersQuery(DEMO_TRACKERS);
+        }
+
+        infohashEl.textContent = infohash || "–";
+        magnetEl.textContent = magnet;
+
         log(
-          "Adding demo magnet to WebTorrent client. Trackers: " +
+          "Adding magnet to WebTorrent client. Trackers: " +
             DEMO_TRACKERS.join(", ")
         );
 
-        const existing = c.get(DEMO_INFOHASH) || null;
+        const existing = infohash ? c.get(infohash) || null : null;
         if (existing) {
           log("Reusing existing demo torrent in client.");
           attachTorrent(existing);
@@ -583,7 +642,7 @@
         }
 
         try {
-          c.add(DEMO_MAGNET, (torrent) => {
+          c.add(magnet, (torrent) => {
             attachTorrent(torrent);
           });
         } catch (e) {
@@ -655,6 +714,9 @@
 
       infohashEl.textContent = DEMO_INFOHASH;
       magnetEl.textContent = DEMO_MAGNET;
+      if (targetInput && !targetInput.value) {
+        targetInput.value = DEMO_INFOHASH;
+      }
       resetStatus();
       log("Ready. Click \"Start DPlayer demo\" to load the Charge torrent into DPlayer.");
     }
