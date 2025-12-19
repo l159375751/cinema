@@ -563,6 +563,10 @@
           <div class="status-label">Down / Up</div>
           <div class="status-value" id="status-speed">0 kB/s · 0 kB/s</div>
         </div>
+        <div class="status-item">
+          <div class="status-label">Total size</div>
+          <div class="status-value" id="status-total-size">unknown</div>
+        </div>
       </div>
       <div class="status-caption">
         <div class="status-caption-left">
@@ -831,6 +835,10 @@
       document.getElementById("status-progress").textContent = "0%";
       document.getElementById("status-peers").textContent = "0";
       document.getElementById("status-speed").textContent = "0 kB/s · 0 kB/s";
+      const totalSizeEl = document.getElementById("status-total-size");
+      if (totalSizeEl) {
+        totalSizeEl.textContent = "unknown";
+      }
       document.getElementById("status-extra").textContent = "Collection metadata not loaded";
       const dot = document.getElementById("status-dot");
       dot.style.background = "#5a8f63";
@@ -853,6 +861,7 @@
         const percent = (torrent.progress * 100) || 0;
         const down = torrent.downloadSpeed || 0;
         const up = torrent.uploadSpeed || 0;
+        const totalSizeEl = document.getElementById("status-total-size");
 
       document.getElementById("status-label").textContent =
         percent >= 99.5 ? "Seed" : "Streaming";
@@ -863,6 +872,10 @@
       );
       document.getElementById("status-speed").textContent =
         formatSize(down) + "/s · " + formatSize(up) + "/s";
+      if (totalSizeEl) {
+        const bytes = torrent.length || 0;
+        totalSizeEl.textContent = bytes > 0 ? formatSize(bytes) : "unknown";
+      }
       document.getElementById("status-extra").textContent =
         "Swarm " + (torrent.infoHash || "").slice(0, 10) + "…";
       const dot = document.getElementById("status-dot");
