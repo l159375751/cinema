@@ -631,8 +631,17 @@
       <div class="client-row">
         <div class="client-label">Remote cinema notes (last 10, by d/id)</div>
         <select class="input" id="nostr-whda-remote-select">
-          <option value="">– none loaded from relay –</option>
+          <option value="__reload__">Load from relay…</option>
         </select>
+      </div>
+      <div class="client-row">
+        <div class="client-label">d tag for this cinema note</div>
+        <input
+          class="client-input"
+          id="nostr-whda-d"
+          type="text"
+          value="WHDA"
+        >
       </div>
       <div class="client-row">
         <span class="client-note" id="nostr-key-label">
@@ -1003,6 +1012,7 @@
       const nostrEventFrameEl = document.getElementById("nostr-event-frame");
       const nostrKeyLabelEl = document.getElementById("nostr-key-label");
       const nostrWhdaRemoteSelectEl = document.getElementById("nostr-whda-remote-select");
+      const nostrWhdaDInputEl = document.getElementById("nostr-whda-d");
       const collectionModeEl = document.getElementById("collection-mode");
 
       let client = null;
@@ -1151,6 +1161,14 @@
 
       function loadWhdaDraftFromEvent(event) {
         if (!event || !nostrWhdaEl) return;
+        if (nostrWhdaDInputEl && Array.isArray(event.tags)) {
+          const dTag =
+            (event.tags.find((t) => Array.isArray(t) && t[0] === "d") || [null, ""])[1] ||
+            "";
+          if (dTag) {
+            nostrWhdaDInputEl.value = dTag;
+          }
+        }
         const raw = typeof event.content === "string" ? event.content : "";
         if (!raw) return;
         try {
@@ -1277,6 +1295,14 @@
 
         const now = Math.floor(Date.now() / 1000);
 
+        let dTag = NOSTR_WHDA_D;
+        if (nostrWhdaDInputEl && typeof nostrWhdaDInputEl.value === "string") {
+          const candidate = nostrWhdaDInputEl.value.trim();
+          if (candidate) {
+            dTag = candidate;
+          }
+        }
+
         let pubkey = localNostrSk || "0".repeat(64);
         try {
           if (
@@ -1295,7 +1321,7 @@
           created_at: now,
           kind: NOSTR_PRESETS_KIND,
           tags: [
-            ["d", NOSTR_WHDA_D],
+            ["d", dTag],
             ["t", "cinema"],
             ["t", "herzog"],
             ["client", "cinema-poc0.2"],
@@ -1320,6 +1346,10 @@
 
         whdaRemoteEvents = [];
         nostrWhdaRemoteSelectEl.innerHTML = "";
+        const reloadOption = document.createElement("option");
+        reloadOption.value = "__reload__";
+        reloadOption.textContent = "Load from relay…";
+        nostrWhdaRemoteSelectEl.appendChild(reloadOption);
         const loadingOption = document.createElement("option");
         loadingOption.value = "";
         loadingOption.textContent = "Loading…";
@@ -1360,6 +1390,11 @@
           }
 
           nostrWhdaRemoteSelectEl.innerHTML = "";
+
+          const reloadOption = document.createElement("option");
+          reloadOption.value = "__reload__";
+          reloadOption.textContent = "Load from relay…";
+          nostrWhdaRemoteSelectEl.appendChild(reloadOption);
 
           if (!whdaRemoteEvents.length) {
             const noneOption = document.createElement("option");
@@ -2282,6 +2317,10 @@
       if (nostrWhdaRemoteSelectEl) {
         nostrWhdaRemoteSelectEl.addEventListener("change", () => {
           const value = nostrWhdaRemoteSelectEl.value;
+          if (value === "__reload__") {
+            reloadWhdaDraftFromRelay();
+            return;
+          }
           if (!value) return;
           const index = Number(value);
           if (!Number.isFinite(index)) return;
