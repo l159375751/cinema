@@ -89,6 +89,14 @@
       backdrop-filter: none;
     }
 
+    .panel-body {
+      margin-top: 4px;
+    }
+
+    .panel-collapsed .panel-body {
+      display: none;
+    }
+
     .player-panel {
       padding: 10px;
     }
@@ -618,46 +626,49 @@
       </div>
     </section>
 
-    <section class="panel">
+    <section class="panel panel-collapsed" id="cinema-nostr-panel">
       <div class="panel-header">
         <div class="panel-title">Cinema Nostr draft</div>
+        <button class="client-button" id="cinema-nostr-toggle" type="button">Show</button>
       </div>
-      <div class="client-row">
-        <div class="client-label">
-          Example content payload for kind 30317 / d=WHDA
+      <div class="panel-body">
+        <div class="client-row">
+          <div class="client-label">
+            Example content payload for kind 30317 / d=WHDA
+          </div>
+          <pre class="nostr-block" id="nostr-whda" contenteditable="true" spellcheck="false">// Loading WHDA draft…</pre>
         </div>
-        <pre class="nostr-block" id="nostr-whda" contenteditable="true" spellcheck="false">// Loading WHDA draft…</pre>
-      </div>
-      <div class="client-row">
-        <div class="client-label">Remote cinema notes (last 10, by d/id)</div>
-        <select class="input" id="nostr-whda-remote-select">
-          <option value="__reload__">Load from relay…</option>
-        </select>
-      </div>
-      <div class="client-row">
-        <div class="client-label">d tag for this cinema note</div>
-        <input
-          class="client-input"
-          id="nostr-whda-d"
-          type="text"
-          value="WHDA"
-        >
-      </div>
-      <div class="client-row">
-        <span class="client-note" id="nostr-key-label">
-          Local Nostr key: not generated
-        </span>
-      </div>
-      <div class="client-actions">
-        <button class="client-button" id="nostr-whda-example">Generate example WHDA</button>
-        <button class="client-button" id="nostr-whda-apply">Apply draft locally</button>
-        <button class="client-button" id="nostr-whda-reload">Reload from relay</button>
-        <button class="client-button" id="nostr-whda-sync">Sync cinema note to relay</button>
-        <span class="client-note">Draft is local-only; sync uses local key/nostr-tools when available (relays may still reject).</span>
-      </div>
-      <div class="client-row">
-        <div class="client-label">EVENT frame (last WHDA EVENT sent to relay)</div>
-        <pre class="nostr-block" id="nostr-event-frame">// EVENT frame will appear here when you sync.</pre>
+        <div class="client-row">
+          <div class="client-label">Remote cinema notes (last 10, by d/id)</div>
+          <select class="input" id="nostr-whda-remote-select">
+            <option value="__reload__">Load from relay…</option>
+          </select>
+        </div>
+        <div class="client-row">
+          <div class="client-label">d tag for this cinema note</div>
+          <input
+            class="client-input"
+            id="nostr-whda-d"
+            type="text"
+            value="WHDA"
+          >
+        </div>
+        <div class="client-row">
+          <span class="client-note" id="nostr-key-label">
+            Local Nostr key: not generated
+          </span>
+        </div>
+        <div class="client-actions">
+          <button class="client-button" id="nostr-whda-example">Generate example WHDA</button>
+          <button class="client-button" id="nostr-whda-apply">Apply draft locally</button>
+          <button class="client-button" id="nostr-whda-reload">Reload from relay</button>
+          <button class="client-button" id="nostr-whda-sync">Sync cinema note to relay</button>
+          <span class="client-note">Draft is local-only; sync uses local key/nostr-tools when available (relays may still reject).</span>
+        </div>
+        <div class="client-row">
+          <div class="client-label">EVENT frame (last WHDA EVENT sent to relay)</div>
+          <pre class="nostr-block" id="nostr-event-frame">// EVENT frame will appear here when you sync.</pre>
+        </div>
       </div>
     </section>
 
@@ -1062,6 +1073,8 @@
       const nostrWhdaRemoteSelectEl = document.getElementById("nostr-whda-remote-select");
       const nostrWhdaDInputEl = document.getElementById("nostr-whda-d");
       const collectionModeEl = document.getElementById("collection-mode");
+      const cinemaNostrPanelEl = document.getElementById("cinema-nostr-panel");
+      const cinemaNostrToggleEl = document.getElementById("cinema-nostr-toggle");
 
       let client = null;
       let activeTorrent = null;
@@ -2378,6 +2391,20 @@
         // Prefill remote cinema notes list on load so "blender" / other
         // cinema notes are available without clicking reload.
         reloadWhdaDraftFromRelay();
+      }
+
+      if (cinemaNostrPanelEl && cinemaNostrToggleEl) {
+        function refreshCinemaNostrToggleLabel() {
+          const collapsed = cinemaNostrPanelEl.classList.contains("panel-collapsed");
+          cinemaNostrToggleEl.textContent = collapsed ? "Show" : "Hide";
+        }
+
+        cinemaNostrToggleEl.addEventListener("click", () => {
+          cinemaNostrPanelEl.classList.toggle("panel-collapsed");
+          refreshCinemaNostrToggleLabel();
+        });
+
+        refreshCinemaNostrToggleLabel();
       }
 
       if (nostrWhdaExampleButton) {
