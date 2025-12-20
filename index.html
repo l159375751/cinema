@@ -379,6 +379,35 @@
       gap: 8px;
     }
 
+    .library-status {
+      font-size: 11px;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .library-spinner {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: 2px solid rgba(255, 255, 255, 0.16);
+      border-top-color: var(--accent);
+      box-sizing: border-box;
+      animation: library-spin 0.7s linear infinite;
+      display: none;
+    }
+
+    .library-spinner.is-active {
+      display: inline-block;
+    }
+
+    @keyframes library-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
     .client-label {
       font-size: 11px;
       color: var(--muted);
@@ -560,6 +589,12 @@
             <option value="blender" selected>Blender films</option>
             <option value="herzog">Werner Herzog collection</option>
           </select>
+        </div>
+        <div class="client-row client-row-inline">
+          <span class="library-status">
+            <span class="library-spinner" id="library-spinner"></span>
+            <span id="library-status-text">Library idle</span>
+          </span>
         </div>
         <ul class="library-list" id="movie-list"></ul>
       </aside>
@@ -1023,6 +1058,8 @@
       const collectionModeEl = document.getElementById("collection-mode");
       const cinemaNostrPanelEl = document.getElementById("cinema-nostr-panel");
       const cinemaNostrToggleEl = document.getElementById("cinema-nostr-toggle");
+      const libraryStatusTextEl = document.getElementById("library-status-text");
+      const librarySpinnerEl = document.getElementById("library-spinner");
 
       let client = null;
       let activeTorrent = null;
@@ -1031,6 +1068,19 @@
       let localNostrSk = null;
       let mediaResolveTimeout = null;
       let whdaRemoteEvents = [];
+
+      function setLibraryStatus(text, isLoading) {
+        if (libraryStatusTextEl) {
+          libraryStatusTextEl.textContent = text;
+        }
+        if (librarySpinnerEl) {
+          if (isLoading) {
+            librarySpinnerEl.classList.add("is-active");
+          } else {
+            librarySpinnerEl.classList.remove("is-active");
+          }
+        }
+      }
 
       function ensureClient() {
         if (!client) {
@@ -1182,6 +1232,7 @@
           if (listEl) {
             listEl.innerHTML = "";
           }
+          setLibraryStatus("Library: no Blender WHDA items", false);
           return;
         }
 
@@ -1218,6 +1269,10 @@
 
         startMetadataScanFromHashes(filmBag);
         setScanStatus("Metadata scan: Blender WHDA example applied locally");
+        setLibraryStatus(
+          "Library: Blender cinema bag (" + String(filmBag.length) + " films)",
+          false
+        );
       }
 
       function loadWhdaDraftFromEvent(event) {
@@ -1869,10 +1924,12 @@
           setScanStatus("Metadata scan: WHDA relay disabled");
           filmBag = [];
           refreshNostrDraftFromFilmBag();
+          setLibraryStatus("Library: WHDA relay disabled", false);
           return;
         }
 
         setScanStatus("Metadata scan: loading WHDA from relay…");
+        setLibraryStatus("Library: loading cinema bag from relay…", true);
 
         let resolved = false;
         let ws;
@@ -1903,6 +1960,7 @@
             setScanStatus("Metadata scan: no WHDA items on relay");
             filmBag = [];
             refreshNostrDraftFromFilmBag();
+            setLibraryStatus("Library: no cinema bag on relay", false);
             return;
           }
 
@@ -1934,6 +1992,10 @@
           });
 
           startMetadataScanFromHashes(filmBag);
+          setLibraryStatus(
+            "Library: cinema bag from relay (" + String(filmBag.length) + " films)",
+            false
+          );
         };
 
         const timer = setTimeout(() => {
@@ -1991,6 +2053,7 @@
         ws.onerror = () => {
           clearTimeout(timer);
           setScanStatus("Metadata scan: error talking to WHDA relay");
+          setLibraryStatus("Library: error talking to WHDA relay", false);
           done();
         };
       }
@@ -2341,16 +2404,20 @@
           collectionMode =
             collectionModeEl.value === "herzog" ? "herzog" : "blender";
           if (collectionMode === "blender") {
+            setLibraryStatus("Library: loading Blender cinema bag…", true);
             loadBlenderWhdaExampleLibrary(listEl, countEl);
           } else {
+            setLibraryStatus("Library: loading cinema bag from relay…", true);
             loadFilmLibraryFromWhda();
           }
         });
       }
 
       if (collectionMode === "blender") {
+        setLibraryStatus("Library: loading Blender cinema bag…", true);
         loadBlenderWhdaExampleLibrary(listEl, countEl);
       } else {
+        setLibraryStatus("Library: loading cinema bag from relay…", true);
         loadFilmLibraryFromWhda();
       }
 
