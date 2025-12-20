@@ -2327,6 +2327,10 @@
           if (index < 0 || index >= whdaRemoteEvents.length) return;
           loadWhdaDraftFromEvent(whdaRemoteEvents[index]);
         });
+
+        // Prefill remote cinema notes list on load so "blender" / other
+        // cinema notes are available without clicking reload.
+        reloadWhdaDraftFromRelay();
       }
 
       if (nostrWhdaExampleButton) {
