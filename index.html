@@ -772,12 +772,16 @@
             : "0%";
         const down = formatSize(status.down || 0);
         const up = formatSize(status.up || 0);
-        return (
-          String(index + 1).padStart(2, "0") +
-          " [" +
-          fullHash +
-          "] " +
-          title +
+        const indexLabel = String(index + 1).padStart(2, "0");
+        const prefix = indexLabel + " [" + fullHash + "] ";
+        let line = prefix + title;
+        const targetColumn = 80;
+        if (line.length < targetColumn) {
+          line += " ".repeat(targetColumn - line.length);
+        } else {
+          line += " ";
+        }
+        line +=
           " — peers=" +
           String(peers) +
           ", " +
@@ -785,8 +789,8 @@
           ", ↓" +
           down +
           ", ↑" +
-          up
-        );
+          up;
+        return line;
       });
       whdaInfohashesEl.textContent = lines.join("\n");
     }
