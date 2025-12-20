@@ -14,7 +14,10 @@ ssh-remote-git-pull:
 
 deploy: push ssh-remote-git-pull
 
-pushall: push
+pushall: 
+	git add index.html debug.html browser-seed.html
+	git commit -m ok
+	make push
 
 infohash: infohash.txt
 

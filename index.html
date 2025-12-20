@@ -1000,58 +1000,6 @@
         });
     }
 
-    function loadBlenderWhdaExampleLibrary(listEl, countEl) {
-      const items = Array.isArray(EXAMPLE_WHDA_ITEMS)
-        ? EXAMPLE_WHDA_ITEMS
-        : [];
-      if (!items.length) {
-        setScanStatus("Metadata scan: no Blender WHDA example items");
-        filmBag = [];
-        refreshNostrDraftFromFilmBag();
-        if (countEl) {
-          countEl.textContent = "0 films";
-        }
-        if (listEl) {
-          listEl.innerHTML = "";
-        }
-        return;
-      }
-
-      filmBag = items.map((item) => ({
-        hash: item.hash,
-        title: item.title,
-      }));
-
-      whdaStatus = {};
-      refreshNostrDraftFromFilmBag();
-
-      if (listEl && countEl) {
-        listEl.innerHTML = "";
-        countEl.textContent = filmBag.length + " films (Blender WHDA)";
-
-        filmBag.forEach((item, index) => {
-          const movie = {
-            id:
-              "film-" +
-              String(index + 1)
-                .toString()
-                .padStart(2, "0"),
-            title: item.title,
-            sizeBytes: 0,
-            tags: ["blender"],
-          };
-          const node = createMovieElement(movie);
-          node.addEventListener("click", () => {
-            loadFilmFromHash(item.hash, item.title, movie.id);
-          });
-          listEl.appendChild(node);
-        });
-      }
-
-      startMetadataScanFromHashes(filmBag);
-      setScanStatus("Metadata scan: Blender WHDA example applied locally");
-    }
-
     function initMiniCinema() {
       const listEl = document.getElementById("movie-list");
       const countEl = document.getElementById("library-count");
@@ -1218,6 +1166,58 @@
           nostrWhdaEl.textContent = "// Failed to render WHDA draft";
         }
         refreshWhdaInfohashes();
+      }
+
+      function loadBlenderWhdaExampleLibrary(listEl, countEl) {
+        const items = Array.isArray(EXAMPLE_WHDA_ITEMS)
+          ? EXAMPLE_WHDA_ITEMS
+          : [];
+        if (!items.length) {
+          setScanStatus("Metadata scan: no Blender WHDA example items");
+          filmBag = [];
+          refreshNostrDraftFromFilmBag();
+          if (countEl) {
+            countEl.textContent = "0 films";
+          }
+          if (listEl) {
+            listEl.innerHTML = "";
+          }
+          return;
+        }
+
+        filmBag = items.map((item) => ({
+          hash: item.hash,
+          title: item.title,
+        }));
+
+        whdaStatus = {};
+        refreshNostrDraftFromFilmBag();
+
+        if (listEl && countEl) {
+          listEl.innerHTML = "";
+          countEl.textContent = filmBag.length + " films (Blender WHDA)";
+
+          filmBag.forEach((item, index) => {
+            const movie = {
+              id:
+                "film-" +
+                String(index + 1)
+                  .toString()
+                  .padStart(2, "0"),
+              title: item.title,
+              sizeBytes: 0,
+              tags: ["blender"],
+            };
+            const node = createMovieElement(movie);
+            node.addEventListener("click", () => {
+              loadFilmFromHash(item.hash, item.title, movie.id);
+            });
+            listEl.appendChild(node);
+          });
+        }
+
+        startMetadataScanFromHashes(filmBag);
+        setScanStatus("Metadata scan: Blender WHDA example applied locally");
       }
 
       function loadWhdaDraftFromEvent(event) {
