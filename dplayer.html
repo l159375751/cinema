@@ -197,9 +197,11 @@
       font-size: 11px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         "Liberation Mono", "Courier New", monospace;
-      max-height: 160px;
+      min-height: 180px;
+      max-height: 600px;
       overflow: auto;
       white-space: pre-wrap;
+      resize: vertical;
     }
 
     #dplayer {
@@ -334,7 +336,7 @@
   <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
   <script src="https://unpkg.com/dplayer/dist/DPlayer.min.js"></script>
   <script>
-    const DEMO_INFOHASH = "403484f62da4fbc835c60736cad841e4cc1a3641";
+    const DEMO_INFOHASH = "460b0b5d942af2de6e3d69333c782f391fcc1ee0";
     const DEMO_TITLE = "Charge \u2013 Blender Open Movie";
     const DEMO_TRACKERS = [
       "wss://tracker.openwebtorrent.com",
@@ -440,25 +442,62 @@
         return client;
       }
 
-      function ensureDPlayer(name) {
+      function ensureDPlayer(url, name) {
         if (!dplayerContainer) return;
         if (typeof DPlayer === "undefined") {
           statusLabelEl.textContent = "No DPlayer";
           log("DPlayer is not available (script failed to load?).");
           return;
         }
-        if (!dp) {
-          dp = new DPlayer({
-            container: dplayerContainer,
-            autoplay: true,
-            video: {
-              url: "",
-              type: "auto",
-            },
-            screenshot: false,
-          });
+        if (!url) {
+          statusLabelEl.textContent = "Error";
+          log("No video URL provided to DPlayer.");
+          return;
         }
-        log("DPlayer ready for " + (name || "video") + ".");
+        if (dp) {
+          try {
+            dp.destroy();
+          } catch (e) {
+            // ignore
+          }
+          dp = null;
+        }
+        log("Creating DPlayer instance for " + (name || "video") + ".");
+        log("Blob URL (truncated): " + String(url).slice(0, 80) + "…");
+        dp = new DPlayer({
+          container: dplayerContainer,
+          autoplay: false,
+          video: {
+            url,
+            type: "auto",
+          },
+          screenshot: false,
+        });
+        try {
+          dp.on("loadedmetadata", () => {
+            log("DPlayer event: loadedmetadata.");
+          });
+          dp.on("canplay", () => {
+            log("DPlayer event: canplay – waiting for user interaction to start playback.");
+          });
+          dp.on("play", () => {
+            log("DPlayer event: play.");
+          });
+          dp.on("pause", () => {
+            log("DPlayer event: pause.");
+          });
+          dp.on("error", (e) => {
+            const err = e && e.message ? e.message : String(e || "unknown");
+            log("DPlayer event: error – " + err);
+            statusLabelEl.textContent = "Error";
+          });
+        } catch (e) {
+          log(
+            "DPlayer wiring exception: " +
+              (e && e.message ? e.message : String(e))
+          );
+        }
+        log("DPlayer initialised with " + (name || "video") + ".");
         return dp;
       }
 
@@ -511,26 +550,20 @@
           updateStatusFromTorrent(activeTorrent);
         }, 1000);
 
-        const player = ensureDPlayer(chosen.name || chosen.path || "video");
-        if (!player || !player.video) {
-          statusLabelEl.textContent = "Error";
-          log("DPlayer did not expose a video element.");
-          return;
-        }
-
         try {
-          chosen.renderTo(player.video, { autoplay: true }, (err) => {
+          chosen.getBlobURL((err, url) => {
             if (err) {
               statusLabelEl.textContent = "Error";
               log(
-                "Render error: " +
+                "Error generating blob URL: " +
                   (err && err.message ? err.message : String(err))
               );
             } else {
+              ensureDPlayer(url, chosen.name || chosen.path || "video");
               log(
-                "Streaming " +
+                "Blob URL generated for " +
                   (chosen.name || chosen.path || "video") +
-                  " into DPlayer video element."
+                  ". Handing off to DPlayer."
               );
             }
           });

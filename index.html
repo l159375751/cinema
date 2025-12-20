@@ -74,10 +74,10 @@
     }
 
     .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 2.1fr) minmax(240px, 1fr);
+      display: flex;
+      flex-direction: column;
       gap: 16px;
-      align-items: flex-start;
+      align-items: stretch;
     }
 
     .panel {
@@ -444,10 +444,10 @@
       font-size: 11px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         "Liberation Mono", "Courier New", monospace;
-      min-height: 140px;
+      min-height: 180px;
       max-height: 600px;
       overflow: auto;
-      white-space: pre;
+      white-space: pre-wrap;
       resize: vertical;
     }
 
@@ -533,7 +533,13 @@
       <aside class="panel">
         <div class="panel-header">
           <div class="panel-title">Library</div>
-          <span class="badge-soft" id="library-count">0 items</span>
+          <div style="display: inline-flex; align-items: center; gap: 6px;">
+            <span class="badge-soft" id="library-count">0 items</span>
+            <select class="input" id="collection-mode" style="max-width: 220px;">
+              <option value="blender" selected>Blender films</option>
+              <option value="herzog">Werner Herzog collection</option>
+            </select>
+          </div>
         </div>
         <ul class="library-list" id="movie-list"></ul>
       </aside>
@@ -581,16 +587,6 @@
       <div class="client-row">
         <div class="client-label">WHDA bag (all infohashes)</div>
         <pre class="nostr-block" id="whda-infohashes">// WHDA bag not loaded yet.</pre>
-      </div>
-      <div class="client-row" style="margin-top: 10px;">
-        <div class="client-label">Client controls</div>
-      </div>
-      <div class="client-row">
-        <div class="client-label">Collection</div>
-        <select class="input" id="collection-mode">
-          <option value="blender" selected>Blender films</option>
-          <option value="herzog">Werner Herzog collection</option>
-        </select>
       </div>
       <div class="client-row">
         <div class="client-label">Presets from Herzog archive</div>
@@ -738,7 +734,7 @@
       }
       const lines = filmBag.map((item, index) => {
         const hash = (item.hash || "").trim();
-        const shortHash = hash ? hash.slice(0, 10) + "…" : "no-hash";
+        const fullHash = hash || "no-hash";
         const title = item.title || hash || "Untitled";
         const key = hash.toLowerCase();
         const status = whdaStatus[key] || {};
@@ -752,7 +748,7 @@
         return (
           String(index + 1).padStart(2, "0") +
           " [" +
-          shortHash +
+          fullHash +
           "] " +
           title +
           " — peers=" +
@@ -877,7 +873,7 @@
         totalSizeEl.textContent = bytes > 0 ? formatSize(bytes) : "unknown";
       }
       document.getElementById("status-extra").textContent =
-        "Swarm " + (torrent.infoHash || "").slice(0, 10) + "…";
+        "Swarm " + (torrent.infoHash || "");
       const dot = document.getElementById("status-dot");
       dot.style.background = "#5a8f63";
       dot.style.boxShadow = "none";
@@ -992,6 +988,7 @@
 
       let client = null;
       let activeTorrent = null;
+      let activeInfohash = null;
       let statusInterval = null;
       let localNostrSk = null;
       let mediaResolveTimeout = null;
@@ -1448,6 +1445,84 @@
         }
       }
 
+      function attachTorrentForPlayback(torrent, label, infohash) {
+        activeTorrent = torrent;
+        activeInfohash =
+          (infohash && infohash.toLowerCase()) ||
+          ((torrent.infoHash || "").toLowerCase());
+
+        const videoPattern = /\.(mp4|m4v|webm|mkv|avi|mov)$/i;
+        const file =
+          torrent.files.find((f) =>
+            videoPattern.test(f.name || f.path || "")
+          ) || torrent.files[0];
+
+        if (!file) {
+          updateStatusError("No playable video file in torrent");
+          overlayBadge.textContent = "Nothing playable found in torrent";
+          setPlayerMeta(label, "No media file loaded (no playable file)");
+          return;
+        }
+
+        const fileName = (file.path || file.name || "").split("/").pop();
+        setPlayerMeta(label, fileName);
+
+        try {
+          if (videoEl) {
+            try {
+              videoEl.pause();
+              videoEl.removeAttribute("src");
+              videoEl.load();
+            } catch (e) {
+              // ignore
+            }
+          }
+          file.getBlobURL((err, url) => {
+            if (err) {
+              updateStatusError(
+                "Render failed: " + (err.message || String(err))
+              );
+              return;
+            }
+            if (!videoEl) return;
+            videoEl.src = url;
+            videoEl.play().catch((e) => {
+              updateStatusError(
+                "Playback failed: " +
+                  (e && e.message ? e.message : String(e))
+              );
+            });
+            overlayBadge.textContent = "";
+          });
+        } catch (e) {
+          updateStatusError(
+            "Render exception: " +
+              (e && e.message ? e.message : String(e))
+          );
+        }
+
+        updateStatusFromTorrent(torrent);
+        if (statusInterval) {
+          clearInterval(statusInterval);
+        }
+        statusInterval = setInterval(() => {
+          if (!activeTorrent) return;
+          updateStatusFromTorrent(activeTorrent);
+        }, 1000);
+
+        if (!torrent.__cinemaErrorHandlerAttached) {
+          torrent.on("error", (err) => {
+            updateStatusError(err.message || "Torrent error");
+            setPlayerMeta(
+              label,
+              "Error: " +
+                (err && err.message ? err.message : "torrent error")
+            );
+          });
+          torrent.__cinemaErrorHandlerAttached = true;
+        }
+      }
+
       function loadFilmFromHash(infohash, title, movieId) {
         const c = ensureClient();
         if (!c) return;
@@ -1458,13 +1533,18 @@
           return;
         }
 
-        if (activeTorrent) {
-          try {
-            activeTorrent.destroy();
-          } catch (e) {
-            // ignore
+        const normalizedHash = cleanHash.toLowerCase();
+
+        if (activeTorrent && activeInfohash) {
+          if (activeInfohash !== normalizedHash) {
+            try {
+              activeTorrent.destroy();
+            } catch (e) {
+              // ignore
+            }
+            activeTorrent = null;
+            activeInfohash = null;
           }
-          activeTorrent = null;
         }
 
         if (statusInterval) {
@@ -1479,9 +1559,9 @@
         }
 
         const label = title || cleanHash;
-        setActiveInfohash(cleanHash);
+        setActiveInfohash(normalizedHash);
         setPlayerMeta(label, "Resolving media…");
-        updateStatusLoading({ title: label, id: cleanHash });
+        updateStatusLoading({ title: label, id: normalizedHash });
         overlayBadge.textContent = "Connecting to swarm…";
 
         if (mediaResolveTimeout) {
@@ -1504,79 +1584,29 @@
 
         const magnet =
           "magnet:?xt=urn:btih:" +
-          cleanHash +
+          normalizedHash +
           "&dn=" +
           encodeURIComponent(label) +
           MAGNET_TRACKERS;
 
-        c.add(magnet, (torrent) => {
+        const existing =
+          c.get(normalizedHash) || c.get(cleanHash) || null;
+
+        const useTorrent = (torrent) => {
           if (mediaResolveTimeout) {
             clearTimeout(mediaResolveTimeout);
             mediaResolveTimeout = null;
           }
-          activeTorrent = torrent;
+          attachTorrentForPlayback(torrent, label, normalizedHash);
+        };
 
-          const videoPattern = /\.(mp4|m4v|webm|mkv|avi|mov)$/i;
-          const file =
-            torrent.files.find((f) =>
-              videoPattern.test(f.name || f.path || "")
-            ) || torrent.files[0];
-
-          if (!file) {
-            updateStatusError("No playable video file in torrent");
-            overlayBadge.textContent = "Nothing playable found in torrent";
-            setPlayerMeta(label, "No media file loaded (no playable file)");
-            return;
-          }
-
-          const fileName = (file.path || file.name || "").split("/").pop();
-          setPlayerMeta(label, fileName);
-
-          try {
-            if (videoEl) {
-              try {
-                videoEl.pause();
-                videoEl.removeAttribute("src");
-                videoEl.load();
-              } catch (e) {
-                // ignore
-              }
-            }
-            file.getBlobURL((err, url) => {
-              if (err) {
-                updateStatusError("Render failed: " + (err.message || String(err)));
-                return;
-              }
-              if (!videoEl) return;
-              videoEl.src = url;
-              videoEl.play().catch((e) => {
-                updateStatusError(
-                  "Playback failed: " +
-                    (e && e.message ? e.message : String(e))
-                );
-              });
-              overlayBadge.textContent = "";
-            });
-          } catch (e) {
-            updateStatusError(
-              "Render exception: " +
-                (e && e.message ? e.message : String(e))
-            );
-          }
-
-          updateStatusFromTorrent(torrent);
-          statusInterval = setInterval(() => {
-            if (!activeTorrent) return;
-            updateStatusFromTorrent(activeTorrent);
-          }, 1000);
-
-          torrent.on("error", (err) => {
-            updateStatusError(err.message || "Torrent error");
-            setPlayerMeta(label, "Error: " + (err && err.message
-              ? err.message
-              : "torrent error"));
+        if (existing) {
+          useTorrent(existing);
+        } else {
+          c.add(magnet, (torrent) => {
+            useTorrent(torrent);
           });
-        });
+        }
       }
 
       function loadFilmLibraryFromWhda() {
@@ -1741,7 +1771,7 @@
           const existing = c.get(hash);
           if (existing) {
             appendMetadataLog(
-              label + " (" + hash.slice(0, 7) + "…) → already active, skipped"
+              label + " (" + hash + ") → already active, skipped"
             );
             index += 1;
             next();
@@ -1752,7 +1782,7 @@
             "Metadata scan: " + String(index + 1) + " / " + String(total)
           );
 
-          const magnet =
+            const magnet =
             "magnet:?xt=urn:btih:" +
             hash +
             "&dn=" +
@@ -1762,7 +1792,7 @@
           c.add(magnet, (torrent) => {
             const files = Array.isArray(torrent.files) ? torrent.files : [];
             const names = files.map((f) => f.path || f.name || "Unnamed");
-            appendMetadataLog(label + " (" + hash.slice(0, 7) + "…) → " + names.length + " file(s)");
+            appendMetadataLog(label + " (" + hash + ") → " + names.length + " file(s)");
             const key = (torrent.infoHash || "").toLowerCase();
             const percent = (torrent.progress * 100) || 0;
             whdaStatus[key] = {
@@ -1809,7 +1839,7 @@
             } catch (e) {
               // ignore console issues
             }
-            appendMetadataLog(label + " (" + hash.slice(0, 7) + "…) → error");
+            appendMetadataLog(label + " (" + hash + ") → error");
             index += 1;
             next();
           });

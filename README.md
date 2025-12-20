@@ -35,3 +35,10 @@ NOTE and RANDOM THINGS THAT ARE SUPER NICE
 - get random free/cc0 torrents  https://webtorrent.io/torrents/sintel.torrent [...]
 
 If you're working on WebTorrent projects, btorrent.xyz is essential to check out!
+
+### deploy / git notes
+
+There is a small `Makefile` with a `make push` / `make deploy` flow, but:
+- `make push` is just `git push $(REMOTE) $(BRANCH)` with defaults (`origin` / `main`).
+- Always look at `git status` / `git diff` first and be explicit about where you push.
+- Treat `make push` as an intentional deploy step, not as a generic “save everything” button.
