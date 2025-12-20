@@ -236,6 +236,13 @@
       gap: 8px;
     }
 
+    .movie-meta-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+
     .movie-tags {
       display: inline-flex;
       gap: 4px;
@@ -252,6 +259,25 @@
       color: var(--muted);
     }
 
+    .movie-meta-size {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .movie-download-button {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(224, 198, 128, 0.4);
+      background: transparent;
+      color: var(--accent);
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .movie-download-button:hover {
+      border-color: rgba(224, 198, 128, 0.7);
+      background: rgba(224, 198, 128, 0.08);
+    }
+
     .badge-soft {
       padding: 2px 6px;
       border-radius: 999px;
@@ -262,23 +288,18 @@
     }
 
     .status-panel {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: baseline;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 8px 16px;
+      align-items: flex-start;
       margin-top: 4px;
     }
 
     .status-item {
-      display: inline-flex;
-      flex-direction: row;
-      gap: 4px;
-      align-items: baseline;
-      min-height: 0;
-      padding: 0;
-      border-radius: 0;
-      background: transparent;
-      border: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
     }
 
     .status-label {
@@ -839,10 +860,46 @@
       whdaInfohashesEl.textContent = lines.join("\n");
     }
 
-    function createMovieElement(movie) {
+    function refreshLibraryMovieStatus() {
+      const listEl = document.getElementById("movie-list");
+      if (!listEl) return;
+      const sizeNodes = listEl.querySelectorAll(".movie-meta-size");
+      sizeNodes.forEach((node) => {
+        const baseSize = node.dataset.baseSize || node.textContent || "";
+        const hash = (node.dataset.hash || "").toLowerCase();
+        if (!hash) {
+          node.textContent = baseSize;
+          return;
+        }
+        const status = whdaStatus[hash];
+        if (!status) {
+          node.textContent = baseSize ? baseSize + " · have 0%" : "have 0%";
+          return;
+        }
+        const bytes =
+          typeof status.totalBytes === "number" && status.totalBytes > 0
+            ? status.totalBytes
+            : null;
+        const sizeLabel = bytes ? formatSize(bytes) : baseSize || "unknown";
+        const progress =
+          status.progress != null
+            ? status.progress.toFixed(1).replace(/\.0$/, "") + "%"
+            : "?%";
+        const peers = status.peers != null ? String(status.peers) : "?";
+        node.textContent =
+          sizeLabel + " · have " + progress + " · peers " + peers;
+      });
+    }
+
+    function createMovieElement(movie, onActivate) {
       const li = document.createElement("li");
       li.className = "movie";
       li.dataset.id = movie.id;
+      const hash =
+        (movie.hash || movie.infohash || "").trim().toLowerCase();
+      if (hash) {
+        li.dataset.hash = hash;
+      }
 
       const thumb = document.createElement("div");
       thumb.className = "movie-thumb";
@@ -874,17 +931,51 @@
         });
       }
 
+      const metaRight = document.createElement("div");
+      metaRight.className = "movie-meta-right";
+
       const size = document.createElement("div");
-      size.textContent = formatSize(movie.sizeBytes);
+      size.className = "movie-meta-size";
+      const baseSize = formatSize(movie.sizeBytes);
+      size.dataset.baseSize = baseSize;
+      if (hash) {
+        size.dataset.hash = hash;
+        size.textContent = baseSize ? baseSize + " · have 0%" : "have 0%";
+      } else {
+        size.textContent = baseSize;
+      }
+      metaRight.appendChild(size);
+
+      if (typeof onActivate === "function") {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "movie-download-button";
+        button.textContent = "Download";
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+          onActivate();
+        });
+        metaRight.appendChild(button);
+      }
 
       meta.appendChild(tagsContainer);
-      meta.appendChild(size);
+      meta.appendChild(metaRight);
 
       main.appendChild(title);
       main.appendChild(meta);
 
       li.appendChild(thumb);
       li.appendChild(main);
+
+      if (typeof onActivate === "function") {
+        li.addEventListener("click", (event) => {
+          const target = event.target;
+          if (target && target.closest && target.closest(".movie-download-button")) {
+            return;
+          }
+          onActivate();
+        });
+      }
 
       return li;
     }
@@ -928,11 +1019,11 @@
       dot.style.boxShadow = "none";
     }
 
-      function updateStatusFromTorrent(torrent) {
-        const percent = (torrent.progress * 100) || 0;
-        const down = torrent.downloadSpeed || 0;
-        const up = torrent.uploadSpeed || 0;
-        const totalSizeEl = document.getElementById("status-total-size");
+    function updateStatusFromTorrent(torrent) {
+      const percent = (torrent.progress * 100) || 0;
+      const down = torrent.downloadSpeed || 0;
+      const up = torrent.uploadSpeed || 0;
+      const totalSizeEl = document.getElementById("status-total-size");
 
       document.getElementById("status-label").textContent =
         percent >= 99.5 ? "Seed" : "Streaming";
@@ -959,9 +1050,13 @@
         progress: percent,
         down,
         up,
+        totalBytes: torrent.length || 0,
       };
       if (typeof refreshWhdaInfohashes === "function") {
         refreshWhdaInfohashes();
+      }
+      if (typeof refreshLibraryMovieStatus === "function") {
+        refreshLibraryMovieStatus();
       }
     }
 
@@ -1026,8 +1121,7 @@
               sizeBytes: 0,
               tags: ["blender"],
             };
-            const node = createMovieElement(movie);
-            node.addEventListener("click", () => {
+            const node = createMovieElement(movie, () => {
               setPlayerMeta(movie.title, "No torrent wired (Blender catalog only)");
               updateStatusError("No torrent wired for Blender films yet");
             });
@@ -1115,6 +1209,10 @@
         const files = torrent.files.filter((f) =>
           videoPattern.test(f.name || f.path || "")
         );
+        const hash =
+          (torrent && typeof torrent.infoHash === "string" && torrent.infoHash) ||
+          COLLECTION_INFOHASH ||
+          "";
         return files.map((file, index) => {
           const title = (file.path || file.name || "Untitled").split("/").pop();
           return {
@@ -1123,6 +1221,7 @@
             sizeBytes: file.length || 0,
             tags: ["herzog"],
             filePath: file.path || file.name || "",
+            hash,
           };
         });
       }
@@ -1274,9 +1373,9 @@
               title: item.title,
               sizeBytes: 0,
               tags: ["blender"],
+              hash: item.hash,
             };
-            const node = createMovieElement(movie);
-            node.addEventListener("click", () => {
+            const node = createMovieElement(movie, () => {
               loadFilmFromHash(item.hash, item.title, movie.id);
             });
             listEl.appendChild(node);
@@ -1366,9 +1465,9 @@
               title: item.title,
               sizeBytes: 0,
               tags: collectionMode === "blender" ? ["blender"] : ["herzog"],
+              hash: item.hash,
             };
-            const node = createMovieElement(movie);
-            node.addEventListener("click", () => {
+            const node = createMovieElement(movie, () => {
               loadFilmFromHash(item.hash, item.title, movie.id);
             });
             listEl.appendChild(node);
@@ -2009,9 +2108,9 @@
               title: item.title,
               sizeBytes: 0,
               tags: collectionMode === "blender" ? ["blender"] : ["herzog"],
+              hash: item.hash,
             };
-            const node = createMovieElement(movie);
-            node.addEventListener("click", () => {
+            const node = createMovieElement(movie, () => {
               loadFilmFromHash(item.hash, item.title, movie.id);
             });
             listEl.appendChild(node);
@@ -2148,8 +2247,12 @@
               progress: percent,
               down: torrent.downloadSpeed || 0,
               up: torrent.uploadSpeed || 0,
+              totalBytes: torrent.length || 0,
             };
             refreshWhdaInfohashes();
+            if (typeof refreshLibraryMovieStatus === "function") {
+              refreshLibraryMovieStatus();
+            }
             setScanStatus(
               "Metadata scan: " +
                 String(index + 1) +
@@ -2212,8 +2315,7 @@
         const defaultIndex = findDefaultIndex(catalog);
 
         catalog.forEach((movie, index) => {
-          const node = createMovieElement(movie);
-          node.addEventListener("click", () => {
+          const node = createMovieElement(movie, () => {
             const c = ensureClient();
             if (!c) return;
             const t = activeTorrent || torrent;
