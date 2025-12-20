@@ -932,10 +932,23 @@
         const c = ensureClient();
         if (!c) return;
 
-        // Parse magnet or convert infohash to magnet
+        // Parse magnet or convert infohash to magnet, always ensuring
+        // WebRTC-friendly trackers are present.
         let magnetURI;
         if (magnetInput.startsWith('magnet:')) {
-          magnetURI = magnetInput;
+          const parsed = parseMagnetURI(magnetInput);
+          const infohash = (parsed.xt || "").toLowerCase();
+          if (!/^[0-9a-fA-F]{40}$/.test(infohash)) {
+            appendLog("Error: magnet URI does not contain a valid btih infohash.");
+            statusLabelEl.textContent = "Error";
+            return;
+          }
+          const trackers = parsed.tr.length ? parsed.tr : DEFAULT_TRACKERS.slice();
+          const trackerParams = trackers
+            .map((t) => "&tr=" + encodeURIComponent(t))
+            .join("");
+          magnetURI = "magnet:?xt=urn:btih:" + infohash + trackerParams;
+          appendLog("Normalised magnet URI for browser (btih + WebRTC trackers).");
         } else {
           // Assume it's an infohash - convert to magnet URI
           const infohash = magnetInput.toLowerCase();
