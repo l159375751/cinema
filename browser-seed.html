@@ -338,7 +338,7 @@
             <div class="status-value" id="status-speed">0 kB/s · 0 kB/s</div>
           </div>
           <div class="status-item">
-            <div class="status-label">Downloaded</div>
+            <div class="status-label" id="status-downloaded-label">Downloaded</div>
             <div class="status-value" id="status-downloaded">0 kB</div>
           </div>
           <div class="status-item">
@@ -564,6 +564,7 @@
       const totalSizeEl = document.getElementById("status-total-size");
       const peersEl = document.getElementById("status-peers");
       const speedEl = document.getElementById("status-speed");
+      const downloadedLabelEl = document.getElementById("status-downloaded-label");
       const downloadedEl = document.getElementById("status-downloaded");
       const uploadedEl = document.getElementById("status-uploaded");
       const logEl = document.getElementById("log");
@@ -608,6 +609,9 @@
         totalSizeEl.textContent = "0 kB";
         peersEl.textContent = "0";
         speedEl.textContent = "0 kB/s · 0 kB/s";
+        if (downloadedLabelEl) {
+          downloadedLabelEl.textContent = "Downloaded";
+        }
         downloadedEl.textContent = "0 kB";
         uploadedEl.textContent = "0 kB";
         infohashOutput.textContent = "–";
@@ -679,6 +683,14 @@
         appendLog("Magnet: " + (torrent.magnetURI || ""));
         statusLabelEl.textContent = "Seeding";
         stopButton.style.display = "block";
+
+        if (downloadedLabelEl) {
+          if (method === "Create" || method === "Torrent file" || method === "Magnet/Infohash") {
+            downloadedLabelEl.textContent = "Loaded from disk";
+          } else {
+            downloadedLabelEl.textContent = "Downloaded";
+          }
+        }
 
         if (statusInterval) {
           clearInterval(statusInterval);
