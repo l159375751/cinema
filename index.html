@@ -676,8 +676,11 @@
           </div>
           <pre class="nostr-block" id="nostr-whda" contenteditable="true" spellcheck="false">// Loading WHDA draft…</pre>
         </div>
-        <div class="client-row">
-          <div class="client-label">Remote cinema notes (last 10, by d/id)</div>
+      <div class="client-row">
+        <div class="client-label">
+          Remote cinema notes (last 10, by d/id)
+          <span class="library-spinner" id="nostr-remote-spinner"></span>
+        </div>
           <select class="input" id="nostr-whda-remote-select">
             <option value="__reload__">Load from relay…</option>
           </select>
@@ -1063,6 +1066,7 @@
       const cinemaNostrToggleEl = document.getElementById("cinema-nostr-toggle");
       const libraryStatusTextEl = document.getElementById("library-status-text");
       const librarySpinnerEl = document.getElementById("library-spinner");
+      const nostrRemoteSpinnerEl = document.getElementById("nostr-remote-spinner");
 
       let client = null;
       let activeTorrent = null;
@@ -1082,6 +1086,15 @@
           } else {
             librarySpinnerEl.classList.remove("is-active");
           }
+        }
+      }
+
+      function setRemoteNotesLoading(isLoading) {
+        if (!nostrRemoteSpinnerEl) return;
+        if (isLoading) {
+          nostrRemoteSpinnerEl.classList.add("is-active");
+        } else {
+          nostrRemoteSpinnerEl.classList.remove("is-active");
         }
       }
 
@@ -1465,6 +1478,7 @@
         }
 
         setNostrStatus("Nostr WHDA: loading notes from relay…");
+        setRemoteNotesLoading(true);
 
         whdaRemoteEvents = [];
         nostrWhdaRemoteSelectEl.innerHTML = "";
@@ -1524,6 +1538,7 @@
             noneOption.textContent = "No cinema notes on relay";
             nostrWhdaRemoteSelectEl.appendChild(noneOption);
             setNostrStatus("Nostr WHDA: no cinema notes on relay");
+            setRemoteNotesLoading(false);
             return;
           }
 
@@ -1554,6 +1569,7 @@
           setNostrStatus(
             "Nostr WHDA: loaded " + String(whdaRemoteEvents.length) + " cinema note(s) from relay"
           );
+          setRemoteNotesLoading(false);
         };
 
         const timer = setTimeout(() => {
@@ -1591,6 +1607,7 @@
           clearTimeout(timer);
           setNostrStatus("Nostr WHDA: error talking to relay");
           done();
+          setRemoteNotesLoading(false);
         };
       }
 
@@ -1797,22 +1814,21 @@
               // ignore
             }
           }
-          file.getBlobURL((err, url) => {
+          if (!videoEl) return;
+          file.renderTo(videoEl, (err) => {
             if (err) {
               updateStatusError(
                 "Render failed: " + (err.message || String(err))
               );
               return;
             }
-            if (!videoEl) return;
-            videoEl.src = url;
+            overlayBadge.textContent = "";
             videoEl.play().catch((e) => {
               updateStatusError(
                 "Playback failed: " +
                   (e && e.message ? e.message : String(e))
               );
             });
-            overlayBadge.textContent = "";
           });
         } catch (e) {
           updateStatusError(
@@ -1875,7 +1891,14 @@
         setActiveInfohash(normalizedHash);
         setPlayerMeta(label, "Resolving media…");
         updateStatusLoading({ title: label, id: normalizedHash });
-        overlayBadge.textContent = "Connecting to swarm…";
+        const hasVideo =
+          videoEl &&
+          typeof videoEl.currentTime === "number" &&
+          !!videoEl.src &&
+          videoEl.readyState >= 2;
+        if (!hasVideo) {
+          overlayBadge.textContent = "Connecting to swarm…";
+        }
 
         if (mediaResolveTimeout) {
           clearTimeout(mediaResolveTimeout);
@@ -2206,7 +2229,14 @@
 
             setActiveMovieElement(movie.id);
             updateStatusLoading(movie);
-            overlayBadge.textContent = "Connecting to swarm…";
+            const hasVideo =
+              videoEl &&
+              typeof videoEl.currentTime === "number" &&
+              !!videoEl.src &&
+              videoEl.readyState >= 2;
+            if (!hasVideo) {
+              overlayBadge.textContent = "Connecting to swarm…";
+            }
 
             const file =
               t.files.find(
@@ -2232,22 +2262,21 @@
                   // ignore
                 }
               }
-              file.getBlobURL((err, url) => {
+              if (!videoEl) return;
+              file.renderTo(videoEl, (err) => {
                 if (err) {
                   updateStatusError(
                     "Render failed: " + (err.message || String(err))
                   );
                   return;
                 }
-                if (!videoEl) return;
-                videoEl.src = url;
+                overlayBadge.textContent = "";
                 videoEl.play().catch((e) => {
                   updateStatusError(
                     "Playback failed: " +
                       (e && e.message ? e.message : String(e))
                   );
                 });
-                overlayBadge.textContent = "";
               });
             } catch (e) {
               updateStatusError(
