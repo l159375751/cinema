@@ -1383,9 +1383,8 @@
                 ? new Date(ev.created_at * 1000)
                 : null;
             const dateLabel = ts ? ts.toISOString().split("T")[0] : "no-date";
-            const idShort =
-              id && id.length > 10 ? id.slice(0, 10) + "…" : id || "no-id";
-            opt.textContent = dTag + " · " + idShort + " · " + dateLabel;
+            const idLabel = id || "no-id";
+            opt.textContent = dTag + " · " + idLabel + " · " + dateLabel;
             opt.title = id || "";
             nostrWhdaRemoteSelectEl.appendChild(opt);
           });
