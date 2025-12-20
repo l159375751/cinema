@@ -533,13 +533,14 @@
       <aside class="panel">
         <div class="panel-header">
           <div class="panel-title">Library</div>
-          <div style="display: inline-flex; align-items: center; gap: 6px;">
-            <span class="badge-soft" id="library-count">0 items</span>
-            <select class="input" id="collection-mode" style="max-width: 220px;">
-              <option value="blender" selected>Blender films</option>
-              <option value="herzog">Werner Herzog collection</option>
-            </select>
-          </div>
+          <span class="badge-soft" id="library-count">0 items</span>
+        </div>
+        <div class="client-row">
+          <div class="client-label">Collection</div>
+          <select class="input" id="collection-mode">
+            <option value="blender" selected>Blender films</option>
+            <option value="herzog">Werner Herzog collection</option>
+          </select>
         </div>
         <ul class="library-list" id="movie-list"></ul>
       </aside>
