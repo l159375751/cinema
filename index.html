@@ -360,6 +360,12 @@
       gap: 4px;
     }
 
+    .client-row-inline {
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+    }
+
     .client-label {
       font-size: 11px;
       color: var(--muted);
@@ -535,8 +541,8 @@
           <div class="panel-title">Library</div>
           <span class="badge-soft" id="library-count">0 items</span>
         </div>
-        <div class="client-row">
-          <div class="client-label">Collection</div>
+        <div class="client-row client-row-inline">
+          <div class="client-label">Collection:</div>
           <select class="input" id="collection-mode">
             <option value="blender" selected>Blender films</option>
             <option value="herzog">Werner Herzog collection</option>
@@ -616,6 +622,12 @@
           Example content payload for kind 30317 / d=WHDA
         </div>
         <pre class="nostr-block" id="nostr-whda" contenteditable="true">// Loading WHDA draft…</pre>
+      </div>
+      <div class="client-row">
+        <div class="client-label">Remote cinema notes (last 10, by d/id)</div>
+        <select class="input" id="nostr-whda-remote-select">
+          <option value="">– none loaded from relay –</option>
+        </select>
       </div>
       <div class="client-row">
         <span class="client-note" id="nostr-key-label">
@@ -985,6 +997,7 @@
       const nostrWhdaExampleButton = document.getElementById("nostr-whda-example");
       const nostrEventFrameEl = document.getElementById("nostr-event-frame");
       const nostrKeyLabelEl = document.getElementById("nostr-key-label");
+      const nostrWhdaRemoteSelectEl = document.getElementById("nostr-whda-remote-select");
       const collectionModeEl = document.getElementById("collection-mode");
 
       let client = null;
@@ -993,6 +1006,7 @@
       let statusInterval = null;
       let localNostrSk = null;
       let mediaResolveTimeout = null;
+      let whdaRemoteEvents = [];
 
       function ensureClient() {
         if (!client) {
@@ -1109,7 +1123,7 @@
           "Local Nostr key (POC secret, hex): " + localNostrSk;
       }
 
-	      function refreshNostrDraftFromFilmBag() {
+      function refreshNostrDraftFromFilmBag() {
         if (!nostrWhdaEl) return;
         if (!Array.isArray(filmBag) || !filmBag.length) {
           nostrWhdaEl.textContent = "// WHDA draft is empty – no films loaded yet";
@@ -1128,6 +1142,18 @@
           nostrWhdaEl.textContent = "// Failed to render WHDA draft";
         }
         refreshWhdaInfohashes();
+      }
+
+      function loadWhdaDraftFromEvent(event) {
+        if (!event || !nostrWhdaEl) return;
+        const raw = typeof event.content === "string" ? event.content : "";
+        if (!raw) return;
+        try {
+          const parsed = JSON.parse(raw);
+          nostrWhdaEl.textContent = JSON.stringify(parsed, null, 2);
+        } catch (e) {
+          nostrWhdaEl.textContent = raw;
+        }
       }
 
       function applyWhdaDraftLocally() {
@@ -1273,6 +1299,138 @@
         };
 
         return event;
+      }
+
+      function reloadWhdaDraftFromRelay() {
+        if (!NOSTR_RELAY || typeof WebSocket === "undefined") {
+          setNostrStatus("Nostr WHDA: relay disabled");
+          return;
+        }
+        if (!nostrWhdaRemoteSelectEl) {
+          setNostrStatus("Nostr WHDA: remote select not available");
+          return;
+        }
+
+        setNostrStatus("Nostr WHDA: loading notes from relay…");
+
+        whdaRemoteEvents = [];
+        nostrWhdaRemoteSelectEl.innerHTML = "";
+        const loadingOption = document.createElement("option");
+        loadingOption.value = "";
+        loadingOption.textContent = "Loading…";
+        nostrWhdaRemoteSelectEl.appendChild(loadingOption);
+
+        let resolved = false;
+        let ws;
+        try {
+          ws = new WebSocket(NOSTR_RELAY);
+        } catch (e) {
+          nostrWhdaRemoteSelectEl.innerHTML = "";
+          const errOption = document.createElement("option");
+          errOption.value = "";
+          errOption.textContent = "Error opening relay";
+          nostrWhdaRemoteSelectEl.appendChild(errOption);
+          setNostrStatus("Nostr WHDA: error opening WebSocket");
+          return;
+        }
+
+        const done = () => {
+          if (resolved) return;
+          resolved = true;
+          try {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+              ws.close();
+            }
+          } catch (e) {
+            // ignore
+          }
+
+          whdaRemoteEvents.sort((a, b) => {
+            const aTs = typeof a.created_at === "number" ? a.created_at : 0;
+            const bTs = typeof b.created_at === "number" ? b.created_at : 0;
+            return bTs - aTs;
+          });
+          if (whdaRemoteEvents.length > 10) {
+            whdaRemoteEvents = whdaRemoteEvents.slice(0, 10);
+          }
+
+          nostrWhdaRemoteSelectEl.innerHTML = "";
+
+          if (!whdaRemoteEvents.length) {
+            const noneOption = document.createElement("option");
+            noneOption.value = "";
+            noneOption.textContent = "No cinema notes on relay";
+            nostrWhdaRemoteSelectEl.appendChild(noneOption);
+            setNostrStatus("Nostr WHDA: no cinema notes on relay");
+            return;
+          }
+
+          const placeholder = document.createElement("option");
+          placeholder.value = "";
+          placeholder.textContent = "Select note by d / id…";
+          nostrWhdaRemoteSelectEl.appendChild(placeholder);
+
+          whdaRemoteEvents.forEach((ev, index) => {
+            const opt = document.createElement("option");
+            opt.value = String(index);
+            const tags = Array.isArray(ev.tags) ? ev.tags : [];
+            const dTag =
+              (tags.find((t) => Array.isArray(t) && t[0] === "d") || [null, ""])[1] ||
+              "no-d-tag";
+            const id = ev.id || "";
+            const ts =
+              typeof ev.created_at === "number" && ev.created_at > 0
+                ? new Date(ev.created_at * 1000)
+                : null;
+            const dateLabel = ts ? ts.toISOString().split("T")[0] : "no-date";
+            const idShort =
+              id && id.length > 10 ? id.slice(0, 10) + "…" : id || "no-id";
+            opt.textContent = dTag + " · " + idShort + " · " + dateLabel;
+            opt.title = id || "";
+            nostrWhdaRemoteSelectEl.appendChild(opt);
+          });
+
+          setNostrStatus(
+            "Nostr WHDA: loaded " + String(whdaRemoteEvents.length) + " cinema note(s) from relay"
+          );
+        };
+
+        const timer = setTimeout(() => {
+          setNostrStatus("Nostr WHDA: relay timeout");
+          done();
+        }, 3500);
+
+        ws.onopen = () => {
+          const filter = {
+            kinds: [NOSTR_PRESETS_KIND],
+            "#t": ["cinema"],
+          };
+          ws.send(JSON.stringify(["REQ", "cinema-whda-draft", filter]));
+        };
+
+        ws.onmessage = (event) => {
+          let msg;
+          try {
+            msg = JSON.parse(event.data);
+          } catch (e) {
+            return;
+          }
+          if (!Array.isArray(msg) || msg.length < 2) return;
+          if (msg[0] === "EVENT") {
+            const ev = msg[2];
+            if (!ev || typeof ev !== "object") return;
+            whdaRemoteEvents.push(ev);
+          } else if (msg[0] === "EOSE") {
+            clearTimeout(timer);
+            done();
+          }
+        };
+
+        ws.onerror = () => {
+          clearTimeout(timer);
+          setNostrStatus("Nostr WHDA: error talking to relay");
+          done();
+        };
       }
 
       function refreshNostrEventFrame(event) {
@@ -2101,7 +2259,7 @@
 
       if (nostrWhdaReloadButton) {
         nostrWhdaReloadButton.addEventListener("click", () => {
-          loadFilmLibraryFromWhda();
+          reloadWhdaDraftFromRelay();
         });
       }
 
@@ -2114,6 +2272,17 @@
       if (nostrWhdaSyncButton) {
         nostrWhdaSyncButton.addEventListener("click", () => {
           syncWhdaToRelay();
+        });
+      }
+
+      if (nostrWhdaRemoteSelectEl) {
+        nostrWhdaRemoteSelectEl.addEventListener("change", () => {
+          const value = nostrWhdaRemoteSelectEl.value;
+          if (!value) return;
+          const index = Number(value);
+          if (!Number.isFinite(index)) return;
+          if (index < 0 || index >= whdaRemoteEvents.length) return;
+          loadWhdaDraftFromEvent(whdaRemoteEvents[index]);
         });
       }
 
