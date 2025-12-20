@@ -1265,11 +1265,14 @@
           listEl.innerHTML = "";
           countEl.textContent = items.length + " films";
 
-          filmBag = items;
+          filmBag = items.map((item) => ({
+            hash: item.hash,
+            title: item.title,
+          }));
           whdaStatus = {};
           refreshNostrDraftFromFilmBag();
 
-          items.forEach((item, index) => {
+          filmBag.forEach((item, index) => {
             const movie = {
               id:
                 "film-" +
@@ -1278,7 +1281,7 @@
                   .padStart(2, "0"),
               title: item.title,
               sizeBytes: 0,
-              tags: ["herzog"],
+              tags: collectionMode === "blender" ? ["blender"] : ["herzog"],
             };
             const node = createMovieElement(movie);
             node.addEventListener("click", () => {
@@ -1287,7 +1290,7 @@
             listEl.appendChild(node);
           });
 
-          startMetadataScanFromHashes(items);
+          startMetadataScanFromHashes(filmBag);
           setScanStatus("Metadata scan: WHDA draft applied locally");
         } catch (e) {
           setScanStatus("Metadata scan: error parsing WHDA draft");
@@ -1781,16 +1784,9 @@
 
         const normalizedHash = cleanHash.toLowerCase();
 
-        if (activeTorrent && activeInfohash) {
-          if (activeInfohash !== normalizedHash) {
-            try {
-              activeTorrent.destroy();
-            } catch (e) {
-              // ignore
-            }
-            activeTorrent = null;
-            activeInfohash = null;
-          }
+        if (activeTorrent && activeInfohash && activeInfohash !== normalizedHash) {
+          activeTorrent = null;
+          activeInfohash = null;
         }
 
         if (statusInterval) {
@@ -1900,10 +1896,13 @@
           listEl.innerHTML = "";
           countEl.textContent = items.length + " films";
 
-          filmBag = items;
+          filmBag = items.map((item) => ({
+            hash: item.hash,
+            title: item.title,
+          }));
           refreshNostrDraftFromFilmBag();
 
-          items.forEach((item, index) => {
+          filmBag.forEach((item, index) => {
             const movie = {
               id:
                 "film-" +
@@ -1912,7 +1911,7 @@
                   .padStart(2, "0"),
               title: item.title,
               sizeBytes: 0,
-              tags: ["herzog"],
+              tags: collectionMode === "blender" ? ["blender"] : ["herzog"],
             };
             const node = createMovieElement(movie);
             node.addEventListener("click", () => {
@@ -1921,7 +1920,7 @@
             listEl.appendChild(node);
           });
 
-          startMetadataScanFromHashes(items);
+          startMetadataScanFromHashes(filmBag);
         };
 
         const timer = setTimeout(() => {
