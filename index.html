@@ -759,17 +759,6 @@
       </div>
     </section>
 
-    <section class="panel">
-      <div class="panel-header">
-        <div class="panel-title">About this POC</div>
-      </div>
-      <p style="margin: 0; font-size: 12px; color: var(--muted);">
-        POC0 is a single-page, browser-based WebTorrent viewer for the “Werner Herzog Collection”
-        infohash. It exposes the collection hash and a simple client so future iterations can
-        plug in a Nostr-backed bibliography instead of the built-in magnet.
-      </p>
-    </section>
-
     <footer>
       <span>Open this file directly or via any static server.</span>
       <span>Collection metadata source: <a href="https://en.btdig.com/c9c47e7b12586a59d83e3e519570835625d44b3e/werner-herzog">Werner Herzog torrent</a>.</span>
@@ -1743,9 +1732,7 @@
             nostrWhdaRemoteSelectEl.appendChild(opt);
           });
 
-          setNostrStatus(
-            "Nostr WHDA: loaded " + String(whdaRemoteEvents.length) + " cinema note(s) from relay"
-          );
+          setNostrStatus("Remote cinema notes ready");
           setRemoteNotesLoading(false);
         };
 
