@@ -707,10 +707,6 @@
           Metadata scan: idle
         </span>
       </div>
-      <div class="client-row">
-        <div class="client-label">Metadata log</div>
-        <div class="client-note" id="metadata-log"></div>
-      </div>
     </section>
 
     <section class="panel panel-collapsed" id="cinema-nostr-panel">
@@ -1218,7 +1214,6 @@
       const presetsEl = document.getElementById("client-presets");
       const nostrStatusEl = document.getElementById("nostr-status");
       const scanStatusEl = document.getElementById("metadata-scan-status");
-      const metadataLogEl = document.getElementById("metadata-log");
       const whdaInfohashesEl = document.getElementById("whda-infohashes");
       const nostrWhdaEl = document.getElementById("nostr-whda");
       const nostrWhdaReloadButton = document.getElementById("nostr-whda-reload");
@@ -1311,10 +1306,8 @@
         }
       }
 
-      function appendMetadataLog(line) {
-        if (!metadataLogEl) return;
-        const value = (metadataLogEl.textContent || "").trim();
-        metadataLogEl.textContent = value ? value + " · " + line : line;
+      function appendMetadataLog() {
+        // Metadata log removed (noise); keep function as no-op.
       }
 
       function setPlayerMeta(title, fileName) {
