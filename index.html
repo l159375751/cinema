@@ -288,6 +288,18 @@
       background: rgba(224, 198, 128, 0.08);
     }
 
+    .movie-download-button.is-progress {
+      background: var(--accent-soft);
+      border-color: rgba(224, 198, 128, 0.85);
+      color: var(--accent);
+    }
+
+    .movie-download-button.is-done {
+      background: #163022;
+      border-color: #5a8f63;
+      color: #c6f0cf;
+    }
+
     .badge-soft {
       padding: 2px 6px;
       border-radius: 999px;
@@ -881,23 +893,50 @@
           node.textContent = baseSize;
           return;
         }
+
+        const li = node.closest(".movie");
+        const button = li ? li.querySelector(".movie-download-button") : null;
+        if (button) {
+          button.classList.remove("is-progress", "is-done");
+        }
+
         const status = whdaStatus[hash];
         if (!status) {
           node.textContent = baseSize ? baseSize + " · have 0%" : "have 0%";
+          if (button) {
+            button.textContent = button.dataset.baseLabel || "Download";
+          }
           return;
         }
+
         const bytes =
           typeof status.totalBytes === "number" && status.totalBytes > 0
             ? status.totalBytes
             : null;
         const sizeLabel = bytes ? formatSize(bytes) : baseSize || "unknown";
-        const progress =
-          status.progress != null
-            ? status.progress.toFixed(1).replace(/\.0$/, "") + "%"
+        const rawProgress =
+          typeof status.progress === "number" ? status.progress : null;
+        const progressLabel =
+          rawProgress != null
+            ? rawProgress.toFixed(1).replace(/\.0$/, "") + "%"
             : "?%";
         const peers = status.peers != null ? String(status.peers) : "?";
+
         node.textContent =
-          sizeLabel + " · have " + progress + " · peers " + peers;
+          sizeLabel + " · have " + progressLabel + " · peers " + peers;
+
+        if (button) {
+          if (rawProgress == null || rawProgress <= 0) {
+            button.textContent = button.dataset.baseLabel || "Download";
+          } else {
+            button.textContent = progressLabel;
+            if (rawProgress >= 99.5) {
+              button.classList.add("is-done");
+            } else {
+              button.classList.add("is-progress");
+            }
+          }
+        }
       });
     }
 
@@ -936,6 +975,10 @@
         button.type = "button";
         button.className = "movie-download-button";
         button.textContent = "Download";
+        button.dataset.baseLabel = "Download";
+        if (hash) {
+          button.dataset.hash = hash;
+        }
         button.addEventListener("click", (event) => {
           event.stopPropagation();
           onActivate();
