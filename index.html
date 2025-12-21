@@ -221,6 +221,13 @@
       gap: 2px;
     }
 
+    .movie-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
     .movie-title {
       font-size: 13px;
       white-space: nowrap;
@@ -250,6 +257,9 @@
     }
 
     .movie-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 1px 6px;
       border-radius: 999px;
       border: 1px solid rgba(255, 255, 255, 0.12);
@@ -917,6 +927,22 @@
       title.className = "movie-title";
       title.textContent = movie.title || movie.id;
 
+      const headerRow = document.createElement("div");
+      headerRow.className = "movie-header-row";
+      headerRow.appendChild(title);
+
+      if (typeof onActivate === "function") {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "movie-download-button";
+        button.textContent = "Download";
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+          onActivate();
+        });
+        headerRow.appendChild(button);
+      }
+
       const meta = document.createElement("div");
       meta.className = "movie-meta";
 
@@ -926,7 +952,8 @@
         movie.tags.forEach((tag) => {
           const tagEl = document.createElement("span");
           tagEl.className = "movie-tag";
-          tagEl.textContent = tag;
+          const normalized = String(tag || "").toLowerCase();
+          tagEl.textContent = normalized === "blender" ? "blnr" : tag;
           tagsContainer.appendChild(tagEl);
         });
       }
@@ -946,22 +973,10 @@
       }
       metaRight.appendChild(size);
 
-      if (typeof onActivate === "function") {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "movie-download-button";
-        button.textContent = "Download";
-        button.addEventListener("click", (event) => {
-          event.stopPropagation();
-          onActivate();
-        });
-        metaRight.appendChild(button);
-      }
-
       meta.appendChild(tagsContainer);
       meta.appendChild(metaRight);
 
-      main.appendChild(title);
+      main.appendChild(headerRow);
       main.appendChild(meta);
 
       li.appendChild(thumb);
@@ -1895,8 +1910,15 @@
 
         if (!file) {
           updateStatusError("No playable video file in torrent");
-          overlayBadge.textContent = "Nothing playable found in torrent";
-          setPlayerMeta(label, "No media file loaded (no playable file)");
+          const hasVideo =
+            videoEl &&
+            typeof videoEl.currentTime === "number" &&
+            !!videoEl.src &&
+            videoEl.readyState >= 2;
+          if (!hasVideo) {
+            overlayBadge.textContent = "Nothing playable found in torrent";
+            setPlayerMeta(label, "No media file loaded (no playable file)");
+          }
           return;
         }
 
