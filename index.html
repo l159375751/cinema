@@ -1809,13 +1809,6 @@
           typeof window.NostrTools.signEvent === "function" &&
           !!localNostrSk;
 
-        console.log("[WHDA] Signing check:", {
-          hasNostrTools,
-          hasNostrSigner,
-          hasLocalKey: !!localNostrSk,
-          nostrToolsAvailable: !!window.NostrTools
-        });
-
         const sendEvent = (eventToSend, label) => {
           refreshNostrEventFrame(eventToSend);
 
@@ -1865,13 +1858,11 @@
             const id = window.NostrTools.getEventHash(baseEvent);
             const sig = window.NostrTools.signEvent(baseEvent, localNostrSk);
             const signedEvent = Object.assign({}, baseEvent, { id, sig });
-            console.log("[WHDA] Signed event:", signedEvent);
             sendEvent(
               signedEvent,
               "Nostr presets: syncing signed WHDA to relay (nostr-tools)"
             );
           } catch (e) {
-            console.error("[WHDA] Signing failed:", e);
             setNostrStatus(
               "Nostr presets: nostr-tools signing failed: " + e.message
             );
@@ -2363,12 +2354,7 @@
                 String(names.length) +
                 ")"
             );
-            try {
-              // eslint-disable-next-line no-console
-              console.log("[WHDA] metadata for", label, names);
-            } catch (e) {
-              // ignore console issues
-            }
+            // Metadata details are available via Cinema bag; omit console spam.
             try {
               torrent.destroy();
             } catch (e) {
@@ -2384,12 +2370,6 @@
                 String(total) +
                 " (error)"
             );
-            try {
-              // eslint-disable-next-line no-console
-              console.warn("[WHDA] metadata error for", label, err);
-            } catch (e) {
-              // ignore console issues
-            }
             appendMetadataLog(label + " (" + hash + ") → error");
             index += 1;
             next();
