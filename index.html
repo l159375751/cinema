@@ -1088,12 +1088,17 @@
 
     function updateStatusFromTorrent(torrent) {
       const percent = (torrent.progress * 100) || 0;
-      const down = torrent.downloadSpeed || 0;
-      const up = torrent.uploadSpeed || 0;
+      const key = (torrent.infoHash || "").toLowerCase();
+      const previous = whdaStatus[key] || {};
+      const isPaused = !!previous.paused;
+      const rawDown = torrent.downloadSpeed || 0;
+      const rawUp = torrent.uploadSpeed || 0;
+      const down = isPaused ? 0 : rawDown;
+      const up = isPaused ? 0 : rawUp;
       const totalSizeEl = document.getElementById("status-total-size");
 
       document.getElementById("status-label").textContent =
-        percent >= 99.5 ? "Seed" : "Streaming";
+        isPaused ? "Paused" : percent >= 99.5 ? "Seed" : "Streaming";
       document.getElementById("status-progress").textContent =
         percent.toFixed(1).replace(/\.0$/, "") + "%";
       document.getElementById("status-peers").textContent = String(
@@ -1110,15 +1115,14 @@
       const dot = document.getElementById("status-dot");
       dot.style.background = "#5a8f63";
       dot.style.boxShadow = "none";
-      const key = (torrent.infoHash || "").toLowerCase();
-      whdaStatus[key] = {
+      whdaStatus[key] = Object.assign({}, previous, {
         label: document.getElementById("status-title").textContent || key,
         peers: torrent.numPeers || 0,
         progress: percent,
         down,
         up,
         totalBytes: torrent.length || 0,
-      };
+      });
       if (typeof refreshWhdaInfohashes === "function") {
         refreshWhdaInfohashes();
       }
@@ -2049,6 +2053,59 @@
         }
 
         const label = title || cleanHash;
+
+        const existing =
+          c.get(normalizedHash) || c.get(cleanHash) || null;
+
+        if (existing && activeTorrent && activeInfohash === normalizedHash) {
+          const key = normalizedHash;
+          const status = whdaStatus[key] || {};
+          const wasPaused = !!existing._cinemaPaused;
+          if (wasPaused) {
+            if (typeof existing.resume === "function") {
+              try {
+                existing.resume();
+              } catch (e) {
+                // ignore
+              }
+            }
+            existing._cinemaPaused = false;
+            status.paused = false;
+            whdaStatus[key] = status;
+            if (videoEl) {
+              try {
+                videoEl.play().catch(() => {});
+              } catch (e) {
+                // ignore
+              }
+            }
+            updateStatusFromTorrent(existing);
+          } else {
+            if (typeof existing.pause === "function") {
+              try {
+                existing.pause();
+              } catch (e) {
+                // ignore
+              }
+            }
+            existing._cinemaPaused = true;
+            status.paused = true;
+            whdaStatus[key] = status;
+            if (videoEl) {
+              try {
+                videoEl.pause();
+              } catch (e) {
+                // ignore
+              }
+            }
+            updateStatusFromTorrent(existing);
+          }
+          if (typeof refreshLibraryMovieStatus === "function") {
+            refreshLibraryMovieStatus();
+          }
+          return;
+        }
+
         setActiveInfohash(normalizedHash);
         setPlayerMeta(label, "Resolving media…");
         updateStatusLoading({ title: label, id: normalizedHash });
@@ -2078,9 +2135,6 @@
           "&dn=" +
           encodeURIComponent(label) +
           MAGNET_TRACKERS;
-
-        const existing =
-          c.get(normalizedHash) || c.get(cleanHash) || null;
 
         const useTorrent = (torrent) => {
           if (mediaResolveTimeout) {
