@@ -2719,6 +2719,16 @@
       }
     }
 
+    window.addEventListener("error", (event) => {
+      const msg = event && event.message ? String(event.message) : "";
+      if (
+        msg.includes("Unhandled error. (MEDIA_ELEMENT_ERROR: Empty src attribute)") ||
+        msg.includes("Unhandled error. (undefined)")
+      ) {
+        event.preventDefault();
+      }
+    });
+
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", initMiniCinema);
     } else {
