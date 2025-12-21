@@ -1039,20 +1039,6 @@
       li.appendChild(thumb);
       li.appendChild(main);
 
-      if (typeof onActivate === "function") {
-        li.addEventListener("click", (event) => {
-          const target = event.target;
-          if (target && target.closest && target.closest(".movie-download-button")) {
-            return;
-          }
-          if (button) {
-            button.dataset.armed = "1";
-            button.classList.add("is-arming");
-          }
-          onActivate();
-        });
-      }
-
       return li;
     }
 
