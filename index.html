@@ -1210,7 +1210,6 @@
       function ensureClient() {
         if (!client) {
           if (typeof WebTorrent === "undefined") {
-            overlayBadge.textContent = "WebTorrent not available in this browser";
             updateStatusError("WebTorrent not available in this browser");
             return null;
           }
@@ -1376,7 +1375,8 @@
 
         if (listEl && countEl) {
           listEl.innerHTML = "";
-          countEl.textContent = filmBag.length + " films (Blender WHDA)";
+          countEl.textContent =
+            "Blender cinema bag (" + String(filmBag.length) + " films)";
 
           filmBag.forEach((item, index) => {
             const movie = {
@@ -1910,15 +1910,7 @@
 
         if (!file) {
           updateStatusError("No playable video file in torrent");
-          const hasVideo =
-            videoEl &&
-            typeof videoEl.currentTime === "number" &&
-            !!videoEl.src &&
-            videoEl.readyState >= 2;
-          if (!hasVideo) {
-            overlayBadge.textContent = "Nothing playable found in torrent";
-            setPlayerMeta(label, "No media file loaded (no playable file)");
-          }
+          setPlayerMeta(label, "No media file loaded (no playable file)");
           return;
         }
 
@@ -2012,14 +2004,7 @@
         setActiveInfohash(normalizedHash);
         setPlayerMeta(label, "Resolving media…");
         updateStatusLoading({ title: label, id: normalizedHash });
-        const hasVideo =
-          videoEl &&
-          typeof videoEl.currentTime === "number" &&
-          !!videoEl.src &&
-          videoEl.readyState >= 2;
-        if (!hasVideo) {
-          overlayBadge.textContent = "Connecting to swarm…";
-        }
+        // Rely on Transfer Channel + metadata text; avoid overlaying the player
 
         if (mediaResolveTimeout) {
           clearTimeout(mediaResolveTimeout);
@@ -2353,14 +2338,6 @@
 
             setActiveMovieElement(movie.id);
             updateStatusLoading(movie);
-            const hasVideo =
-              videoEl &&
-              typeof videoEl.currentTime === "number" &&
-              !!videoEl.src &&
-              videoEl.readyState >= 2;
-            if (!hasVideo) {
-              overlayBadge.textContent = "Connecting to swarm…";
-            }
 
             const file =
               t.files.find(
