@@ -289,10 +289,16 @@
       color: var(--accent);
     }
 
-    .movie-download-button.is-progress {
+    .movie-download-button.is-arming {
       background: var(--accent-soft);
       border-color: rgba(224, 198, 128, 0.85);
       color: var(--accent);
+    }
+
+    .movie-download-button.is-progress {
+      background: #285b3a;
+      border-color: #6fb17a;
+      color: #d4f8dd;
     }
 
     .movie-download-button.is-done {
@@ -898,7 +904,7 @@
         const li = node.closest(".movie");
         const button = li ? li.querySelector(".movie-download-button") : null;
         if (button) {
-          button.classList.remove("is-progress", "is-done");
+          button.classList.remove("is-arming", "is-progress", "is-done");
         }
 
         const status = whdaStatus[hash];
@@ -906,6 +912,9 @@
           node.textContent = baseSize ? baseSize + " · have 0%" : "have 0%";
           if (button) {
             button.textContent = button.dataset.baseLabel || "Download";
+            if (button.dataset.armed === "1") {
+              button.classList.add("is-arming");
+            }
           }
           return;
         }
@@ -929,6 +938,7 @@
         if (button) {
           if (rawProgress == null || rawProgress <= 0) {
             button.textContent = button.dataset.baseLabel || "Download";
+            button.classList.add("is-arming");
           } else if (rawProgress >= 99.5) {
             button.classList.add("is-done");
           } else {
@@ -968,17 +978,21 @@
       headerRow.className = "movie-header-row";
       headerRow.appendChild(title);
 
+      let button = null;
       if (typeof onActivate === "function") {
-        const button = document.createElement("button");
+        button = document.createElement("button");
         button.type = "button";
         button.className = "movie-download-button";
         button.textContent = "Download";
         button.dataset.baseLabel = "Download";
+        button.dataset.armed = "0";
         if (hash) {
           button.dataset.hash = hash;
         }
         button.addEventListener("click", (event) => {
           event.stopPropagation();
+          button.dataset.armed = "1";
+          button.classList.add("is-arming");
           onActivate();
         });
         headerRow.appendChild(button);
@@ -1028,6 +1042,10 @@
           const target = event.target;
           if (target && target.closest && target.closest(".movie-download-button")) {
             return;
+          }
+          if (button) {
+            button.dataset.armed = "1";
+            button.classList.add("is-arming");
           }
           onActivate();
         });
