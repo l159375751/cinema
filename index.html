@@ -911,9 +911,11 @@
         if (!status) {
           node.textContent = baseSize ? baseSize + " · have 0%" : "have 0%";
           if (button) {
-            button.textContent = button.dataset.baseLabel || "Download";
             if (button.dataset.armed === "1") {
               button.classList.add("is-arming");
+              button.textContent = "Searching peers";
+            } else {
+              button.textContent = button.dataset.baseLabel || "Load";
             }
           }
           return;
@@ -937,11 +939,17 @@
 
         if (button) {
           if (rawProgress == null || rawProgress <= 0) {
-            button.textContent = button.dataset.baseLabel || "Download";
-            button.classList.add("is-arming");
+            if (button.dataset.armed === "1") {
+              button.textContent = "Searching peers";
+              button.classList.add("is-arming");
+            } else {
+              button.textContent = button.dataset.baseLabel || "Load";
+            }
           } else if (rawProgress >= 99.5) {
+            button.textContent = "Done";
             button.classList.add("is-done");
           } else {
+            button.textContent = "Downloading";
             button.classList.add("is-progress");
           }
         }
@@ -983,8 +991,8 @@
         button = document.createElement("button");
         button.type = "button";
         button.className = "movie-download-button";
-        button.textContent = "Download";
-        button.dataset.baseLabel = "Download";
+        button.textContent = "Load";
+        button.dataset.baseLabel = "Load";
         button.dataset.armed = "0";
         if (hash) {
           button.dataset.hash = hash;
@@ -993,6 +1001,7 @@
           event.stopPropagation();
           button.dataset.armed = "1";
           button.classList.add("is-arming");
+          button.textContent = "Searching peers";
           onActivate();
         });
         headerRow.appendChild(button);
